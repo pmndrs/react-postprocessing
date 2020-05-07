@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createRef } from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
 import { useMemo, useEffect, createContext } from 'react'
 import {
@@ -11,47 +11,36 @@ import {
 } from 'postprocessing'
 import { HalfFloatType } from 'three'
 
-export const context = createContext(null)
+export const EffectComposerContext = createContext(null)
 
-function EffectComposer({ children }: { children: any }) {
+const EffectComposer = React.memo(({ children }: { children: JSX.Element | JSX.Element[] }) => {
   const { gl, scene, camera, size } = useThree()
-
-  const composer = useMemo(() => {
-    const composer = new EffectComposerImpl(gl, {
-      frameBufferType: HalfFloatType,
-    })
+  const [composer, normalPass] = useMemo(() => {
+    const composer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
     composer.addPass(new RenderPass(scene, camera))
-
-    const normalPass = new NormalPass(scene, camera)
-
-    composer.addPass(normalPass)
-    return composer
-  }, [camera, scene, gl])
-
-  useEffect(() => {
-    if (Array.isArray(children)) {
-      const passes = []
-
-      console.log(children)
-
-      for (let child of children) {
-        if (child.type) {
-          passes.push(new EffectPass(camera, child.type()))
-        }
-      }
-
-      console.log(...passes)
-      // // composer.addPass(camera, ...passes);
-      passes.map((pass) => composer.addPass(pass))
-    } else {
-      const pass = new EffectPass(camera, children.type())
-      composer.addPass(pass)
-    }
-  }, [composer, children, camera])
+    const normalPass = (composer.normalPass = new NormalPass(scene, camera))
+    return [composer, normalPass]
+  }, [children])
 
   useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
   useFrame((_, delta) => composer.render(delta), 1)
-  return <></>
-}
+
+  const refs = useMemo(() => [...new Array(React.Children.count(children))].map(createRef), [children])
+  useEffect(() => {
+    composer.addPass(normalPass)
+    const effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
+    composer.addPass(effectPass)
+    effectPass.renderToScreen = true
+    return () => composer.reset()
+  }, [children])
+
+  return (
+    <EffectComposerContext.Provider value={composer}>
+      {React.Children.map(children, (el: JSX.Element, i) => (
+        <el.type {...el.props} ref={refs[i]} />
+      ))}
+    </EffectComposerContext.Provider>
+  )
+})
 
 export default EffectComposer
