@@ -1,14 +1,17 @@
 import React from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
-import { useMemo, useEffect } from 'react'
+import { useMemo, useEffect, createContext } from 'react'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
   EffectPass,
   NormalPass,
+  Effect,
   // @ts-ignore
 } from 'postprocessing'
 import { HalfFloatType } from 'three'
+
+export const context = createContext(null)
 
 function EffectComposer({ children }: { children: any }) {
   const { gl, scene, camera, size } = useThree()
@@ -27,10 +30,18 @@ function EffectComposer({ children }: { children: any }) {
 
   useEffect(() => {
     if (Array.isArray(children)) {
-      const passes = children.map((child) => new EffectPass(camera, child.type()))
+      const passes = []
 
-      // composer.addPass(camera, ...passes);
+      console.log(children)
 
+      for (let child of children) {
+        if (child.type) {
+          passes.push(new EffectPass(camera, child.type()))
+        }
+      }
+
+      console.log(...passes)
+      // // composer.addPass(camera, ...passes);
       passes.map((pass) => composer.addPass(pass))
     } else {
       const pass = new EffectPass(camera, children.type())
