@@ -80,6 +80,7 @@
     "postprocessing": "^6.13.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "three": "^0.116.1"
+    "three": "^0.116.1",
+    "react-three-fiber": "^4.1.4"
   }
 }
