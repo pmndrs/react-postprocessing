@@ -16,6 +16,6 @@
     "noImplicitThis": false,
     "preserveSymlinks": true
   },
-  "include": ["./*.d.ts", "./src/**/*"],
+  "include": ["postprocessing.d.ts", "./src/**/*"],
   "exclude": ["./node_modules/**/*"]
 }

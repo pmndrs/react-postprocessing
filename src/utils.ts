@@ -5,12 +5,12 @@ export const wrapEffect = (effectImpl: any) => {
   return forwardRef((props: any, ref) => {
     const { camera } = useThree()
 
-    const effect = useMemo(() => new effectImpl(camera, /* something here */ props), [props])
+    const effect = useMemo(() => new effectImpl(camera, /* something here */ props), [props, camera])
 
     useImperativeHandle(
       ref,
       () => {
-        effect
+        return effect
       },
       [effect]
     )
