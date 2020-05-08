@@ -1,7 +1,7 @@
 {
   "name": "react-postprocessing",
   "version": "0.0.1",
-  "description": "postprocessing wrapper for react-three-fiber",
+  "description": "postprocessing wrapper for React and react-three-fiber",
   "keywords": [
     "postprocessing",
     "react",
@@ -16,10 +16,14 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/react-spring/react-postprocessing.git"
+  },
   "scripts": {
-    "prebuild": "rimraf dist && npm run typegen",
+    "prebuild": "rm -rf dist && pnpm run typegen",
     "build": "rollup -c",
-    "prepare": "npm run build",
+    "prepare": "pnpm run build",
     "eslint": "eslint src/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
@@ -74,13 +78,14 @@
     "react-three-fiber": "^4.1.4",
     "rollup": "^2.8.2",
     "rollup-plugin-size-snapshot": "^0.11.0",
-    "three": "^0.116.1"
+    "three": "^0.116.1",
+    "tsd-jsdoc": "^2.5.0"
   },
   "peerDependencies": {
     "postprocessing": "^6.13.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "three": "^0.116.1",
-    "react-three-fiber": "^4.1.4"
+    "react-three-fiber": "^4.1.4",
+    "three": "^0.116.1"
   }
 }

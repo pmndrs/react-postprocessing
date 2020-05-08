@@ -35,6 +35,7 @@ devDependencies:
   rollup: 2.8.2
   rollup-plugin-size-snapshot: 0.11.0_rollup@2.8.2
   three: 0.116.1
+  tsd-jsdoc: 2.5.0
 lockfileVersion: 5.1
 packages:
   /@babel/code-frame/7.8.3:
@@ -7105,6 +7106,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-3n1qG+/5kg+jrbTzwAykB5yRYtQCTqOGKq5U5PE3b0a1/mzo6snDhjGS0zJVJunO0NrT3Dg1MLy5TjWP/UJppg==
+  /tsd-jsdoc/2.5.0:
+    dependencies:
+      typescript: 3.8.3
+    dev: true
+    peerDependencies:
+      jsdoc: ^3.6.3
+    resolution:
+      integrity: sha512-80fcJLAiUeerg4xPftp+iEEKWUjJjHk9AvcHwJqA8Zw0R4oASdu3kT/plE/Zj19QUTz8KupyOX25zStlNJjS9g==
   /tslib/1.11.2:
     dev: true
     resolution:
@@ -7175,6 +7184,13 @@ packages:
     dev: true
     resolution:
       integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+  /typescript/3.8.3:
+    dev: true
+    engines:
+      node: '>=4.2.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
   /unicode-canonical-property-names-ecmascript/1.0.4:
     dev: true
     engines:
@@ -7613,3 +7629,4 @@ specifiers:
   rollup: ^2.8.2
   rollup-plugin-size-snapshot: ^0.11.0
   three: ^0.116.1
+  tsd-jsdoc: ^2.5.0

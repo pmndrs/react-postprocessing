@@ -1,26 +1,19 @@
-import React, { createRef } from 'react'
+import React, { createRef, useMemo, useEffect, createContext } from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
-import { useMemo, useEffect, createContext } from 'react'
-import {
-  EffectComposer as EffectComposerImpl,
-  RenderPass,
-  EffectPass,
-  NormalPass,
-  Effect,
-  // @ts-ignore
-} from 'postprocessing'
+import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { HalfFloatType } from 'three'
 
 export const EffectComposerContext = createContext(null)
 
 const EffectComposer = React.memo(({ children }: { children: JSX.Element | JSX.Element[] }) => {
   const { gl, scene, camera, size } = useThree()
+
   const [composer, normalPass] = useMemo(() => {
-    const composer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
-    composer.addPass(new RenderPass(scene, camera))
-    const normalPass = (composer.normalPass = new NormalPass(scene, camera))
-    return [composer, normalPass]
-  }, [children])
+    const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
+    effectComposer.addPass(new RenderPass(scene, camera))
+    const pass = new NormalPass(scene, camera)
+    return [effectComposer, pass]
+  }, [camera, gl, scene])
 
   useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
   useFrame((_, delta) => composer.render(delta), 1)
@@ -32,7 +25,7 @@ const EffectComposer = React.memo(({ children }: { children: JSX.Element | JSX.E
     composer.addPass(effectPass)
     effectPass.renderToScreen = true
     return () => composer.reset()
-  }, [children])
+  }, [children, composer, camera, normalPass, refs])
 
   return (
     <EffectComposerContext.Provider value={composer}>

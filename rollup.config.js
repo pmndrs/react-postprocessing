@@ -1,7 +1,7 @@
 import path from 'path'
 import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
-import json from ' @rollup/plugin-json'
+import json from '@rollup/plugin-json'
 import { sizeSnapshot } from 'rollup-plugin-size-snapshot'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
@@ -12,7 +12,7 @@ const getBabelOptions = ({ useESModules }, targets) => ({
   babelrc: false,
   extensions,
   exclude: '**/node_modules/**',
-  runtimeHelpers: true,
+  babelHelpers: 'runtime',
   presets: [
     ['@babel/preset-env', { loose: true, modules: false, targets }],
     '@babel/preset-react',

@@ -14,9 +14,8 @@
     "outDir": "dist",
     "resolveJsonModule": true,
     "noImplicitThis": false,
-    "baseUrl": "./src",
     "preserveSymlinks": true
   },
-  "include": ["./src"],
+  "include": ["./*.d.ts", "./src/**/*"],
   "exclude": ["./node_modules/**/*"]
 }
