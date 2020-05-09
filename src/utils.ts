@@ -1,11 +1,12 @@
-import { forwardRef, useMemo, useImperativeHandle } from 'react'
+import { forwardRef, useMemo, useImperativeHandle, Props } from 'react'
 import { useThree } from 'react-three-fiber'
+import { Effect } from 'postprocessing'
 
 export const wrapEffect = (effectImpl: any) => {
-  return forwardRef((props: any, ref) => {
+  return forwardRef((props: Props<Effect>, ref) => {
     const { camera } = useThree()
 
-    const effect = useMemo(() => new effectImpl(camera, /* something here */ props), [props, camera])
+    const effect = useMemo(() => new effectImpl(camera, /* something here */ props), [props, camera]) as Effect
 
     useImperativeHandle(
       ref,
