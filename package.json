@@ -1,6 +1,6 @@
 {
   "name": "react-postprocessing",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha",
   "description": "postprocessing wrapper for React and react-three-fiber",
   "keywords": [
     "postprocessing",
@@ -12,22 +12,22 @@
   ],
   "author": "v1rtl",
   "license": "MIT",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/react-spring/react-postprocessing.git"
   },
   "scripts": {
-    "prebuild": "rm -rf dist && pnpm run typegen",
-    "build": "rollup -c",
+    "build:esm": "tsc",
+    "build:cjs": "tsc -p cjs.tsconfig.json",
+    "build": "pnpm run build:esm && pnpm run build:cjs",
     "prepare": "pnpm run build",
     "eslint": "eslint src/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
-    "typegen": "tsc && mv dist/src/* dist && rm -rf dist/src || true"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react"
   },
   "husky": {
     "hooks": {
@@ -43,29 +43,16 @@
     "printWidth": 120
   },
   "devDependencies": {
-    "@babel/core": "7.9.0",
-    "@babel/plugin-transform-modules-commonjs": "7.9.0",
-    "@babel/plugin-transform-parameters": "7.9.5",
-    "@babel/plugin-transform-runtime": "7.9.0",
-    "@babel/plugin-transform-template-literals": "7.8.3",
-    "@babel/preset-env": "7.9.5",
-    "@babel/preset-react": "7.9.4",
-    "@babel/preset-typescript": "^7.9.0",
-    "@rollup/plugin-babel": "^5.0.0",
-    "@rollup/plugin-json": "^4.0.3",
-    "@rollup/plugin-node-resolve": "^7.1.3",
     "@types/jest": "^25.2.1",
-    "@types/lodash-es": "^4.17.3",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
     "@types/react-test-renderer": "^16.9.2",
     "@typescript-eslint/eslint-plugin": "^2.29.0",
     "@typescript-eslint/parser": "^2.29.0",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^3.0.0",
     "husky": "^4.2.5",
@@ -76,8 +63,6 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-three-fiber": "^4.1.4",
-    "rollup": "^2.8.2",
-    "rollup-plugin-size-snapshot": "^0.11.0",
     "three": "^0.116.1",
     "tsd-jsdoc": "^2.5.0"
   },

@@ -1,6 +1,6 @@
-import React, { createRef, useMemo, useEffect, createContext } from 'react'
+import React, { createRef, useMemo, useEffect, createContext, RefObject } from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
-import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
+import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass, Effect } from 'postprocessing'
 import { HalfFloatType } from 'three'
 
 export const EffectComposerContext = createContext(null)
@@ -18,7 +18,11 @@ const EffectComposer = React.memo(({ children }: { children: JSX.Element | JSX.E
   useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
   useFrame((_, delta) => composer.render(delta), 1)
 
-  const refs = useMemo(() => [...new Array(React.Children.count(children))].map(createRef), [children])
+  const refs = useMemo(
+    (): RefObject<Effect>[] => [...new Array(React.Children.count(children))].map(createRef) as RefObject<Effect>[],
+    [children]
+  )
+
   useEffect(() => {
     composer.addPass(normalPass)
     const effectPass = new EffectPass(camera, ...refs.map((r) => r.current))

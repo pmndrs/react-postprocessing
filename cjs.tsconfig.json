@@ -5,7 +5,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
-    "module": "ES6",
+    "module": "commonjs",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -13,7 +13,7 @@
     "preserveSymlinks": true,
     "baseUrl": "./",
     "declaration": true,
-    "outDir": "dist/esm",
+    "outDir": "dist/cjs",
     "paths": {
       "*": ["types/*"]
     }
