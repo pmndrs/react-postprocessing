@@ -1,0 +1,20 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel  --no-autoinstall index.html -p 3000",
+    "clean": "rm -rf .parcel-cache dist",
+    "prestart": "pnpm run clean"
+  },
+  "keywords": [],
+  "author": "v1rtl",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.0.0-alpha.3.2"
+  },
+  "dependencies": {
+    "wouter": "^2.4.0"
+  }
+}

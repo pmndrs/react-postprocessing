@@ -1,0 +1,30 @@
+body {
+  font-family: monospace;
+
+  background-color: black;
+}
+
+* {
+  color: #f0dfdf;
+}
+
+a {
+  line-height: 1.5;
+}
+
+a:hover {
+  color: blue;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  height: 700px;
+}
+
+#header {
+  text-decoration: none;
+}

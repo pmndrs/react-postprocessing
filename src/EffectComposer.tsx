@@ -8,11 +8,11 @@ export const EffectComposerContext = createContext(null)
 const EffectComposer = React.memo(({ children }: { children: JSX.Element | JSX.Element[] }) => {
   const { gl, scene, camera, size } = useThree()
 
-  const [composer, normalPass] = useMemo(() => {
+  const [composer] = useMemo(() => {
     const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
     effectComposer.addPass(new RenderPass(scene, camera))
-    const pass = new NormalPass(scene, camera)
-    return [effectComposer, pass]
+
+    return [effectComposer]
   }, [camera, gl, scene])
 
   useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
@@ -24,12 +24,13 @@ const EffectComposer = React.memo(({ children }: { children: JSX.Element | JSX.E
   )
 
   useEffect(() => {
+    const normalPass = new NormalPass(scene, camera)
     composer.addPass(normalPass)
     const effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
     composer.addPass(effectPass)
     effectPass.renderToScreen = true
     return () => composer.reset()
-  }, [children, composer, camera, normalPass, refs])
+  }, [children, composer, camera, refs])
 
   return (
     <EffectComposerContext.Provider value={composer}>
