@@ -6,7 +6,8 @@
   "scripts": {
     "start": "parcel  --no-autoinstall index.html -p 3000",
     "clean": "rm -rf .parcel-cache dist",
-    "prestart": "pnpm run clean"
+    "prestart": "pnpm run clean",
+    "build": "parcel build index.html"
   },
   "keywords": [],
   "author": "v1rtl",
