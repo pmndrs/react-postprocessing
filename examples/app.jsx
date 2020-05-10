@@ -3,7 +3,7 @@ import { render } from 'react-dom'
 import { Link, Route } from 'wouter'
 import GlitchAndNoise from './pages/glitch-and-noise'
 import './style.css'
-import SMAAAndBloom from './pages/smaa-and-bloom'
+import SSAOAndBloom from './pages/ssao-and-bloom'
 
 const links = [
   {
@@ -11,8 +11,8 @@ const links = [
     text: 'Glitch and Noise',
   },
   {
-    href: '/smaa-and-bloom',
-    text: 'SMAA and Bloom',
+    href: '/ssao-and-bloom',
+    text: 'SSAO and Bloom',
   },
 ]
 
@@ -34,7 +34,7 @@ const App = () => (
     </nav>
 
     <Route path="/glitch-and-noise" component={GlitchAndNoise} />
-    <Route path="/smaa-and-bloom" component={SMAAAndBloom} />
+    <Route path="/smaa-and-bloom" component={SSAOAndBloom} />
   </div>
 )
 

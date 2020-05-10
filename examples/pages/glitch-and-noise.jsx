@@ -6,10 +6,10 @@ import { BlendFunction } from 'postprocessing'
 const Box = () => {
   const ref = useRef()
 
-  useFrame(() => {
-    ref.current.rotateX(0.01)
-    ref.current.rotateY(0.01)
-    ref.current.rotateZ(-0.01)
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime()
+    ref.current.rotation.x = Math.sin(time / 4)
+    ref.current.rotation.y = Math.sin(time / 2)
   })
 
   return (

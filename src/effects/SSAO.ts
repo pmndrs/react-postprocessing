@@ -5,10 +5,10 @@ import { EffectComposerContext } from '../EffectComposer'
 
 const SSAO = forwardRef((props, ref) => {
   const { camera } = useThree()
-  const composer = useContext(EffectComposerContext)
+  const { normalPass } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>
-      new SSAOEffect(camera, composer.normalPass.renderTarget.texture, {
+      new SSAOEffect(camera, normalPass.renderTarget.texture, {
         blendFunction: BlendFunction.MULTIPLY,
         samples: 30,
         rings: 4,
