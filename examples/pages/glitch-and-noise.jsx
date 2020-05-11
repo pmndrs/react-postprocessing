@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Canvas, useFrame, extend } from 'react-three-fiber'
+import { Canvas, useFrame } from 'react-three-fiber'
 import { EffectComposer, Glitch, Noise } from '../../dist/esm'
 import { BlendFunction } from 'postprocessing'
 

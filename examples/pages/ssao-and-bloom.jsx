@@ -1,6 +1,6 @@
-import React, { useRef, useMemo } from 'react'
+import React, { useRef, useMemo, Suspense, useEffect } from 'react'
 import { Canvas, useFrame } from 'react-three-fiber'
-import { EffectComposer, SSAO, Bloom } from '../../dist/esm'
+import { EffectComposer, SSAO, Bloom, SMAA } from '../../dist/esm'
 import { Color, Object3D, VertexColors } from 'three'
 import niceColors from 'nice-color-palettes'
 const _object = new Object3D()
@@ -49,6 +49,12 @@ function Boxes() {
 }
 
 const SSAOAndBloom = () => {
+  const ref = useRef()
+
+  useEffect(() => {
+    ref.current?.colorEdgesMaterial.setEdgeDetectionThreshold(0.1)
+  }, [])
+
   return (
     <>
       <h2>SSAO + Bloom</h2>
@@ -60,6 +66,9 @@ const SSAOAndBloom = () => {
           <EffectComposer>
             <Bloom />
             <SSAO />
+            <Suspense fallback={<Boxes />}>
+              <SMAA ref={ref} />
+            </Suspense>
           </EffectComposer>
         </Canvas>
       </div>

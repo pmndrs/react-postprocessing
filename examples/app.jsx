@@ -34,7 +34,7 @@ const App = () => (
     </nav>
 
     <Route path="/glitch-and-noise" component={GlitchAndNoise} />
-    <Route path="/smaa-and-bloom" component={SSAOAndBloom} />
+    <Route path="/ssao-and-bloom" component={SSAOAndBloom} />
   </div>
 )
 
