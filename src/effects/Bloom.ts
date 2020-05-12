@@ -14,15 +14,7 @@ const Bloom: ForwardRefExoticComponent<BloomEffect> = forwardRef((props, ref) =>
       }),
     [props]
   )
-
-  useImperativeHandle(
-    ref,
-    () => {
-      return effect
-    },
-    [effect]
-  )
-
+  useImperativeHandle(ref, () => effect, [effect])
   return null
 })
 
