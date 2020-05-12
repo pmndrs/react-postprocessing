@@ -3,15 +3,7 @@ import { GlitchEffect } from 'postprocessing'
 
 const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef((props, ref) => {
   const effect = useMemo(() => new GlitchEffect(props), [props])
-
-  useImperativeHandle(
-    ref,
-    () => {
-      return effect
-    },
-    [effect]
-  )
-
+  useImperativeHandle(ref, () => effect, [effect])
   return null
 })
 
