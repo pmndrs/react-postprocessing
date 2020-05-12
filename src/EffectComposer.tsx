@@ -14,19 +14,14 @@ import { HalfFloatType } from 'three'
 export const EffectComposerContext = createContext<{ composer: EffectComposerImpl; normalPass: NormalPass }>(null)
 
 export type EffectComposerProps = {
-  children?: JSX.Element | JSX.Element[]
+  children: JSX.Element | JSX.Element[]
   smaa?: boolean
-  effects?: Effect[]
   edgeDetection?: number
+  renderPriority?: number
 }
 
 const EffectComposer = React.memo(
-  (
-    { children, smaa, edgeDetection, effects }: EffectComposerProps = {
-      edgeDetection: 0.1,
-      smaa: false,
-    }
-  ) => {
+  ({ children, smaa = true, edgeDetection = 0.1, renderPriority = 1 }: EffectComposerProps) => {
     const { gl, scene, camera, size } = useThree()
     const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
     const [composer, normalPass] = useMemo(() => {
@@ -45,7 +40,7 @@ const EffectComposer = React.memo(
     }, [camera, gl, scene])
 
     useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
-    useFrame((_, delta) => composer.render(delta), 1)
+    useFrame((_, delta) => composer.render(delta), renderPriority)
 
     const refs = useMemo(
       (): RefObject<Effect>[] => [...new Array(React.Children.count(children))].map(createRef) as RefObject<Effect>[],
@@ -54,14 +49,7 @@ const EffectComposer = React.memo(
 
     useEffect(() => {
       composer.addPass(normalPass)
-      let effectPass: EffectPass
-
-      if (effects) {
-        effectPass = new EffectPass(camera, ...refs.map((r) => r.current), ...effects)
-      } else {
-        effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
-      }
-
+      let effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
       composer.addPass(effectPass)
       effectPass.renderToScreen = true
       return () => composer.reset()
