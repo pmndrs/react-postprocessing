@@ -49,7 +49,7 @@ const EffectComposer = React.memo(
 
     useEffect(() => {
       composer.addPass(normalPass)
-      let effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
+      const effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
       composer.addPass(effectPass)
       effectPass.renderToScreen = true
       return () => composer.reset()

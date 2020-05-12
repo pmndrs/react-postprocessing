@@ -15,6 +15,9 @@ yarn add postprocessing react-postprocessing
   <a href="https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf">
   <img src="previews/ssao-and-bloom.gif" />
   </a>
+  <a href="https://codesandbox.io/s/react-postprocessing-pixelation-demo-tcct8">
+  <img src="previews/pixelation.gif" />
+  </a>
 </p>
 
 <p align="middle">
