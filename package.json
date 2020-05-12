@@ -1,6 +1,6 @@
 {
   "name": "react-postprocessing",
-  "version": "1.0.0-alpha3",
+  "version": "1.0.0-beta",
   "description": "postprocessing wrapper for React and react-three-fiber",
   "keywords": [
     "postprocessing",
