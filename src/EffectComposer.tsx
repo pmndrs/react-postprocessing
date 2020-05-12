@@ -28,26 +28,19 @@ const EffectComposer = React.memo(
     }
   ) => {
     const { gl, scene, camera, size } = useThree()
-
-    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '')
-
+    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
       const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
-
       // Add render pass
       effectComposer.addPass(new RenderPass(scene, camera))
-
       // Create normal pass
       const pass = new NormalPass(scene, camera)
-
       // Add SMAAEffect
-
       if (smaa) {
         const smaaEffect = new SMAAEffect(...smaaProps)
         smaaEffect.colorEdgesMaterial.setEdgeDetectionThreshold(edgeDetection)
       }
-
       return [effectComposer, pass]
     }, [camera, gl, scene])
 
@@ -67,8 +60,11 @@ const EffectComposer = React.memo(
       return () => composer.reset()
     }, [children, composer, camera, normalPass, refs])
 
+    // Memoize state, otherwise it would trigger all consumers on every render
+    const state = useMemo(() => ({ composer, normalPass }), [composer, normalPass])
+
     return (
-      <EffectComposerContext.Provider value={{ composer, normalPass }}>
+      <EffectComposerContext.Provider value={state}>
         {React.Children.map(children, (el: JSX.Element, i) => (
           <el.type {...el.props} ref={refs[i]} />
         ))}
