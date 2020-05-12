@@ -31,7 +31,7 @@ yarn add postprocessing react-postprocessing
 
 All effects are consumed by effect composer, `EffectComposer`, that creates passes and other things required for compositor to work.
 
-You can pass effects either using children:
+You can pass effects using children:
 
 ```jsx
 import React from 'react'
