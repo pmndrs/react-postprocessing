@@ -5,12 +5,7 @@
 ## Installation
 
 ```sh
-# npm
-npm i react react-three-fiber react-postprocessing three postprocessing
-# pnpm
-pnpm i react react-three-fiber react-postprocessing three postprocessing
-# yarn
-yarn add react react-three-fiber react-postprocessing three postprocessing
+yarn add postprocessing react-postprocessing
 ```
 
 ## Demos

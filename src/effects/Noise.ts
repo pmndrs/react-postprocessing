@@ -3,15 +3,7 @@ import { NoiseEffect } from 'postprocessing'
 
 const Noise: ForwardRefExoticComponent<NoiseEffect> = forwardRef((props, ref) => {
   const effect = useMemo(() => new NoiseEffect(props), [props])
-
-  useImperativeHandle(
-    ref,
-    () => {
-      return effect
-    },
-    [effect]
-  )
-
+  useImperativeHandle(ref, () => effect, [effect])
   return null
 })
 
