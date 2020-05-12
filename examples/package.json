@@ -15,7 +15,9 @@
     "parcel": "^2.0.0-alpha.3.2"
   },
   "dependencies": {
+    "drei": "^0.0.32",
     "nice-color-palettes": "^3.0.0",
+    "stats.js": "^0.17.0",
     "wouter": "^2.4.0"
   }
 }
