@@ -2,8 +2,9 @@ import React, { useRef } from 'react'
 import { Canvas, useFrame } from 'react-three-fiber'
 import { EffectComposer, Glitch, Noise } from '../../dist/esm'
 import { BlendFunction } from 'postprocessing'
+import { OrbitControls } from 'drei'
 
-const Box = () => {
+export const Box = () => {
   const ref = useRef()
 
   useFrame((state) => {
@@ -25,8 +26,9 @@ const GlitchAndNoise = () => (
     <h2>glitch + noise</h2>
     <div className="container">
       <Canvas>
+        <OrbitControls />
         <Box />
-        <EffectComposer>
+        <EffectComposer smaa={false}>
           <Glitch />
           <Noise blendFunction={BlendFunction.DIVIDE} />
         </EffectComposer>

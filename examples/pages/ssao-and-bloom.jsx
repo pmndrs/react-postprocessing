@@ -2,6 +2,7 @@ import React, { useRef, useMemo, Suspense } from 'react'
 import { Canvas, useFrame } from 'react-three-fiber'
 import { EffectComposer, SSAO, Bloom } from '../../dist/esm'
 import { Color, Object3D, VertexColors } from 'three'
+import { OrbitControls } from 'drei'
 import niceColors from 'nice-color-palettes'
 const _object = new Object3D()
 const _color = new Color()
@@ -48,13 +49,6 @@ function Boxes() {
   )
 }
 
-const Box = () => (
-  <mesh>
-    <boxGeometry args={[1, 1, 1]} attach="geometry" />
-    <meshBasicMaterial color="red" attach="material" />
-  </mesh>
-)
-
 const SSAOAndBloom = () => {
   return (
     <>
@@ -62,10 +56,11 @@ const SSAOAndBloom = () => {
       <div className="container">
         <Canvas camera={{ position: [0, 0, 15], near: 5, far: 20 }}>
           <Boxes />
+          <OrbitControls />
           <ambientLight />
           <directionalLight position={[0, 1, 2]} color="white" />
-          <Suspense fallback={<Box />}>
-            <EffectComposer smaa={false}>
+          <Suspense fallback={null}>
+            <EffectComposer>
               <Bloom />
               <SSAO />
             </EffectComposer>

@@ -24,7 +24,7 @@ const EffectComposer = React.memo(
   (
     { children, smaa, edgeDetection, effects }: EffectComposerProps = {
       edgeDetection: 0.1,
-      smaa: true,
+      smaa: false,
     }
   ) => {
     const { gl, scene, camera, size } = useThree()
@@ -54,7 +54,14 @@ const EffectComposer = React.memo(
 
     useEffect(() => {
       composer.addPass(normalPass)
-      const effectPass = new EffectPass(camera, ...refs.map((r) => r.current), ...effects)
+      let effectPass: EffectPass
+
+      if (effects) {
+        effectPass = new EffectPass(camera, ...refs.map((r) => r.current), ...effects)
+      } else {
+        effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
+      }
+
       composer.addPass(effectPass)
       effectPass.renderToScreen = true
       return () => composer.reset()

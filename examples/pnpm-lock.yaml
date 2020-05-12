@@ -1,5 +1,7 @@
 dependencies:
+  drei: 0.0.32
   nice-color-palettes: 3.0.0
+  stats.js: 0.17.0
   wouter: 2.4.0
 devDependencies:
   parcel: 2.0.0-alpha.3.2
@@ -939,7 +941,6 @@ packages:
   /@babel/runtime/7.9.6:
     dependencies:
       regenerator-runtime: 0.13.5
-    dev: true
     resolution:
       integrity: sha512-64AF1xY3OAkFHqOb9s4jpgk1Mm5vDZ4L3acHvAml+53nO1XbXLuDodsVpO4OIUsmemlUHMxNdYMNJmsvOwLrvQ==
   /@babel/template/7.8.6:
@@ -3033,6 +3034,20 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-M3NhsLbV1i6HuGzBUH8vXrtxOk+tWmzWKDMbAVSUp3Zsjm7ywFeuwrUXhmhQyRK1q5B5GGy7hcXPbj3bnfZg2g==
+  /drei/0.0.32:
+    dependencies:
+      '@babel/runtime': 7.9.6
+      postprocessing: 6.13.5
+      react-merge-refs: 1.0.0
+      stats.js: 0.17.0
+      utility-types: 3.10.0
+    dev: false
+    peerDependencies:
+      react: '>=16.13'
+      react-dom: '>=16.13'
+      three-three-fiber: '>=4.0'
+    resolution:
+      integrity: sha512-QBmQHNQh6kKJR2f6xswxmvhGDOUGOAFhw1+F40o/6WA+6XrEGOFKuko/cKaxsCsAXGS/cAmgUc+3WmXgaqejew==
   /duplexer3/0.1.4:
     dev: false
     resolution:
@@ -5327,6 +5342,12 @@ packages:
       node: '>=8.0.0'
     resolution:
       integrity: sha512-Fbpi95+JJyR0tqU7pUy1zTSQFjAsluuwB9pJ1h0jtnGk7n/O2TBtP5nDl9rV0JVACjQ1Lm5wSp4ppChr8u3MhA==
+  /postprocessing/6.13.5:
+    dev: false
+    peerDependencies:
+      three: '>= 0.102.0 < 0.117.0'
+    resolution:
+      integrity: sha512-txeM9PL1p5HgzE6agSLO1cT9TQyhoXn1Ogj9PkEjLNNbqI1Anv2PmUTevPR2CY9o93ET563T1jA8d75Bftw+lw==
   /prebuild-install/5.3.3:
     dependencies:
       detect-libc: 1.0.3
@@ -5486,6 +5507,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+  /react-merge-refs/1.0.0:
+    dev: false
+    resolution:
+      integrity: sha512-VkvWuCR5VoTjb+VYUcOjkFo66HDv1Hw8VjKcwQtWr2lJnT8g7epRRyfz8+Zkl2WhwqNeqR0gIe0XYrBa9ePeXg==
   /react-refresh/0.6.0:
     dev: true
     engines:
@@ -5537,7 +5562,6 @@ packages:
     resolution:
       integrity: sha512-1G6jJVDWrt0rK99kBjvEtziZNCICAuvIPkSiUFIQxVP06RCVpq3dmDo2oi6ABpYaDYaTRr67BEhL8r1wgEZZKg==
   /regenerator-runtime/0.13.5:
-    dev: true
     resolution:
       integrity: sha512-ZS5w8CpKFinUzOwW3c83oPeVXoNsrLsaCoLtJvAClH135j/R77RuymhiSErhm2lKcwSCIpmvIWSbDkIfAqKQlA==
   /regenerator-transform/0.14.4:
@@ -5952,6 +5976,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-YICcOcv/VTNyJv1eC1IPNB8ftcY=
+  /stats.js/0.17.0:
+    dev: false
+    resolution:
+      integrity: sha1-scPcRtlEmLV4t/05hbgaznExzH0=
   /statuses/1.5.0:
     dev: true
     engines:
@@ -6438,6 +6466,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-I8XkoQwE+fPQEhy9v012V+TSdH2kp9ts29i20TaaDUXsg7x/onePbhFJUExBfv/2ay1ZOp/Vsm3nDlmnFGSAog==
+  /utility-types/3.10.0:
+    dev: false
+    engines:
+      node: '>= 4'
+    resolution:
+      integrity: sha512-O11mqxmi7wMKCo6HKFt5AhO4BwY3VV68YU07tgxfz8zJTIxr4BpsezN49Ffwy9j3ZpwwJp4fkRwjRzq3uWE6Rg==
   /utils-merge/1.0.1:
     dev: true
     engines:
@@ -6620,6 +6654,8 @@ packages:
     resolution:
       integrity: sha512-ZbotRWhF+lkjijC/VhmOT9wSgyBQ7+zr13+YLkhfsSiTriYsMzkTUFP18pFhWwBeMa5gUc1MzbhrO6/VB7c9Xg==
 specifiers:
+  drei: ^0.0.32
   nice-color-palettes: ^3.0.0
   parcel: ^2.0.0-alpha.3.2
+  stats.js: ^0.17.0
   wouter: ^2.4.0

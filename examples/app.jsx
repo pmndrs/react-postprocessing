@@ -4,15 +4,23 @@ import { Link, Route } from 'wouter'
 import GlitchAndNoise from './pages/glitch-and-noise'
 import './style.css'
 import SSAOAndBloom from './pages/ssao-and-bloom'
+import PixelationDemo from './pages/pixelation'
 
 const links = [
   {
     href: '/glitch-and-noise',
     text: 'Glitch and Noise',
+    component: GlitchAndNoise,
   },
   {
     href: '/ssao-and-bloom',
     text: 'SSAO and Bloom',
+    component: SSAOAndBloom,
+  },
+  {
+    href: '/pixelation',
+    component: PixelationDemo,
+    text: 'Pixelation',
   },
 ]
 
@@ -33,8 +41,9 @@ const App = () => (
       </Route>
     </nav>
 
-    <Route path="/glitch-and-noise" component={GlitchAndNoise} />
-    <Route path="/ssao-and-bloom" component={SSAOAndBloom} />
+    {links.map((link) => (
+      <Route path={link.href} component={link.component} key={link.text} />
+    ))}
   </div>
 )
 
