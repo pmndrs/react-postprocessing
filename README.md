@@ -78,7 +78,7 @@ const App = () => {
 
 #### SMAA
 
-By default, `SMAA` is disabled in `EffectComposer`. If enabled, you can now pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold. Note that SMAA uses a loader so you have to wrap everything in `Suspense`:
+By default, `SMAA` is disabled in `EffectComposer`. When enabled, you can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold. Note that SMAA uses a loader so you have to wrap everything in `Suspense`:
 
 ```jsx
 <Suspense fallback={null}>
@@ -112,7 +112,7 @@ const App = () => (
 
 ### Effects settings
 
-Every effects inherits all the prop from original `postprocessing` class, for example:
+Every effects inherits all the props from original `postprocessing` class, for example:
 
 ```jsx
 import React from 'react'
@@ -134,7 +134,7 @@ const App = () => (
 
 ### Custom effects
 
-Currently not all of the effects are wrapped, so if you may have to wrap some of them yourself.
+Currently not all of the effects are wrapped, so if you require some effects that isn't wrapped yet you cand add them manually.
 
 #### Using `wrapEffect`
 
@@ -161,11 +161,11 @@ const App = () => (
 )
 ```
 
-> Currently types aren't being passed properly in wrapEffect, it returns `RefWithExoticComponent<any>` where instead of any should be the effect class. Feel free to submit a PR to fix it!
+> Currently types aren't being passed properly in `wrapEffect`, it returns `RefWithExoticComponent<any>` where instead of any should be the effect class. Feel free to submit a PR to fix it!
 
 #### Using `effects` prop of `EffectComposer`
 
-Another way is importing an efffect and passing it to `effects`:
+Another way is importing an effect and passing it to `effects`:
 
 ```jsx
 import React, { useMemo } from 'react'
