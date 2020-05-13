@@ -30,8 +30,6 @@ yarn add postprocessing react-postprocessing
 
 #### Passing effects
 
-##### with children
-
 All effects are consumed by effect composer, `EffectComposer`, that creates passes and other things required for compositor to work.
 
 You can pass effects using children:
@@ -138,9 +136,11 @@ const App = () => (
       <boxGeometry args={[1, 1, 1]} />
       <meshBasicMaterial color="red" />
     </mesh>
-    <EffectComposer>
-      <Noise />
-    </EffectComposer>
+    <Suspense>
+      <EffectComposer>
+        <Noise />
+      </EffectComposer>
+    </Suspense>
   </Canvas>
 )
 ```
