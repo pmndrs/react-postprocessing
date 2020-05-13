@@ -5,6 +5,8 @@ import GlitchAndNoise from './pages/glitch-and-noise'
 import './style.css'
 import SSAOAndBloom from './pages/ssao-and-bloom'
 import PixelationDemo from './pages/pixelation'
+import SepiaVignette from './pages/sepia-vignette'
+import TextureDemo from './pages/texture'
 
 const links = [
   {
@@ -22,24 +24,36 @@ const links = [
     component: PixelationDemo,
     text: 'Pixelation',
   },
+  {
+    href: '/sepia-vignette-texture',
+    component: SepiaVignette,
+    text: 'Sepia and Vignette',
+  },
+  {
+    href: '/texture',
+    component: TextureDemo,
+    text: 'Texture',
+  },
 ]
 
 const App = () => (
   <div>
-    <Link href="/">
-      <a id="header">
-        <h1>react-postprocessing examples</h1>
-      </a>
-    </Link>
-    <nav>
-      <Route path="/">
-        {links.map(({ href, text }) => (
-          <Link href={href} key={text}>
-            {text}
-          </Link>
-        ))}
-      </Route>
-    </nav>
+    <div id="menu">
+      <Link href="/">
+        <a id="header">
+          <h1>react-postprocessing examples</h1>
+        </a>
+      </Link>
+      <nav>
+        <Route path="/">
+          {links.map(({ href, text }) => (
+            <Link href={href} key={text}>
+              {text}
+            </Link>
+          ))}
+        </Route>
+      </nav>
+    </div>
 
     {links.map((link) => (
       <Route path={link.href} component={link.component} key={link.text} />

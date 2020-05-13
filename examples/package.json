@@ -12,7 +12,7 @@
   "author": "v1rtl",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.0.0-alpha.3.2"
+    "parcel": "^2.0.0-nightly.266"
   },
   "dependencies": {
     "drei": "^0.0.32",

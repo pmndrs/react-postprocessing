@@ -1,10 +1,11 @@
-import React, { useRef } from 'react'
+import React, { useRef, Suspense } from 'react'
 import { Canvas, useFrame } from 'react-three-fiber'
 import { EffectComposer, Glitch, Noise } from '../../dist/esm'
 import { BlendFunction } from 'postprocessing'
 import { OrbitControls } from 'drei'
 
-export const Box = () => {
+// eslint-disable-next-line react/prop-types
+export const Box = ({ size, ...props } = { size: 3 }) => {
   const ref = useRef()
 
   useFrame((state) => {
@@ -14,9 +15,9 @@ export const Box = () => {
   })
 
   return (
-    <mesh ref={ref}>
-      <boxGeometry args={[3, 3, 3]} attach="geometry" />
-      <meshBasicMaterial color="red" wireframe attach="material" />
+    <mesh ref={ref} {...props}>
+      <boxGeometry args={[size, size, size]} attach="geometry" />
+      <meshBasicMaterial color="red" attach="material" />
     </mesh>
   )
 }
@@ -28,10 +29,12 @@ const GlitchAndNoise = () => (
       <Canvas>
         <OrbitControls />
         <Box />
-        <EffectComposer smaa={false}>
-          <Glitch />
-          <Noise blendFunction={BlendFunction.DIVIDE} />
-        </EffectComposer>
+        <Suspense fallback={null}>
+          <EffectComposer>
+            <Glitch />
+            <Noise blendFunction={BlendFunction.DIVIDE} />
+          </EffectComposer>
+        </Suspense>
       </Canvas>
     </div>
   </>

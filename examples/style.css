@@ -1,7 +1,7 @@
 body {
   font-family: monospace;
-
-  background-color: black;
+  margin: 0;
+  background-color: #000000;
 }
 
 * {
@@ -21,6 +21,24 @@ nav {
   flex-direction: column;
 }
 
-.container {
-  height: 600px;
+canvas {
+  height: 100vh;
+}
+
+#menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+h2 {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  text-align: right;
 }
