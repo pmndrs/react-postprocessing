@@ -47,41 +47,18 @@ const App = () => (
       <boxGeometry args={[1, 1, 1]} />
       <meshBasicMaterial color="red" />
     </mesh>
-    <EffectComposer>
-      <Glitch />
-    </EffectComposer>
+    <Suspense>
+      <EffectComposer>
+        <Glitch />
+      </EffectComposer>
+    </Suspense>
   </Canvas>
 )
 ```
 
-##### using `effects` prop
-
-It is also possible to pass effects as an array. Note that you have to import effects from `postprocessing` in this case, not from `react-postprocessing`.
-
-```jsx
-import React, { useMemo } from 'react'
-import { EffectComposer, Glitch } from 'react-postprocessing'
-import { Canvas } from 'react-three-fiber'
-import { NoiseEffect } from 'postprocessing'
-
-const App = () => {
-  const Noise = useMemo(() => new NoiseEffect(/* props */))
-
-  return (
-    <Canvas>
-      <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="red" />
-      </mesh>
-      <EffectComposer effects={[Noise]} />
-    </Canvas>
-  )
-}
-```
-
 #### SMAA
 
-By default, `SMAA` is disabled in `EffectComposer`. When enabled, you can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold. Note that SMAA uses a loader so you have to wrap everything in `Suspense`:
+By default, `SMAA` is enabled in `EffectComposer`. When enabled, you can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold.
 
 ```jsx
 <Suspense fallback={null}>
@@ -106,9 +83,11 @@ const App = () => (
       <boxGeometry args={[1, 1, 1]} />
       <meshBasicMaterial color="red" />
     </mesh>
-    <EffectComposer>
-      <Glitch />
-    </EffectComposer>
+    <Suspense>
+      <EffectComposer>
+        <Glitch />
+      </EffectComposer>
+    </Suspense>
   </Canvas>
 )
 ```
@@ -128,9 +107,11 @@ const App = () => (
       <boxGeometry args={[1, 1, 1]} />
       <meshBasicMaterial color="red" />
     </mesh>
-    <EffectComposer>
-      <Glitch delay={new Vector(2, 2)} />
-    </EffectComposer>
+    <Suspense>
+      <EffectComposer>
+        <Glitch delay={new Vector(2, 2)} />
+      </EffectComposer>
+    </Suspense>
   </Canvas>
 )
 ```
@@ -166,27 +147,21 @@ const App = () => (
 
 > Currently types aren't being passed properly in `wrapEffect`, it returns `RefWithExoticComponent<any>` where instead of any should be the effect class. Feel free to submit a PR to fix it!
 
-#### Using `effects` prop of `EffectComposer`
+#### From scratch
 
-Another way is importing an effect and passing it to `effects`:
+If the effect doesn't use object literals for props, `PixelationEffect` for instance, you can wrap your own component using `forwardRef` and `useImperativeHandle` and define your own props:
 
 ```jsx
-import React, { useMemo } from 'react'
-import { EffectComposer, Glitch } from 'react-postprocessing'
-import { Canvas } from 'react-three-fiber'
-import { NoiseEffect } from 'postprocessing'
+import { forwardRef, useImperativeHandle, useMemo } from 'react'
+import { PixelationEffect } from 'postprocessing'
 
-const App = () => {
-  const Noise = useMemo(() => new NoiseEffect(/* props */))
+const Pixelation = forwardRef(({ granularity }, ref) => {
+  const effect = useMemo(() => new PixelationEffect(granularity || 5), [granularity])
 
-  return (
-    <Canvas>
-      <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="red" />
-      </mesh>
-      <EffectComposer effects={[Noise]} />
-    </Canvas>
-  )
-}
+  useImperativeHandle(ref, () => effect, [effect])
+
+  return null
+})
+
+export default Pixelation
 ```
