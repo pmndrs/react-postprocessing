@@ -1,10 +1,7 @@
-import { forwardRef, useImperativeHandle, useMemo } from 'react'
 import { SepiaEffect } from 'postprocessing'
+import { wrapEffect } from '../util'
+import { ForwardRefExoticComponent } from 'react'
 
-const Sepia = forwardRef((props: SepiaEffect, ref) => {
-  const effect = useMemo(() => new SepiaEffect(props), [props])
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+const Sepia: ForwardRefExoticComponent<SepiaEffect> = wrapEffect(SepiaEffect)
 
 export default Sepia

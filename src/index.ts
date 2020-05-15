@@ -7,8 +7,9 @@ import Pixelation from './effects/Pixelation'
 import Sepia from './effects/Sepia'
 import Vignette from './effects/Vignette'
 import Texture from './effects/Texture'
+import Outline from './effects/Outline'
 
-export { Glitch, SSAO, Noise, Bloom, Depth, Pixelation, Sepia, Vignette, Texture }
+export { Glitch, SSAO, Noise, Bloom, Depth, Pixelation, Sepia, Vignette, Texture, Outline }
 
 import { default as EffectComposer, EffectComposerContext } from './EffectComposer'
 

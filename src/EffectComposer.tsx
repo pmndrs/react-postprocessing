@@ -52,7 +52,6 @@ const EffectComposer = React.memo(
       const effectPass = new EffectPass(camera, ...refs.map((r) => r.current))
       composer.addPass(effectPass)
       effectPass.renderToScreen = true
-      return () => composer.reset()
     }, [children, composer, camera, normalPass, refs])
 
     // Memoize state, otherwise it would trigger all consumers on every render

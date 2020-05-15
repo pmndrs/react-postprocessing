@@ -32,7 +32,7 @@ const GlitchAndNoise = () => (
         <Suspense fallback={null}>
           <EffectComposer>
             <Glitch />
-            <Noise blendFunction={BlendFunction.DIVIDE} />
+            <Noise blendFunction={BlendFunction.SUBTRACT} />
           </EffectComposer>
         </Suspense>
       </Canvas>

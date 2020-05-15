@@ -11,7 +11,7 @@
     "isolatedModules": true,
     "jsx": "react",
     "preserveSymlinks": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "declaration": true,
     "outDir": "dist/esm",
     "paths": {

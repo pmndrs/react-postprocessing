@@ -1,10 +1,7 @@
-import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent } from 'react'
 import { GlitchEffect } from 'postprocessing'
+import { wrapEffect } from '../util'
+import { ForwardRefExoticComponent } from 'react'
 
-const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef((props, ref) => {
-  const effect = useMemo(() => new GlitchEffect(props), [props])
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+const Glitch: ForwardRefExoticComponent<GlitchEffect> = wrapEffect(GlitchEffect)
 
 export default Glitch

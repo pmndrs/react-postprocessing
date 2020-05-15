@@ -1,10 +1,7 @@
-import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent } from 'react'
 import { NoiseEffect } from 'postprocessing'
+import { wrapEffect } from '../util'
+import { ForwardRefExoticComponent } from 'react'
 
-const Noise: ForwardRefExoticComponent<NoiseEffect> = forwardRef((props, ref) => {
-  const effect = useMemo(() => new NoiseEffect(props), [props])
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+const Noise: ForwardRefExoticComponent<NoiseEffect> = wrapEffect(NoiseEffect)
 
 export default Noise

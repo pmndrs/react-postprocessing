@@ -7,6 +7,7 @@ import SSAOAndBloom from './pages/ssao-and-bloom'
 import PixelationDemo from './pages/pixelation'
 import SepiaVignette from './pages/sepia-vignette'
 import TextureDemo from './pages/texture'
+import OutlineDemo from './pages/outline'
 
 const links = [
   {
@@ -32,7 +33,12 @@ const links = [
   {
     href: '/texture',
     component: TextureDemo,
-    text: 'Texture',
+    text: 'Texture [broken]',
+  },
+  {
+    href: '/outline',
+    component: OutlineDemo,
+    text: 'Outline',
   },
 ]
 
