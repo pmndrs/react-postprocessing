@@ -1,6 +1,6 @@
 {
   "name": "react-postprocessing",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta3",
   "description": "postprocessing wrapper for React and react-three-fiber",
   "keywords": [
     "postprocessing",
@@ -26,8 +26,8 @@
   "scripts": {
     "build:esm": "tsc",
     "build:cjs": "tsc -p cjs.tsconfig.json",
-    "build": "pnpm run build:esm && pnpm run build:cjs",
-    "prepare": "pnpm run build",
+    "build": "yarn build:esm && pnpm run build:cjs",
+    "prepare": "yarn build",
     "eslint": "eslint src/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react"
