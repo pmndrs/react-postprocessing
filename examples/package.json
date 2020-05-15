@@ -2,17 +2,20 @@
   "name": "example",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.html"
+  "files": ["dist"],
   "scripts": {
     "start": "parcel  --no-autoinstall index.html -p 3000",
     "clean": "rm -rf .parcel-cache dist",
-    "prestart": "pnpm run clean"
+    "prestart": "yarn clean",
+    "build": "parcel build index.html --dist-dir dist",
+    "prebuild": "yarn clean"
   },
   "keywords": [],
   "author": "v1rtl",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.0.0-nightly.266"
+    "parcel": "^2.0.0-nightly.270"
   },
   "dependencies": {
     "drei": "^0.0.32",
