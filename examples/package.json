@@ -2,14 +2,24 @@
   "name": "example",
   "version": "1.0.0",
   "description": "",
-  "main": "index.html"
-  "files": ["dist"],
+  "main": "index.html",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "parcel  --no-autoinstall index.html -p 3000",
     "clean": "rm -rf .parcel-cache dist",
     "prestart": "yarn clean",
-    "build": "parcel build index.html --dist-dir dist",
+    "build": "parcel build index.html --target app --dist-dir dist",
     "prebuild": "yarn clean"
+  },
+  "targets": {
+    "app": {
+      "context": "browser",
+      "includeNodeModules": true,
+      "outputFormat": "esmodule",
+      "isLibrary": false
+    }
   },
   "keywords": [],
   "author": "v1rtl",

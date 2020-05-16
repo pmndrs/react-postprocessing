@@ -75,5 +75,8 @@
     "react-dom": "^16.13.1",
     "react-three-fiber": "^4.1.4",
     "three": "^0.116.1"
+  },
+  "dependencies": {
+    "react-merge-refs": "^1.0.0"
   }
 }

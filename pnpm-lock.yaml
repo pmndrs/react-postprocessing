@@ -1,3 +1,5 @@
+dependencies:
+  react-merge-refs: 1.0.0
 devDependencies:
   '@types/jest': 25.2.1
   '@types/react': 16.9.34
@@ -3977,7 +3979,6 @@ packages:
     resolution:
       integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
   /react-merge-refs/1.0.0:
-    dev: true
     resolution:
       integrity: sha512-VkvWuCR5VoTjb+VYUcOjkFo66HDv1Hw8VjKcwQtWr2lJnT8g7epRRyfz8+Zkl2WhwqNeqR0gIe0XYrBa9ePeXg==
   /react-promise-suspense/0.3.3:
@@ -5223,6 +5224,7 @@ specifiers:
   pretty-quick: ^2.0.1
   react: ^16.13.1
   react-dom: ^16.13.1
+  react-merge-refs: ^1.0.0
   react-three-fiber: ^4.1.4
   three: ^0.116.1
   tsd-jsdoc: ^2.5.0

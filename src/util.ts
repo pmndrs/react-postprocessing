@@ -6,13 +6,7 @@ export const wrapEffect = (effectImpl: any): ForwardRefExoticComponent<typeof ef
   return forwardRef((props: EffectType, ref) => {
     const effect = useMemo(() => new effectImpl(props), [props])
 
-    useImperativeHandle(
-      ref,
-      () => {
-        return effect
-      },
-      [effect]
-    )
+    useImperativeHandle(ref, () => effect, [effect])
 
     return null
   })

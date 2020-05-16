@@ -10,6 +10,7 @@ const OutlineDemo = () => {
   const ref = useRef()
 
   useEffect(() => {
+    console.log(ref)
     ref.current?.selection.set(selection)
   }, [selection])
 

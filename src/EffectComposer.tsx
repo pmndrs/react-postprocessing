@@ -10,6 +10,7 @@ import {
   SMAAImageLoader,
 } from 'postprocessing'
 import { HalfFloatType } from 'three'
+import mergeRefs from 'react-merge-refs'
 
 export const EffectComposerContext = createContext<{ composer: EffectComposerImpl; normalPass: NormalPass }>(null)
 
@@ -23,15 +24,20 @@ export type EffectComposerProps = {
 const EffectComposer = React.memo(
   ({ children, smaa = true, edgeDetection = 0.1, renderPriority = 1 }: EffectComposerProps) => {
     const { gl, scene, camera, size } = useThree()
-    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
+
+    // Load SMAA
+    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '')
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
       const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
+
       // Add render pass
       effectComposer.addPass(new RenderPass(scene, camera))
+
       // Create normal pass
       const pass = new NormalPass(scene, camera)
-      // Add SMAAEffect
+
+      // Initialiaze SMAAEffect
       if (smaa) {
         const smaaEffect = new SMAAEffect(...smaaProps)
         smaaEffect.colorEdgesMaterial.setEdgeDetectionThreshold(edgeDetection)
@@ -42,10 +48,9 @@ const EffectComposer = React.memo(
     useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
     useFrame((_, delta) => composer.render(delta), renderPriority)
 
-    const refs = useMemo(
-      (): RefObject<Effect>[] => [...new Array(React.Children.count(children))].map(createRef) as RefObject<Effect>[],
-      [children]
-    )
+    const refs: RefObject<Effect>[] = [...new Array(React.Children.count(children))].map(createRef) as RefObject<
+      Effect
+    >[]
 
     useEffect(() => {
       composer.addPass(normalPass)
@@ -59,9 +64,11 @@ const EffectComposer = React.memo(
 
     return (
       <EffectComposerContext.Provider value={state}>
-        {React.Children.map(children, (el: JSX.Element, i) => (
-          <el.type {...el.props} ref={refs[i]} />
-        ))}
+        {React.Children.map(children, (el: JSX.Element, i) => {
+          // refs don't work as they should yet
+
+          return <el.type {...el.props} ref={/* mergeRefs( [*/ refs[i] /*, el.props.ref]) */} />
+        })}
       </EffectComposerContext.Provider>
     )
   }
