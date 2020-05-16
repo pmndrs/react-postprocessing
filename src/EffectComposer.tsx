@@ -67,7 +67,7 @@ const EffectComposer = React.memo(
         {React.Children.map(children, (el: JSX.Element, i) => {
           // refs don't work as they should yet
 
-          return <el.type {...el.props} ref={/* mergeRefs( [*/ refs[i] /*, el.props.ref]) */} />
+          return <el.type {...el.props} ref={mergeRefs([refs[i], el.props.ref])} />
         })}
       </EffectComposerContext.Provider>
     )
