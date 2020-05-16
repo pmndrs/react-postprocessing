@@ -8,6 +8,7 @@ import PixelationDemo from './pages/pixelation'
 import SepiaVignette from './pages/sepia-vignette'
 import TextureDemo from './pages/texture'
 import OutlineDemo from './pages/outline'
+import ColorDepthDemo from './pages/colordepth'
 
 const links = [
   {
@@ -39,6 +40,11 @@ const links = [
     href: '/outline',
     component: OutlineDemo,
     text: 'Outline',
+  },
+  {
+    href: '/color-depth',
+    component: ColorDepthDemo,
+    text: 'Color Depth',
   },
 ]
 

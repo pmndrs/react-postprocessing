@@ -1,4 +1,4 @@
-import React, { createRef, useMemo, useEffect, createContext, RefObject } from 'react'
+import React, { createRef, useMemo, useEffect, createContext, RefObject, cloneElement } from 'react'
 import { useThree, useFrame, useLoader } from 'react-three-fiber'
 import {
   EffectComposer as EffectComposerImpl,
@@ -65,9 +65,7 @@ const EffectComposer = React.memo(
     return (
       <EffectComposerContext.Provider value={state}>
         {React.Children.map(children, (el: JSX.Element, i) => {
-          // refs don't work as they should yet
-
-          return <el.type {...el.props} ref={mergeRefs([refs[i], el.props.ref])} />
+          return cloneElement(el, { ref: refs[i] })
         })}
       </EffectComposerContext.Provider>
     )
