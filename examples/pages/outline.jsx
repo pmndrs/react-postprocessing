@@ -1,18 +1,32 @@
 import React, { useState, Suspense, useEffect, useRef } from 'react'
-import { Canvas, useFrame } from 'react-three-fiber'
+import { Canvas, useFrame, useThree } from 'react-three-fiber'
 import { EffectComposer, Outline } from '../../dist/esm'
 import { BlendFunction } from 'postprocessing'
-import { OrbitControls, Sky } from 'drei'
+import { OrbitControls } from 'drei'
 
 const OutlineDemo = () => {
-  const [selection, select] = useState()
+  const [selected, select] = useState(false)
 
-  const ref = useRef()
+  const outlineRef = useRef()
+
+  const meshRef = useRef()
+
+  const { gl } = useThree()
 
   useEffect(() => {
-    console.log(ref)
-    ref.current?.selection.set(selection)
-  }, [selection])
+    if (meshRef.current && outlineRef.current) {
+      const outlineSelection = outlineRef.current.selection
+
+      const mesh = meshRef.current
+
+      if (selected) {
+        outlineRef.current.clearSelection()
+        outlineRef.current.update(gl /* inputBuffer: WebGLRenderTarget, deltaTime: Number */)
+      } else {
+        outlineSelection.set([mesh])
+      }
+    }
+  }, [selected])
 
   return (
     <>
@@ -23,21 +37,31 @@ const OutlineDemo = () => {
           bottom: 0,
           left: 0,
         }}>
-        {JSON.stringify({ selected: typeof selection !== 'undefined' })}
+        {JSON.stringify({ selected })}
       </div>
       <div className="container">
-        <Canvas>
+        <Canvas
+          gl={{
+            alpha: true,
+          }}>
           <OrbitControls />
           <pointLight position={[0, -1, 1]} />
           <ambientLight color="green" />
           <directionalLight color="white" position={[0, 1, 1]} />
-          <mesh onClick={(e) => select(e)}>
+          <mesh ref={meshRef} onClick={() => select(!selected)}>
             <coneGeometry args={[1, 3]} attach="geometry" />
             <meshPhongMaterial color="blue" attach="material" />
           </mesh>
           <Suspense fallback={null}>
             <EffectComposer>
-              <Outline ref={ref} />
+              <Outline
+                xRay
+                edgeStrength={2.5}
+                pulseSpeed={0.0}
+                visibleEdgeColor={0xffffff}
+                hiddenEdgeColor={0x22090a}
+                ref={outlineRef}
+              />
             </EffectComposer>
           </Suspense>
         </Canvas>

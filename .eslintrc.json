@@ -18,7 +18,8 @@
   "env": {
     "browser": true,
     "shared-node-browser": true,
-    "node": true
+    "node": true,
+    "es6": true
   },
   "settings": {
     "react": {

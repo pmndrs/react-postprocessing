@@ -72,7 +72,7 @@ const EffectComposer = React.memo(
             },
             i
           ) => {
-            const multiRef = mergeRefs([el.ref, refs[i]])
+            const multiRef = mergeRefs([refs[i], el.ref])
             return cloneElement(el, { ref: multiRef })
           }
         )}
