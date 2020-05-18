@@ -18,6 +18,9 @@ yarn add postprocessing react-postprocessing
   <a href="https://codesandbox.io/s/react-postprocessing-pixelation-demo-tcct8">
   <img src="previews/pixelation.gif" />
   </a>
+  <a href="https://codesandbox.io/s/react-postprocessing-outline-demo-eubgn">
+	<img src="previews/outline.gif" />
+  </a>
 </p>
 
 <p align="middle">
