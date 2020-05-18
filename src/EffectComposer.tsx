@@ -1,4 +1,4 @@
-import React, { createRef, useMemo, useEffect, createContext, RefObject, cloneElement } from 'react'
+import React, { createRef, useMemo, useEffect, createContext, RefObject, cloneElement, Ref } from 'react'
 import { useThree, useFrame, useLoader } from 'react-three-fiber'
 import {
   EffectComposer as EffectComposerImpl,
@@ -26,7 +26,7 @@ const EffectComposer = React.memo(
     const { gl, scene, camera, size } = useThree()
 
     // Load SMAA
-    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '')
+    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
       const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
@@ -64,9 +64,18 @@ const EffectComposer = React.memo(
 
     return (
       <EffectComposerContext.Provider value={state}>
-        {React.Children.map(children, (el: JSX.Element, i) => {
-          return cloneElement(el, { ref: refs[i] })
-        })}
+        {React.Children.map(
+          children,
+          (
+            el: JSX.Element & {
+              ref: Ref<Effect>
+            },
+            i
+          ) => {
+            const multiRef = mergeRefs([el.ref, refs[i]])
+            return cloneElement(el, { ref: multiRef })
+          }
+        )}
       </EffectComposerContext.Provider>
     )
   }
