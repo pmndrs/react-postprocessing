@@ -10,7 +10,7 @@ import {
   SMAAImageLoader,
 } from 'postprocessing'
 import { HalfFloatType } from 'three'
-import useMergedRef from '@react-hook/merged-ref'
+import mergeRefs from 'react-merge-refs'
 
 export const EffectComposerContext = createContext<{ composer: EffectComposerImpl; normalPass: NormalPass }>(null)
 
@@ -72,7 +72,7 @@ const EffectComposer = React.memo(
             },
             i
           ) => {
-            const multiRef = useMergedRef(el.ref, refs[i])
+            const multiRef = mergeRefs([el.ref, refs[i]])
             return cloneElement(el, { ref: multiRef })
           }
         )}
