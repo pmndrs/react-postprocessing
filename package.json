@@ -1,6 +1,6 @@
 {
   "name": "react-postprocessing",
-  "version": "1.0.0-beta4",
+  "version": "1.0.0-beta6",
   "description": "postprocessing wrapper for React and react-three-fiber",
   "keywords": [
     "postprocessing",
@@ -77,6 +77,6 @@
     "three": "^0.116.1"
   },
   "dependencies": {
-    "react-merge-refs": "^1.0.0"
+    "@react-hook/merged-ref": "^1.1.1"
   }
 }
