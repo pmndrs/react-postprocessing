@@ -2,7 +2,8 @@
 
 Here's a list of all wrapped effects with demos, example usage (with props) and reference to postprocessing docs.
 
-* [Glitch](#glitch--)
+* [`<Glitch />`](#glitch--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx)
+* [`<Noise />`](#noise--)  [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx)
 
 
 ##  `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx)
@@ -23,7 +24,7 @@ import { GlitchMode } from 'postrocessing'
 />
 ```
 
-## `<Noise />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx)
+## ]
 
 [Docs reference](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 
