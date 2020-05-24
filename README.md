@@ -1,5 +1,11 @@
 # react-postprocessing
 
+<p align="middle">
+	<a href="https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj">
+		<img src="/vases.gif" />
+	</a>
+</p>
+
 [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for React and [react-three-fiber](https://github.com/react-spring/react-three-fiber) for simplied effects setup. Instead of manually initializing the composer and adding required passes you can simply put all the effects inside of `<EffectComposer />`.
 
 ## Installation
@@ -7,14 +13,6 @@
 ```sh
 yarn add postprocessing react-postprocessing
 ```
-
-## Demos
-
-<p align="middle">
-	<a href="https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj">
-		<img src="/vases.gif" />
-	</a>
-</p>
 
 ## Getting Started
 
