@@ -57,6 +57,9 @@
     "@babel/preset-env": "7.9.5",
     "@babel/preset-react": "7.9.4",
     "@babel/preset-typescript": "^7.9.0",
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-json": "^4.0.3",
+    "@rollup/plugin-node-resolve": "^8.0.0",
     "@types/jest": "^25.2.1",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
@@ -77,15 +80,12 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-three-fiber": "^4.1.4",
+    "rimraf": "^3.0.2",
     "rollup": "^2.7.2",
     "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-size-snapshot": "^0.11.0",
     "three": "^0.116.1",
-    "tsd-jsdoc": "^2.5.0",
-    "rimraf": "^3.0.2"
+    "tsd-jsdoc": "^2.5.0"
   },
   "peerDependencies": {
     "postprocessing": "^6.13.5",
