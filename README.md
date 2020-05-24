@@ -12,7 +12,7 @@ yarn add postprocessing react-postprocessing
 
 <p align="middle">
 	<a href="https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj">
-		<img src="/demo.gif" />
+		<img src="/vases.gif" />
 	</a>
 </p>
 
