@@ -11,20 +11,9 @@ yarn add postprocessing react-postprocessing
 ## Demos
 
 <p align="middle">
-  <a href="https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx"><img src="previews/glitch-and-noise.gif" /></a>
-  <a href="https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf">
-  <img src="previews/ssao-and-bloom.gif" />
-  </a>
-  <a href="https://codesandbox.io/s/react-postprocessing-pixelation-demo-tcct8">
-  <img src="previews/pixelation.gif" />
-  </a>
-  <a href="https://codesandbox.io/s/react-postprocessing-outline-demo-eubgn">
-	<img src="previews/outline.gif" />
-  </a>
-</p>
-
-<p align="middle">
-  <i>Click on a demo to inspect code and full view.</i>
+	<a href="https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj">
+		<img src="/demo.gif" />
+	</a>
 </p>
 
 ## Getting Started
