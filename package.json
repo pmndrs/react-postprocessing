@@ -10,11 +10,14 @@
     "webgl",
     "3d"
   ],
-  "author": "v1rtl",
+  "contributors": [
+    "Paul Henschel <drcmda@gmail.com>",
+    "v1rtl"
+  ],
   "license": "MIT",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "sideEffects": false,
   "files": [
     "dist"
@@ -24,13 +27,13 @@
     "url": "git+https://github.com/react-spring/react-postprocessing.git"
   },
   "scripts": {
-    "build:esm": "tsc",
-    "build:cjs": "tsc -p cjs.tsconfig.json",
-    "build": "yarn build:esm && pnpm run build:cjs",
-    "prepare": "yarn build",
+    "prebuild": "rimraf dist && npm run typegen",
+    "build": "rollup -c",
+    "prepare": "npm run build",
     "eslint": "eslint src/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react"
+    "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
+    "typegen": "tsc --emitDeclarationOnly || true"
   },
   "husky": {
     "hooks": {
@@ -46,6 +49,14 @@
     "printWidth": 120
   },
   "devDependencies": {
+    "@babel/core": "7.9.0",
+    "@babel/plugin-transform-modules-commonjs": "7.9.0",
+    "@babel/plugin-transform-parameters": "7.9.5",
+    "@babel/plugin-transform-runtime": "7.9.0",
+    "@babel/plugin-transform-template-literals": "7.8.3",
+    "@babel/preset-env": "7.9.5",
+    "@babel/preset-react": "7.9.4",
+    "@babel/preset-typescript": "^7.9.0",
     "@types/jest": "^25.2.1",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.6",
@@ -66,8 +77,15 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-three-fiber": "^4.1.4",
+    "rollup": "^2.7.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-size-snapshot": "^0.11.0",
     "three": "^0.116.1",
-    "tsd-jsdoc": "^2.5.0"
+    "tsd-jsdoc": "^2.5.0",
+    "rimraf": "^3.0.2"
   },
   "peerDependencies": {
     "postprocessing": "^6.13.5",

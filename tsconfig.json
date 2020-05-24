@@ -14,7 +14,7 @@
     "preserveSymlinks": true,
     "baseUrl": ".",
     "declaration": true,
-    "outDir": "dist/esm",
+    "outDir": "dist",
     "paths": {
       "*": ["types/*"]
     }
