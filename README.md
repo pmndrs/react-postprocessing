@@ -6,7 +6,9 @@
 	</a>
 </p>
 
-[postprocessing](https://vanruesc.github.io/postprocessing) wrapper for React and [react-three-fiber](https://github.com/react-spring/react-three-fiber) for simplied effects setup. Instead of manually initializing the composer and adding required passes you can simply put all the effects inside of `<EffectComposer />`.
+[postprocessing](https://vanruesc.github.io/postprocessing) wrapper for React.
+
+Instead of manually initializing the composer and adding required passes you can simply put all the effects inside of `<EffectComposer />`.
 
 ## Installation
 
