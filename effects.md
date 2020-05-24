@@ -24,7 +24,7 @@ import { GlitchMode } from 'postrocessing'
 />
 ```
 
-## ]
+## `<Noise />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx)
 
 [Docs reference](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 
