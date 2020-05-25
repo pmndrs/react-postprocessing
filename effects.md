@@ -13,7 +13,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 import { Glitch } from 'react-postprocessing'
 import { GlitchMode } from 'postrocessing'
 
-;<Glitch
+<Glitch
   delay={[1.5, 3.5]} // min and max glitch delay
   duration={[0.6, 1.0]} // min and max glitch duration
   strength={[0.3, 1.0]} // min and max glitch strength
@@ -29,7 +29,7 @@ import { GlitchMode } from 'postrocessing'
 import { Noise } from 'react-postprocessing'
 import { BlendFunction } from 'postprocessing'
 
-;<Noise
+<Noise
   premultiply // enables or disables noise premultiplication
   blendFunction={BlendFunction.ADD} // blend mode
 />
@@ -41,7 +41,7 @@ import { BlendFunction } from 'postprocessing'
 import { Bloom } from 'react-postprocessing'
 import { BlurPass, Resizer, KernelSize } from 'postprocessing'
 
-;<Bloom
+<Bloom
   intensity={1.0} // The bloom intensity.
   blurPass={undefined} // A blur pass.
   width={Resizer.AUTO_SIZE} // render width
