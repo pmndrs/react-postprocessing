@@ -2,7 +2,7 @@
 
 <p align="middle">
 	<a href="https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj">
-		<img src="/vases.gif" />
+		<img src="vases.gif" />
 	</a>
 </p>
 
@@ -15,6 +15,10 @@ Instead of manually initializing the composer and adding required passes you can
 ```sh
 yarn add postprocessing react-postprocessing
 ```
+
+## Effects
+
+For a list of effects, examples and props usage, check [effects.md](https://github.com/react-spring/react-postprocessing/blob/master/effects.md).
 
 ## Getting Started
 

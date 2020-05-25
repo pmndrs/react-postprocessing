@@ -84,8 +84,7 @@
     "rollup": "^2.7.2",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-size-snapshot": "^0.11.0",
-    "three": "^0.116.1",
-    "tsd-jsdoc": "^2.5.0"
+    "three": "^0.116.1"
   },
   "peerDependencies": {
     "postprocessing": "^6.13.5",
