@@ -1,4 +1,4 @@
-import { Color, Vector3 } from 'three'
+import { Color } from 'three'
 import React, { Suspense } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { EffectComposer, Bloom, SSAO, Glitch } from 'react-postprocessing'
@@ -26,7 +26,7 @@ export default function App() {
         <EffectComposer>
           <Bloom luminanceThreshold={0.6} />
           <SSAO />
-          <Glitch delay={new Vector3(4, 4, 4)} />
+          <Glitch delay={[1, 3]} duration={[0.5, 1]} ratio={1} strength={[0.3, 0.6]} />
         </EffectComposer>
       </Suspense>
     </Canvas>
