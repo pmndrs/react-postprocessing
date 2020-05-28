@@ -64,23 +64,21 @@ const EffectComposer = React.memo(
 
     return (
       <EffectComposerContext.Provider value={state}>
-        {React.Children.toArray(children)
-          // Filter out null / boolean values
-          .filter((ch) => ch && typeof ch !== 'boolean')
-          .map(
-            (
-              el: JSX.Element & {
-                ref: Ref<Effect>
-              },
-              i
-            ) => {
-              const multiRef = mergeRefs([refs[i], el.ref])
+        {React.Children.map(
+          children,
+          (
+            el: JSX.Element & {
+              ref: Ref<Effect>
+            },
+            i
+          ) => {
+            const multiRef = mergeRefs([refs[i], el.ref])
 
-              if (el) {
-                return cloneElement(el, { ref: multiRef })
-              }
+            if (el) {
+              return cloneElement(el, { ref: multiRef })
             }
-          )}
+          }
+        )}
       </EffectComposerContext.Provider>
     )
   }
