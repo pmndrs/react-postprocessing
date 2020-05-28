@@ -31,23 +31,27 @@ All effects are consumed by effect composer, `EffectComposer`, that creates pass
 You can pass effects using children:
 
 ```jsx
-import React from 'react'
+import React, { useState } from 'react'
 import { EffectComposer, Glitch } from 'react-postprocessing'
 import { Canvas } from 'react-three-fiber'
 
-const App = () => (
-  <Canvas>
-    <mesh>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="red" />
-    </mesh>
-    <Suspense>
-      <EffectComposer>
-        <Glitch />
-      </EffectComposer>
-    </Suspense>
-  </Canvas>
-)
+const App = () => {
+  const [isTriggered, setTriggered] = useState(false)
+
+  return (
+    <Canvas>
+      <mesh onClick={() => setTriggered(!isTriggered)}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshBasicMaterial color="red" />
+      </mesh>
+      <Suspense>
+        <EffectComposer>
+          <Glitch active={isTriggered} />
+        </EffectComposer>
+      </Suspense>
+    </Canvas>
+  )
+}
 ```
 
 #### SMAA
@@ -103,7 +107,7 @@ const App = () => (
     </mesh>
     <Suspense>
       <EffectComposer>
-        <Glitch delay={new Vector(2, 2)} />
+        <Glitch delay={[1, 2]} />
       </EffectComposer>
     </Suspense>
   </Canvas>
