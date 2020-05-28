@@ -1,15 +1,17 @@
 import { Color } from 'three'
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import { Canvas } from 'react-three-fiber'
 import { EffectComposer, Bloom, SSAO, Glitch } from 'react-postprocessing'
 import Model from './Model'
 
 export default function App() {
+  const [hovered, setHover] = useState(false)
+
   return (
     <Canvas
       shadowMap
       colorManagement
-      gl={{ alpha: false, logarithmicDepthBuffer: true }}
+      gl={{ alpha: false, logarithmicDepthBuffer: true, precision: 'lowp' }}
       camera={{ position: [0, 2.5, 25], fov: 35 }}
       onCreated={({ gl, scene }) => {
         gl.toneMappingExposure = 1.5
@@ -22,11 +24,11 @@ export default function App() {
       <directionalLight position={[10, 5, -20]} angle={2} color="#ffc530" intensity={2} />
       <pointLight position={[-10, -10, -10]} intensity={5} />
       <Suspense fallback={null}>
-        <Model />
+        <Model onPointerOver={(e) => setHover(true)} onPointerOut={(e) => setHover(false)} />
         <EffectComposer>
           <Bloom luminanceThreshold={0.6} />
           <SSAO />
-          <Glitch delay={[1, 3]} duration={[0.5, 1]} ratio={1} strength={[0.3, 0.6]} />
+          <Glitch delay={[0, 0]} duration={[0.5, 1]} active={hovered} ratio={1} strength={[0.3, 0.6]} />
         </EffectComposer>
       </Suspense>
     </Canvas>

@@ -1,5 +1,5 @@
-import { GlitchEffect } from 'postprocessing'
-import { ForwardRefExoticComponent, useMemo, useImperativeHandle, forwardRef } from 'react'
+import { GlitchEffect, GlitchMode } from 'postprocessing'
+import { ForwardRefExoticComponent, useMemo, useImperativeHandle, forwardRef, useEffect } from 'react'
 import { ReactThreeFiber } from 'react-three-fiber'
 import { useVector2 } from '../util'
 
@@ -17,7 +17,11 @@ const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef((props: Glitc
 
   const strength = useVector2(props, 'strength')
 
+  const mode = props.active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
+
   const effect = useMemo(() => new GlitchEffect({ ...props, delay, duration, strength }), [props])
+
+  effect.mode = mode
 
   useImperativeHandle(ref, () => effect, [effect])
 

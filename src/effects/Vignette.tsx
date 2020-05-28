@@ -1,10 +1,7 @@
-import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent } from 'react'
+import { ForwardRefExoticComponent } from 'react'
 import { VignetteEffect } from 'postprocessing'
+import { wrapEffect } from '../util'
 
-const Vignette: ForwardRefExoticComponent<VignetteEffect> = forwardRef((props, ref) => {
-  const effect = useMemo(() => new VignetteEffect(props), [props])
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+const Vignette: ForwardRefExoticComponent<VignetteEffect> = wrapEffect(VignetteEffect)
 
 export default Vignette

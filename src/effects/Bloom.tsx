@@ -1,10 +1,7 @@
-import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent } from 'react'
-import { BloomEffect, BlendFunction, KernelSize } from 'postprocessing'
+import { ForwardRefExoticComponent } from 'react'
+import { BloomEffect } from 'postprocessing'
+import { wrapEffect } from '../util'
 
-const Bloom: ForwardRefExoticComponent<BloomEffect> = forwardRef((props, ref) => {
-  const effect = useMemo(() => new BloomEffect(props), [props])
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+const Bloom: ForwardRefExoticComponent<BloomEffect> = wrapEffect(BloomEffect)
 
 export default Bloom

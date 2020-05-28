@@ -27,9 +27,9 @@
     "url": "git+https://github.com/react-spring/react-postprocessing.git"
   },
   "scripts": {
-    "prebuild": "rimraf dist && npm run typegen",
+    "prebuild": "rimraf dist && yarn typegen",
     "build": "rollup -c",
-    "prepare": "npm run build",
+    "prepare": "yarn build",
     "eslint": "eslint src/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",

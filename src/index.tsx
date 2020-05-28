@@ -12,6 +12,4 @@ import ColorDepth from './effects/ColorDepth'
 
 export { Glitch, SSAO, Noise, Bloom, Depth, Pixelation, Sepia, Vignette, Texture, Outline, ColorDepth }
 
-import { default as EffectComposer, EffectComposerContext } from './EffectComposer'
-
-export { EffectComposer, EffectComposerContext }
+export { default as EffectComposer, EffectComposerContext } from './EffectComposer'
