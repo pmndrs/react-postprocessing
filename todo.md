@@ -4,26 +4,26 @@ List of wrapped effects at the moment:
 
 - [x] SMAA
 
-- [x] [Bloom](https://github.com/react-spring/react-postprocessing/blob/src/effects/Bloom.ts)
-- [x] [Depth](https://github.com/react-spring/react-postprocessing/blob/src/effects/Depth.ts)
-- [x] [Glitch](https://github.com/react-spring/react-postprocessing/blob/src/effects/Glitch.ts)
-- [x] [Noise](https://github.com/react-spring/react-postprocessing/blob/src/effects/Noise.ts)
-- [x] [Pixelation](https://github.com/react-spring/react-postprocessing/blob/src/effects/Pixelation.ts)
-- [x] [SSAO](https://github.com/react-spring/react-postprocessing/blob/src/effects/SSAO.ts)
-- [x] [Vignette](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Vignette.ts)
+- [x] [Bloom](https://github.com/react-spring/react-postprocessing/blob/src/effects/Bloom.tsx)
+- [x] [Depth](https://github.com/react-spring/react-postprocessing/blob/src/effects/Depth.tsx)
+- [x] [Glitch](https://github.com/react-spring/react-postprocessing/blob/src/effects/Glitch.tsx)
+- [x] [Noise](https://github.com/react-spring/react-postprocessing/blob/src/effects/Noise.tsx)
+- [x] [Pixelation](https://github.com/react-spring/react-postprocessing/blob/src/effects/Pixelation.tsx)
+- [x] [SSAO](https://github.com/react-spring/react-postprocessing/blob/src/effects/SSAO.tsx)
+- [x] [Vignette](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Vignette.tsx)
 - [ ] Texture
-- [x] [Sepia](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Sepia.ts)
+- [x] [Sepia](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Sepia.tsx)
 - [ ] Bokeh
-- [ ] BrightnessContrast
+- [x] [BrightnessContrast](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/BrightnessContrast.tsx)
 - [ ] ChromaticAberration
 - [ ] ColorAverage
-- [ ] ColorDepth
-- [ ] DepthOfField
-- [ ] DotScreen
+- [x] [ColorDepth](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/ColorDepth.tsx)
+- [x] [DepthOfField](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/DepthOfField.tsx)
+- [x] [DotScreen](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/DotScreen.tsx)
 - [ ] GammaCorrection
 - [ ] GodRays
 - [ ] Grid
-- [ ] HueSaturation
+- [x] [HueSaturation](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/HueSaturation.tsx)
 - [ ] Outline
 - [ ] RealisticBokeh
 - [ ] Scanline
