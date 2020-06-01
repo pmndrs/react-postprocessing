@@ -9,7 +9,8 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<Vignette />`](#vignette--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
 - [`<Sepia />`](#sepia--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SepiaEffect.js~SepiaEffect.html)
 - [`<DotScreen />`](#dotscreen--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-dotscreen-demo-vthef) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/DotScreenEffect.js~DotScreenEffect.html)
-- [`<Pixelation />`](#pixlation--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-pixelation-demo-q4x1h) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/PixelationEffect.js~PixelationEffect.html)
+- [`<Pixelation />`](#pixelation--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-pixelation-demo-q4x1h) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/PixelationEffect.js~PixelationEffect.html)
+- [`<HueSaturation />`](#huesaturation--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
 
 ## `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
@@ -114,6 +115,21 @@ import { Pixelation } from 'react-postprocessing'
 return (
   <Pixelation
     granularity={5} // pixel granularity
+  />
+)
+```
+
+## `<HueSaturation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
+
+```jsx
+import { HueSaturation } from 'react-postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <HueSaturation
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    hue={0} // hue in radians
+    saturation={0} // saturation in radians
   />
 )
 ```
