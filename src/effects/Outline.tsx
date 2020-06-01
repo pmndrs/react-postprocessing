@@ -2,7 +2,7 @@ import { OutlineEffect } from 'postprocessing'
 import { forwardRef, useMemo, useImperativeHandle } from 'react'
 import { useThree } from 'react-three-fiber'
 
-const Outline = forwardRef((props: OutlineEffect, ref) => {
+export const Outline = forwardRef((props: OutlineEffect, ref) => {
   const { scene, camera } = useThree()
 
   const effect = useMemo(
@@ -20,5 +20,3 @@ const Outline = forwardRef((props: OutlineEffect, ref) => {
   useImperativeHandle(ref, () => effect, [effect])
   return null
 })
-
-export default Outline

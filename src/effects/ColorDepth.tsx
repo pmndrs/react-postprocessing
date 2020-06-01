@@ -1,6 +1,5 @@
 import { ColorDepthEffect } from 'postprocessing'
 import { wrapEffect } from '../util'
+import { ForwardRefExoticComponent } from 'react'
 
-const ColorDepth = wrapEffect(ColorDepthEffect)
-
-export default ColorDepth
+export const ColorDepth: ForwardRefExoticComponent<ColorDepthEffect> = wrapEffect(ColorDepthEffect)

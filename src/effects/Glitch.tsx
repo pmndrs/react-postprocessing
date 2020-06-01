@@ -3,14 +3,15 @@ import { ForwardRefExoticComponent, useMemo, useImperativeHandle, forwardRef, us
 import { ReactThreeFiber } from 'react-three-fiber'
 import { useVector2 } from '../util'
 
-type GlitchProps = GlitchEffect & {
-  delay?: ReactThreeFiber.Vector2
-  duration?: ReactThreeFiber.Vector2
-  chromaticAberrationOffset?: ReactThreeFiber.Vector2
-  strength?: ReactThreeFiber.Vector2
-}
+export type GlitchProps = GlitchEffect &
+  Partial<{
+    delay: ReactThreeFiber.Vector2
+    duration: ReactThreeFiber.Vector2
+    chromaticAberrationOffset: ReactThreeFiber.Vector2
+    strength: ReactThreeFiber.Vector2
+  }>
 
-const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef((props: GlitchProps, ref) => {
+export const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef((props: GlitchProps, ref) => {
   const delay = useVector2(props, 'delay')
 
   const duration = useVector2(props, 'duration')
@@ -31,5 +32,3 @@ const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef((props: Glitc
 
   return null
 })
-
-export default Glitch

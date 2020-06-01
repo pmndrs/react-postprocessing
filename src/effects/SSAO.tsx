@@ -3,7 +3,7 @@ import { useThree } from 'react-three-fiber'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
 import { EffectComposerContext } from '../EffectComposer'
 
-const SSAO = forwardRef((props, ref) => {
+export const SSAO = forwardRef((props, ref) => {
   const { camera } = useThree()
   const { normalPass } = useContext(EffectComposerContext)
   const effect = useMemo(
@@ -27,5 +27,3 @@ const SSAO = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => effect, [effect])
   return null
 })
-
-export default SSAO
