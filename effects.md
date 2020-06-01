@@ -6,6 +6,8 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<Noise />`](#noise--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx)
   [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 - [`<Bloom />`](#bloom--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
+- [`<Vignette />`](#vignette--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
+
 
 ## `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
@@ -54,6 +56,35 @@ return (
     kernelSize={KernelSize.LARGE} // blur kernel size
     luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
     luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+  />
+)
+```
+
+## `<Vignette />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
+
+```jsx
+import { Vignette } from 'react-postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Vignette
+    offset={0.5} // vignette offset
+    darkness={0.5} // vignette darkness
+    eskill={false} // Eskil's vignette technique
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## `<Sepia />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SepiaEffect.js~SepiaEffect.html)
+
+```jsx
+import { Sepia } from 'react-postprocessing'
+
+return (
+  <Sepia
+    intensity={1.0} // sepia intensity
+    blendFunction={BlendFunction.NORMAL} // blend mode
   />
 )
 ```
