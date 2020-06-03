@@ -13,5 +13,6 @@ export * from './effects/Sepia'
 export * from './effects/SSAO'
 export * from './effects/Texture'
 export * from './effects/Vignette'
+export * from './effects/ScanlineEffect'
 
 export { default as EffectComposer, EffectComposerContext } from './EffectComposer'
