@@ -23,7 +23,7 @@ List of wrapped effects at the moment:
 - [ ] Grid
 - [x] [HueSaturation](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/HueSaturation.tsx)
 - [ ] Outline
-- [ ] Scanline
+- [x] [Scanline](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Scanline.tsx)
 - [ ] SelectiveBloom
 - [ ] ShockWave
 - [x] [ToneMapping](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/ToneMapping.tsx)
