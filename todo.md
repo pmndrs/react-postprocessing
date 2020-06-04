@@ -27,4 +27,4 @@ List of wrapped effects at the moment:
 - [ ] Scanline
 - [ ] SelectiveBloom
 - [ ] ShockWave
-- [ ] ToneMapping
+- [x] [ToneMapping](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/ToneMapping.tsx)
