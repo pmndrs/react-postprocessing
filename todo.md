@@ -13,7 +13,6 @@ List of wrapped effects at the moment:
 - [x] [Vignette](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Vignette.tsx)
 - [ ] Texture
 - [x] [Sepia](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Sepia.tsx)
-- [ ] Bokeh
 - [x] [BrightnessContrast](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/BrightnessContrast.tsx)
 - [ ] ChromaticAberration
 - [ ] ColorAverage
