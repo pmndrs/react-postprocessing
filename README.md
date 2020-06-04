@@ -1,5 +1,7 @@
 # react-postprocessing
 
+![npm](https://img.shields.io/npm/v/react-postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-postprocessing?style=flat-square)
+
 <p align="middle">
 	<a href="https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj">
 		<img src="vases.gif" />
@@ -8,7 +10,9 @@
 
 [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for React.
 
-Instead of manually initializing the composer and adding required passes you can simply put all the effects inside of `<EffectComposer />`.
+## Why
+
+Instead of manually initializing the composer and adding required passes you can import the effects as components and put them inside `<EffectComposer />`.
 
 ## Installation
 
@@ -72,7 +76,7 @@ When you want to add a new effect your `react-three-fiber` component you first n
 
 ```jsx
 import React from 'react'
-import { EffectComposer, Glitch } from 'react-postprocessing'
+import { EffectComposer, Scanline } from 'react-postprocessing'
 import { Canvas } from 'react-three-fiber'
 
 const App = () => (
@@ -83,7 +87,7 @@ const App = () => (
     </mesh>
     <Suspense>
       <EffectComposer>
-        <Glitch />
+        <Scanline />
       </EffectComposer>
     </Suspense>
   </Canvas>
@@ -92,7 +96,7 @@ const App = () => (
 
 ### Effects settings
 
-Every effects inherits all the props from original `postprocessing` class, for example:
+Every effect inherits all the props from original `postprocessing` class, for example:
 
 ```jsx
 import React from 'react'
@@ -107,7 +111,8 @@ const App = () => (
     </mesh>
     <Suspense>
       <EffectComposer>
-        <Glitch delay={[1, 2]} />
+      	{/* min and max duration */}
+        <Glitch duration={[1, 2]} />
       </EffectComposer>
     </Suspense>
   </Canvas>
@@ -155,13 +160,36 @@ If the effect doesn't use object literals for props, `PixelationEffect` for inst
 import { forwardRef, useImperativeHandle, useMemo } from 'react'
 import { PixelationEffect } from 'postprocessing'
 
-const Pixelation = forwardRef(({ granularity }, ref) => {
-  const effect = useMemo(() => new PixelationEffect(granularity || 5), [granularity])
+export const Pixelation = forwardRef(({ granularity = 5 }, ref) => {
+  const effect = useMemo(() => new PixelationEffect(granularity), [granularity])
 
   useImperativeHandle(ref, () => effect, [effect])
 
   return null
 })
+```
 
-export default Pixelation
+In case you want to do add a custom prop that isn't inherited from `postprocessing` you should watch this prop with `useLayoutEffect`:
+
+```jsx
+import { forwardRef, useMemo, useImperativeHandle, useLayoutEffect } from 'react'
+import { useThree, ReactThreeFiber } from 'react-three-fiber'
+import { DepthOfFieldEffect } from 'postprocessing'
+import { Texture } from 'three'
+
+export const DepthOfField = forwardRef(({ target, depthTexture, ...props }, ref) => {
+  const { camera } = useThree()
+
+  const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [props])
+
+  // custom `depthTexture` prop
+  useLayoutEffect(() => {
+    if (depthTexture) {
+      effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
+    }
+  }, [depthTexture])
+
+  useImperativeHandle(ref, () => effect, [effect])
+  return null
+})
 ```
