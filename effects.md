@@ -11,6 +11,8 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<DotScreen />`](#dotscreen--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-dotscreen-demo-vthef) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/DotScreenEffect.js~DotScreenEffect.html)
 - [`<Pixelation />`](#pixelation--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-pixelation-demo-q4x1h) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/PixelationEffect.js~PixelationEffect.html)
 - [`<HueSaturation />`](#huesaturation--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
+- [`<BrightnessContrast />`](#brightnesscontrast--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-brightnesscontrast-demo-lhl6z) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BrightnessContrastEffect.js~BrightnessContrastEffect.html)
+- [`<ToneMapping />`](#tonemapping--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
 
 ## `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
@@ -130,6 +132,38 @@ return (
     blendFunction={BlendFunction.NORMAL} // blend mode
     hue={0} // hue in radians
     saturation={0} // saturation in radians
+  />
+)
+```
+
+## `<BrightnessContrast />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-brightnesscontrast-demo-lhl6z) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BrightnessContrastEffect.js~BrightnessContrastEffect.html)
+
+```jsx
+import { BrightnessContrast } from 'postprocessing'
+
+return (
+  <BrightnessContrast
+    brightness={0} // brightness. min: -1, max: 1
+    contrast={0} // contrast: min -1, max: 1
+  />
+)
+```
+
+## `<ToneMapping />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
+
+```jsx
+import { ToneMapping } from 'react-postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <ToneMapping
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    adaptive={true} // toggle adaptive luminance map usage
+    resolution={256} // texture resolution of the luminance map
+    middleGrey={0.6} // middle grey factor
+    maxLuminance={16.0} // maximum luminance
+    averageLuminance={1.0} // average luminance
+    adaptationRate={1.0} // luminance adaptation rate
   />
 )
 ```
