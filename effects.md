@@ -13,6 +13,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<HueSaturation />`](#huesaturation---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
 - [`<BrightnessContrast />`](#brightnesscontrast--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-brightnesscontrast-demo-lhl6z) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BrightnessContrastEffect.js~BrightnessContrastEffect.html)
 - [`<ToneMapping />`](#tonemapping---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
+- [`<Scanline />`](#scanline---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-scanline-demo-luo42) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ScanlineEffect.js~ScanlineEffect.html)
 
 ## `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
@@ -164,6 +165,20 @@ return (
     maxLuminance={16.0} // maximum luminance
     averageLuminance={1.0} // average luminance
     adaptationRate={1.0} // luminance adaptation rate
+  />
+)
+```
+
+## `<Scanline />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-scanline-demo-luo42) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ScanlineEffect.js~ScanlineEffect.html)
+
+```jsx
+import { Scanline } from 'react-postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Scanline
+    blendFunction={BlendFunction.OVERLAY} // blend mode
+    density={1.25} // scanline density
   />
 )
 ```
