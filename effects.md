@@ -14,6 +14,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<BrightnessContrast />`](#brightnesscontrast--) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-brightnesscontrast-demo-lhl6z) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BrightnessContrastEffect.js~BrightnessContrastEffect.html)
 - [`<ToneMapping />`](#tonemapping---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
 - [`<Scanline />`](#scanline---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-scanline-demo-luo42) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ScanlineEffect.js~ScanlineEffect.html)
+- [`<ChromaticAberration />`](#chromaticaberration---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
 
 ## `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
@@ -179,6 +180,20 @@ return (
   <Scanline
     blendFunction={BlendFunction.OVERLAY} // blend mode
     density={1.25} // scanline density
+  />
+)
+```
+
+## `<ChromaticAberration />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
+
+```jsx
+import { ChromaticAberration } from 'react-postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <ChromaticAberration
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    offset={[0.02, 0.002]} // color offset
   />
 )
 ```
