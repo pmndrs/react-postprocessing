@@ -1,9 +1,13 @@
 import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent, Ref } from 'react'
 import { PixelationEffect } from 'postprocessing'
 
-export const Pixelation: ForwardRefExoticComponent<{ granularity?: number }> = forwardRef(
+export type PixelationProps = {
+  granularity?: number
+}
+
+export const Pixelation: ForwardRefExoticComponent<PixelationProps> = forwardRef(
   (
-    { granularity }: { granularity: number } = {
+    { granularity }: PixelationProps = {
       granularity: 5,
     },
     ref: Ref<PixelationEffect>
