@@ -8,7 +8,7 @@ export type HueSaturationProps = HueSaturationEffect &
 
 export const HueSaturation: ForwardRefExoticComponent<HueSaturationEffect> = forwardRef(
   ({ hue, ...props }: HueSaturationProps, ref) => {
-    const effect = useMemo(() => new HueSaturationEffect({ ...props, hue }), [props])
+    const effect = useMemo(() => new HueSaturationEffect(props), [props])
 
     useLayoutEffect(() => {
       if (hue) {
