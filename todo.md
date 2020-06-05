@@ -14,7 +14,7 @@ List of wrapped effects at the moment:
 - [ ] Texture
 - [x] [Sepia](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Sepia.tsx)
 - [x] [BrightnessContrast](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/BrightnessContrast.tsx)
-- [ ] ChromaticAberration
+- [x] [ChromaticAberration](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/ChromaticAberration.tsx)
 - [ ] ColorAverage
 - [x] [ColorDepth](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/ColorDepth.tsx)
 - [x] [DepthOfField](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/DepthOfField.tsx)
