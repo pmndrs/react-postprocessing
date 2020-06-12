@@ -1,6 +1,6 @@
 {
   "name": "react-postprocessing",
-  "version": "1.0.0-beta22",
+  "version": "1.0.0-beta23",
   "description": "postprocessing wrapper for React and react-three-fiber",
   "keywords": [
     "postprocessing",
@@ -83,6 +83,7 @@
     "rimraf": "^3.0.2",
     "rollup": "^2.11.2",
     "rollup-plugin-size-snapshot": "^0.11.0",
+    "rollup-plugin-terser": "^6.1.0",
     "three": "^0.116.1"
   },
   "peerDependencies": {
