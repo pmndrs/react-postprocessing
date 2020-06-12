@@ -1,9 +1,11 @@
-import { forwardRef, useContext, useMemo, useImperativeHandle } from 'react'
+import { forwardRef, useContext, useMemo, useImperativeHandle, useLayoutEffect, ForwardRefExoticComponent } from 'react'
 import { useThree } from 'react-three-fiber'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
 import { EffectComposerContext } from '../EffectComposer'
 
-export const SSAO = forwardRef((props, ref) => {
+type SSAOProps = SSAOEffect & {}
+
+export const SSAO: ForwardRefExoticComponent<SSAOEffect> = forwardRef((props: SSAOProps, ref) => {
   const { camera } = useThree()
   const { normalPass } = useContext(EffectComposerContext)
   const effect = useMemo(
@@ -24,6 +26,7 @@ export const SSAO = forwardRef((props, ref) => {
       }),
     [props]
   )
+
   useImperativeHandle(ref, () => effect, [effect])
   return null
 })

@@ -2,4 +2,4 @@ import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent, us
 import { ScanlineEffect } from 'postprocessing'
 import { wrapEffect } from '../util'
 
-export const Scanline: ForwardRefExoticComponent<ScanlineEffect> = wrapEffect(ScanlineEffect)
+export const Scanline = wrapEffect(ScanlineEffect)

@@ -17,6 +17,7 @@ export const Outline = forwardRef((props: OutlineEffect, ref) => {
       }),
     [props]
   )
+
   useImperativeHandle(ref, () => effect, [effect])
   return null
 })

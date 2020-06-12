@@ -1,17 +1,23 @@
-import { ChromaticAberrationEffect } from 'postprocessing'
-import { ForwardRefExoticComponent, forwardRef, useImperativeHandle, useMemo } from 'react'
+import { ChromaticAberrationEffect, BlendFunction } from 'postprocessing'
+import { forwardRef, useImperativeHandle, useMemo, useLayoutEffect } from 'react'
 import { ReactThreeFiber } from 'react-three-fiber'
-import { useVector2 } from '../util'
+import { useVector2, toggleBlendMode } from '../util'
 
-export type ChromaticAberrationProps = ChromaticAberrationEffect &
+// type for function args should use constructor args
+export type ChromaticAberrationProps = ConstructorParameters<typeof ChromaticAberrationEffect>[0] &
   Partial<{
     offset: ReactThreeFiber.Vector2
+    active: boolean
   }>
 
-export const ChromaticAberration: ForwardRefExoticComponent<ChromaticAberrationEffect> = forwardRef((props, ref) => {
+export const ChromaticAberration = forwardRef(({ active = true, ...props }: ChromaticAberrationProps, ref) => {
   const offset = useVector2(props, 'offset')
 
   const effect = useMemo(() => new ChromaticAberrationEffect({ ...props, offset }), [props])
+
+  useLayoutEffect(() => {
+    toggleBlendMode(effect, BlendFunction.NORMAL || props.blendFunction, active)
+  }, [active])
 
   useImperativeHandle(ref, () => effect, [effect])
 
