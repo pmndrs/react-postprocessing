@@ -15,7 +15,7 @@ export const wrapEffect = <
     }>
 >(
   effectImpl: new (...args: any[]) => EffectType,
-  defaultBlendMode: number = BlendFunction.ADD
+  defaultBlendMode: number = BlendFunction.NORMAL
 ): ForwardRefExoticComponent<EffectType> => {
   return forwardRef(({ active = true, ...props }: ConstructorParameters<typeof effectImpl>[0], ref) => {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])

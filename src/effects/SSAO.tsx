@@ -1,9 +1,10 @@
-import { forwardRef, useContext, useMemo, useImperativeHandle, useLayoutEffect, ForwardRefExoticComponent } from 'react'
+import { forwardRef, useContext, useMemo, useImperativeHandle, ForwardRefExoticComponent } from 'react'
 import { useThree } from 'react-three-fiber'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
 import { EffectComposerContext } from '../EffectComposer'
 
-type SSAOProps = SSAOEffect & {}
+// first two args are camera and texture
+type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2]
 
 export const SSAO: ForwardRefExoticComponent<SSAOEffect> = forwardRef((props: SSAOProps, ref) => {
   const { camera } = useThree()
