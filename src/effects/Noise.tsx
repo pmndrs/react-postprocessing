@@ -1,4 +1,4 @@
-import { NoiseEffect } from 'postprocessing'
+import { NoiseEffect, BlendFunction } from 'postprocessing'
 import { wrapEffect } from '../util'
 
-export const Noise = wrapEffect(NoiseEffect)
+export const Noise = wrapEffect(NoiseEffect, BlendFunction.SCREEN)

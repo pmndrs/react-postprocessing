@@ -1712,25 +1712,6 @@ declare module 'postprocessing' {
   }
 
   /**
-   * Constructs a new bokeh effect.
-   * @param [options] - The options.
-   * @param [options.blendFunction = BlendFunction.NORMAL] - The blend function of this effect.
-   * @param [options.focus = 0.5] - The focus distance ratio, ranging from 0.0 to 1.0.
-   * @param [options.dof = 0.02] - Depth of field. An area in front of and behind the focal point that still appears sharp.
-   * @param [options.aperture = 0.015] - Camera aperture scale. Bigger values for stronger blur and shallower depth of field.
-   * @param [options.maxBlur = 1.0] - The maximum blur strength.
-   */
-  export class BokehEffect extends Effect {
-    constructor(options?: {
-      blendFunction?: BlendFunction
-      focus?: number
-      dof?: number
-      aperture?: number
-      maxBlur?: number
-    })
-  }
-
-  /**
    * Constructs a new brightness/contrast effect.
    * @param [options] - The options.
    * @param [options.blendFunction = BlendFunction.NORMAL] - The blend function of this effect.
@@ -1902,16 +1883,6 @@ declare module 'postprocessing' {
      * @param [angle] - The angle of the dot pattern.
      */
     setAngle(angle?: number): void
-  }
-
-  /**
-   * Constructs a new gamma correction effect.
-   * @param [options] - The options.
-   * @param [options.blendFunction = BlendFunction.NORMAL] - The blend function of this effect.
-   * @param [options.gamma = 2.0] - The gamma factor.
-   */
-  export class GammaCorrectionEffect extends Effect {
-    constructor(options?: { blendFunction?: BlendFunction; gamma?: number })
   }
 
   /**
@@ -2360,65 +2331,6 @@ declare module 'postprocessing' {
      * @param height - The height.
      */
     setSize(width: number, height: number): void
-  }
-
-  /**
-   * Constructs a new bokeh effect.
-   * @param [options] - The options.
-   * @param [options.blendFunction = BlendFunction.NORMAL] - The blend function of this effect.
-   * @param [options.focus = 1.0] - The focus distance in world units.
-   * @param [options.focalLength = 24.0] - The focal length of the main camera.
-   * @param [options.fStop = 0.9] - The ratio of the lens focal length to the diameter of the entrance pupil (aperture).
-   * @param [options.luminanceThreshold = 0.5] - A luminance threshold.
-   * @param [options.luminanceGain = 2.0] - A luminance gain factor.
-   * @param [options.bias = 0.5] - A blur bias.
-   * @param [options.fringe = 0.7] - A blur offset.
-   * @param [options.maxBlur = 1.0] - The maximum blur strength.
-   * @param [options.rings = 3] - The number of blur iterations.
-   * @param [options.samples = 2] - The amount of samples taken per ring.
-   * @param [options.showFocus = false] - Whether the focal point should be highlighted. Useful for debugging.
-   * @param [options.manualDoF = false] - Enables manual control over the depth of field.
-   * @param [options.pentagon = false] - Enables pentagonal blur shapes. Requires a high number of rings and samples.
-   */
-  export class RealisticBokehEffect extends Effect {
-    constructor(options?: {
-      blendFunction?: BlendFunction
-      focus?: number
-      focalLength?: number
-      fStop?: number
-      luminanceThreshold?: number
-      luminanceGain?: number
-      bias?: number
-      fringe?: number
-      maxBlur?: number
-      rings?: boolean
-      samples?: boolean
-      showFocus?: boolean
-      manualDoF?: boolean
-      pentagon?: boolean
-    })
-    /**
-     * The amount of blur iterations.
-     */
-    rings: number
-    /**
-     * The amount of blur samples per ring.
-     */
-    samples: number
-    /**
-     * Indicates whether the focal point will be highlighted.
-     */
-    showFocus: boolean
-    /**
-       * Indicates whether the Depth of Field should be calculated manually.
-      
-      If enabled, the Depth of Field can be adjusted via the `dof` uniform.
-       */
-    manualDoF: boolean
-    /**
-     * Indicates whether the blur shape should be pentagonal.
-     */
-    pentagon: boolean
   }
 
   /**
