@@ -17,11 +17,11 @@ export const wrapEffect = <
   effectImpl: new (...args: any[]) => EffectType,
   defaultBlendMode: number = BlendFunction.NORMAL
 ): ForwardRefExoticComponent<EffectType> => {
-  return forwardRef(({ active = true, ...props }: ConstructorParameters<typeof effectImpl>[0], ref) => {
+  return forwardRef(({ active = true, ...props }: ConstructorParameters<typeof effectImpl>[0] & EffectType, ref) => {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
-      toggleBlendMode(effect, defaultBlendMode || props.blendFunction, active)
+      toggleBlendMode(effect, props.blendFunction || defaultBlendMode, active)
     }, [active])
 
     useImperativeHandle(ref, () => effect, [effect])
