@@ -21,7 +21,7 @@ export const wrapEffect = <
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
-      toggleBlendMode(effect, props.blendFunction || defaultBlendMode, active)
+      toggleBlendMode(effect, props.blendFunction != null ? props.blendFunction : defaultBlendMode, active)
     }, [active])
 
     useImperativeHandle(ref, () => effect, [effect])
