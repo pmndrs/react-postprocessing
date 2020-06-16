@@ -8,13 +8,13 @@ type TextureProps = ConstructorParameters<typeof TextureEffect>[0] & {
 }
 
 export const Texture: ForwardRefExoticComponent<TextureProps> = forwardRef(
-  ({ textureSrc, ...props }: TextureProps, ref) => {
-    const texture = useLoader(TextureLoader, textureSrc)
+  ({ textureSrc, texture, ...props }: TextureProps, ref) => {
+    const t = useLoader(TextureLoader, textureSrc)
 
-    texture.encoding = sRGBEncoding
-    texture.wrapS = texture.wrapT = RepeatWrapping
+    t.encoding = sRGBEncoding
+    t.wrapS = t.wrapT = RepeatWrapping
 
-    const effect = useMemo(() => new TextureEffect({ ...props, texture }), [props])
+    const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props])
 
     useImperativeHandle(ref, () => effect, [effect])
     return null
