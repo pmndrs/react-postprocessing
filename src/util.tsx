@@ -20,9 +20,9 @@ export const wrapEffect = <
   return forwardRef(({ active = true, ...props }: ConstructorParameters<typeof effectImpl>[0] & EffectType, ref) => {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
-    useLayoutEffect(() => {
+    /*  useLayoutEffect(() => {
       toggleBlendMode(effect, props.blendFunction != null ? props.blendFunction : defaultBlendMode, active)
-    }, [active])
+    }, [active]) */
 
     useImperativeHandle(ref, () => effect, [effect])
 
@@ -30,7 +30,7 @@ export const wrapEffect = <
   })
 }
 
-export const useVector2 = (props: any, key: string) => {
+export const useVector2 = (props: any, key: string): Vector2 => {
   const vec: ReactThreeFiber.Vector2 = props[key]
 
   return useMemo(() => {
