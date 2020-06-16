@@ -248,6 +248,7 @@ return (
     blendFunction={BlendFunction.OVERLAY} // blend mode
     scale={1.0} // grid pattern scale
     lineWidth={0.0} // grid pattern line width
+    size={{ width, height }} // overrides the default pass width and height
   />
 )
 ```
