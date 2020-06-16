@@ -1,10 +1,10 @@
 import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent, useLayoutEffect } from 'react'
 import { Vector2 } from 'three'
 import { ReactThreeFiber } from 'react-three-fiber'
-import { Effect, BlendFunction } from 'postprocessing'
+import { Effect, BlendFunction, BlendMode } from 'postprocessing'
 
 export const toggleBlendMode = (effect: Effect, blendFunc: number, active: boolean) => {
-  effect.blendMode.blendFunction = active ? blendFunc : BlendFunction.SKIP
+  effect.blendMode = new BlendMode(active ? blendFunc : BlendFunction.SKIP)
 }
 
 export const wrapEffect = <
