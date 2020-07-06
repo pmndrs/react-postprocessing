@@ -7,22 +7,16 @@ export const toggleBlendMode = (effect: Effect, blendFunc: number, active: boole
   effect.blendMode = new BlendMode(active ? blendFunc : BlendFunction.SKIP)
 }
 
-export const wrapEffect = <
-  EffectType extends Effect &
-    Partial<{
-      active: boolean
-      blendFunction: number
-    }>
->(
-  effectImpl: new (...args: any[]) => EffectType,
+export const wrapEffect = <T extends new (...args: any[]) => Effect>(
+  effectImpl: T,
   defaultBlendMode: number = BlendFunction.NORMAL
-): ForwardRefExoticComponent<EffectType> => {
-  return forwardRef(({ active = true, ...props }: ConstructorParameters<typeof effectImpl>[0] & EffectType, ref) => {
+): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0]> => {
+  return forwardRef(({ active, ...props }, ref) => {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
-    /*  useLayoutEffect(() => {
-      toggleBlendMode(effect, props.blendFunction != null ? props.blendFunction : defaultBlendMode, active)
-    }, [active]) */
+    useLayoutEffect(() => {
+      effect.blendMode = props.blendFunction != null ? props.blendFunction : defaultBlendMode
+    }, [active])
 
     useImperativeHandle(ref, () => effect, [effect])
 

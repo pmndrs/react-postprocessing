@@ -12,7 +12,7 @@
 
 ## Why
 
-Instead of manually initializing the composer and adding required passes you can import the effects as components and put them inside `<EffectComposer />`.
+Instead of manually initializing the composer and adding required passes you can import the effects as components and put them inside `<EffectComposer />` for the easiest effect setup and better performance.
 
 ## Installation
 
@@ -48,7 +48,7 @@ const App = () => {
         <boxGeometry args={[1, 1, 1]} />
         <meshBasicMaterial color="red" />
       </mesh>
-      <Suspense>
+      <Suspense fallback={null}>
         <EffectComposer>
           <Glitch active={isTriggered} />
         </EffectComposer>
@@ -111,7 +111,7 @@ const App = () => (
     </mesh>
     <Suspense>
       <EffectComposer>
-      	{/* min and max duration */}
+        {/* min and max duration */}
         <Glitch duration={[1, 2]} />
       </EffectComposer>
     </Suspense>
