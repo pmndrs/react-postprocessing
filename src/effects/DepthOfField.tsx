@@ -11,6 +11,7 @@ type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
       texture: Texture
       packing: number
     }
+    blur: number
   }>
 
 export const DepthOfField = forwardRef(({ target, depthTexture, ...props }: DOFProps, ref) => {
