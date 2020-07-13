@@ -687,7 +687,13 @@ declare module 'postprocessing' {
    * @param [options.kernelSize = KernelSize.LARGE] - The blur kernel size.
    */
   export class BlurPass {
-    constructor(options?: Partial<{ width?: number; height?: number; kernelSize?: KernelSize }>)
+    constructor(
+      options?: Partial<{
+        width?: number
+        height?: number
+        kernelSize?: KernelSize
+      }>
+    )
     /**
        * The desired render resolution.
       
@@ -964,26 +970,26 @@ declare module 'postprocessing' {
    * @property SOFT_LIGHT - Soft light blending.
    * @property SUBTRACT - Color subtraction.
    */
-  export const BlendFunction: {
-    SKIP: number
-    ADD: number
-    ALPHA: number
-    AVERAGE: number
-    COLOR_BURN: number
-    COLOR_DODGE: number
-    DARKEN: number
-    DIFFERENCE: number
-    EXCLUSION: number
-    LIGHTEN: number
-    MULTIPLY: number
-    DIVIDE: number
-    NEGATION: number
-    NORMAL: number
-    OVERLAY: number
-    REFLECT: number
-    SCREEN: number
-    SOFT_LIGHT: number
-    SUBTRACT: number
+  export enum BlendFunction {
+    'SKIP',
+    'ADD',
+    'ALPHA',
+    'AVERAGE',
+    'COLOR_BURN',
+    'COLOR_DODGE',
+    'DARKEN',
+    'DIFFERENCE',
+    'EXCLUSION',
+    'LIGHTEN',
+    'MULTIPLY',
+    'DIVIDE',
+    'NEGATION',
+    'NORMAL',
+    'OVERLAY',
+    'REFLECT',
+    'SCREEN',
+    'SOFT_LIGHT',
+    'SUBTRACT',
   }
 
   /**
@@ -2107,7 +2113,13 @@ declare module 'postprocessing' {
    * @param [options.lineWidth = 0.0] - The line width of the grid pattern.
    */
   export class GridEffect extends Effect {
-    constructor(options?: Partial<{ blendFunction: BlendFunction; scale: number; lineWidth: number }>)
+    constructor(
+      options?: Partial<{
+        blendFunction: BlendFunction
+        scale: number
+        lineWidth: number
+      }>
+    )
     /**
      * Returns the current grid scale.
      * @returns The grid scale.

@@ -12,7 +12,10 @@ import {
 import { HalfFloatType } from 'three'
 import mergeRefs from 'react-merge-refs'
 
-export const EffectComposerContext = createContext<{ composer: EffectComposerImpl; normalPass: NormalPass }>(null)
+export const EffectComposerContext = createContext<{
+  composer: EffectComposerImpl
+  normalPass: NormalPass
+}>(null)
 
 export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
@@ -29,7 +32,9 @@ const EffectComposer = React.memo(
     const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
-      const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
+      const effectComposer = new EffectComposerImpl(gl, {
+        frameBufferType: HalfFloatType,
+      })
 
       // Add render pass
       effectComposer.addPass(new RenderPass(scene, camera))
