@@ -1,22 +1,18 @@
 import { forwardRef, useImperativeHandle, useMemo, ForwardRefExoticComponent, useLayoutEffect } from 'react'
 import { Vector2 } from 'three'
 import { ReactThreeFiber } from 'react-three-fiber'
-import { Effect, BlendFunction, BlendMode } from 'postprocessing'
-
-export const toggleBlendMode = (effect: Effect, blendFunc: number, active: boolean) => {
-  effect.blendMode = new BlendMode(active ? blendFunc : BlendFunction.SKIP)
-}
+import { Effect, BlendFunction } from 'postprocessing'
 
 export const wrapEffect = <T extends new (...args: any[]) => Effect>(
   effectImpl: T,
   defaultBlendMode: number = BlendFunction.NORMAL
 ): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0]> => {
-  return forwardRef(({ active, ...props }, ref) => {
+  return forwardRef((props, ref) => {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
       effect.blendMode = props.blendFunction != null ? props.blendFunction : defaultBlendMode
-    }, [active])
+    }, [])
 
     useImperativeHandle(ref, () => effect, [effect])
 
