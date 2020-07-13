@@ -11,7 +11,7 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
-      effect.blendMode = props.blendFunction != null ? props.blendFunction : defaultBlendMode
+      effect.blendMode.blendFunction = props.blendFunction || defaultBlendMode
     }, [])
 
     useImperativeHandle(ref, () => effect, [effect])
