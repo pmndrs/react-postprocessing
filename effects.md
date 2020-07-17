@@ -2,8 +2,8 @@
 
 Here's a list of all wrapped effects with demos, example usage (with default props) and reference to postprocessing docs.
 
-- [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
-- [`<Glitch />`](#glitch---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
+- [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)][ssao-docs]
+- [`<Glitch />`](#glitch---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](Glitch-Docs)
 - [`<Noise />`](#noise---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-noise-demo-6cxje)
   [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 - [`<Bloom />`](#bloom---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
@@ -19,7 +19,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<ColorAverage />`](#coloraverage---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 - [`<Grid />`](#grid---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
 
-## `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
+## `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
 ```jsx
 import { SSAO } from 'react-postprocessing'
@@ -252,3 +252,9 @@ return (
   />
 )
 ```
+
+[Showcase-Sandbox]: [https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj]
+
+[SSAO-Docs]: [https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html]
+
+[Glitch-Docs]: [https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html]
