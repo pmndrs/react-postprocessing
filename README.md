@@ -13,7 +13,7 @@ Well, you can do pretty much anything, but here's an example combining a couple 
 ![](https://i.imgur.com/mZucXdX.jpg)
 
 ```jsx
-import React, { useState } from 'react'
+import React from 'react'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
 import { Canvas } from 'react-three-fiber'
 
