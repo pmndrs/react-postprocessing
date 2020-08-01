@@ -19,7 +19,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<ColorAverage />`](#coloraverage---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 - [`<Grid />`](#grid---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
 
-## `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
+#### `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
 ```jsx
 import { SSAO } from 'react-postprocessing'
@@ -42,7 +42,7 @@ return (
 )
 ```
 
-## `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
+#### `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
 ```jsx
 import { Glitch } from 'react-postprocessing'
@@ -60,7 +60,7 @@ return (
 )
 ```
 
-## `<Noise />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
+#### `<Noise />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 
 ```jsx
 import { Noise } from 'react-postprocessing'
@@ -74,7 +74,7 @@ return (
 )
 ```
 
-## `<Bloom />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
+#### `<Bloom />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
 
 ```jsx
 import { Bloom } from 'react-postprocessing'
@@ -93,7 +93,7 @@ return (
 )
 ```
 
-## `<Vignette />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
+#### `<Vignette />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
 
 ```jsx
 import { Vignette } from 'react-postprocessing'
@@ -109,7 +109,7 @@ return (
 )
 ```
 
-## `<Sepia />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SepiaEffect.js~SepiaEffect.html)
+#### `<Sepia />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SepiaEffect.js~SepiaEffect.html)
 
 ```jsx
 import { Sepia } from 'react-postprocessing'
@@ -122,7 +122,7 @@ return (
 )
 ```
 
-## `<DotScreen />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-dotscreen-demo-vthef) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/DotScreenEffect.js~DotScreenEffect.html)
+#### `<DotScreen />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-dotscreen-demo-vthef) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/DotScreenEffect.js~DotScreenEffect.html)
 
 ```jsx
 import { DotScreen } from 'react-postprocessing'
@@ -137,7 +137,7 @@ return (
 )
 ```
 
-## `<Pixelation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-pixelation-demo-q4x1h) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/PixelationEffect.js~PixelationEffect.html)
+#### `<Pixelation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-pixelation-demo-q4x1h) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/PixelationEffect.js~PixelationEffect.html)
 
 ```jsx
 import { Pixelation } from 'react-postprocessing'
@@ -149,7 +149,7 @@ return (
 )
 ```
 
-## `<HueSaturation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
+#### `<HueSaturation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
 
 ```jsx
 import { HueSaturation } from 'react-postprocessing'
@@ -164,7 +164,7 @@ return (
 )
 ```
 
-## `<BrightnessContrast />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-brightnesscontrast-demo-lhl6z) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BrightnessContrastEffect.js~BrightnessContrastEffect.html)
+#### `<BrightnessContrast />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-brightnesscontrast-demo-lhl6z) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BrightnessContrastEffect.js~BrightnessContrastEffect.html)
 
 ```jsx
 import { BrightnessContrast } from 'postprocessing'
@@ -177,7 +177,7 @@ return (
 )
 ```
 
-## `<ToneMapping />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
+#### `<ToneMapping />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
 
 ```jsx
 import { ToneMapping } from 'react-postprocessing'
@@ -196,7 +196,7 @@ return (
 )
 ```
 
-## `<Scanline />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-scanline-demo-luo42) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ScanlineEffect.js~ScanlineEffect.html)
+#### `<Scanline />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-scanline-demo-luo42) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ScanlineEffect.js~ScanlineEffect.html)
 
 ```jsx
 import { Scanline } from 'react-postprocessing'
@@ -210,7 +210,7 @@ return (
 )
 ```
 
-## `<ChromaticAberration />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
+#### `<ChromaticAberration />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
 
 ```jsx
 import { ChromaticAberration } from 'react-postprocessing'
@@ -224,7 +224,7 @@ return (
 )
 ```
 
-## `<ColorAverage />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
+#### `<ColorAverage />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 
 ```jsx
 import { ColorAverage } from 'react-postprocessing'
@@ -237,7 +237,7 @@ return (
 )
 ```
 
-## `<Grid />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
+#### `<Grid />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
 
 ```jsx
 import { Grid } from 'react-postprocessing'
