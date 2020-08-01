@@ -262,14 +262,18 @@ return (
 
 # SMAA
 
-By default, `SMAA` is enabled in `EffectComposer`. When enabled, you can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold.
+By default, `SMAA` is enabled in `EffectComposer`. You can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold.
 
 ```jsx
-<Suspense fallback={null}>
-  <EffectComposer smaa edgeDetection={0.3}>
-    <Glitch />
-  </EffectComposer>
-</Suspense>
+<EffectComposer edgeDetection={0.3}>
+  <Glitch />
+</EffectComposer>
+```
+
+You can switch off smaa by doing:
+
+```jsx
+<EffectComposer smaa={false}>
 ```
 
 ### Custom effects
