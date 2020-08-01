@@ -8,6 +8,10 @@ This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper fo
     
 #### What does it look like?
 
+![](https://i.imgur.com/mZucXdX.jpg)
+
+You can try out a demo here: https://codesandbox.io/s/vigorous-currying-3r6l2
+
 ```jsx
 import React, { useState } from 'react'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
