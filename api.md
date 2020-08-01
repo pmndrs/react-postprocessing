@@ -258,3 +258,31 @@ return (
 [SSAO-Docs]: [https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html]
 
 [Glitch-Docs]: [https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html]
+
+
+# SMAA
+
+By default, `SMAA` is enabled in `EffectComposer`. When enabled, you can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold.
+
+```jsx
+<Suspense fallback={null}>
+  <EffectComposer smaa edgeDetection={0.3}>
+    <Glitch />
+  </EffectComposer>
+</Suspense>
+```
+
+### Custom effects
+
+If you plan to use custom effects, make sure to expose the effect itself as a reference!
+
+```jsx
+import { forwardRef, useImperativeHandle, useMemo } from 'react'
+import { PixelationEffect } from 'postprocessing'
+
+export const Pixelation = forwardRef(({ granularity = 5 }, ref) => {
+  const effect = useMemo(() => new PixelationEffect(granularity), [granularity])
+  useImperativeHandle(ref, () => effect, [effect])
+  return null
+})
+```
