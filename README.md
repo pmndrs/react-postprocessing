@@ -8,9 +8,9 @@ This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper fo
     
 #### What does it look like?
 
-![](https://i.imgur.com/mZucXdX.jpg)
+Well, you can do pretty much anything, but here's an example ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
 
-You can try out a demo here: https://codesandbox.io/s/vigorous-currying-3r6l2
+![](https://i.imgur.com/mZucXdX.jpg)
 
 ```jsx
 import React, { useState } from 'react'
