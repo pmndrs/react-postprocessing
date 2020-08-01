@@ -32,4 +32,4 @@ function App() {
     
 #### Documentation
 
-[api.md](https://github.com/react-spring/react-postprocessing/blob/master/effects.md)
+[api.md](https://github.com/react-spring/react-postprocessing/blob/master/api.md)
