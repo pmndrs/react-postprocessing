@@ -7,12 +7,13 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
   effectImpl: T,
   defaultBlendMode: number = BlendFunction.NORMAL
 ): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0]> => {
-  return forwardRef((props, ref) => {
+  return forwardRef(({ blendFunction, opacity, ...props }, ref) => {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
-      effect.blendMode.blendFunction = props.blendFunction || defaultBlendMode
-    }, [])
+      effect.blendMode.blendFunction = blendFunction || defaultBlendMode
+      if (opacity !== undefined) effect.blendMode.opacity.value = opacity
+    }, [blendFunction, opacity])
 
     useImperativeHandle(ref, () => effect, [effect])
 
