@@ -14,9 +14,8 @@ type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
     blur: number
   }>
 
-export const DepthOfField = forwardRef(({ target, depthTexture, ...props }: DOFProps, ref) => {
+export const DepthOfField = forwardRef(function DepthOfField({ target, depthTexture, ...props }: DOFProps, ref) {
   const { camera } = useThree()
-
   const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [props])
 
   useLayoutEffect(() => {
@@ -25,16 +24,10 @@ export const DepthOfField = forwardRef(({ target, depthTexture, ...props }: DOFP
         target instanceof Vector3
           ? new Vector3().set(target.x, target.y, target.z)
           : new Vector3().set(target[0], target[1], target[2])
-
       effect.target = vec
     }
-  }, [target])
-
-  useLayoutEffect(() => {
-    if (depthTexture) {
-      effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
-    }
-  }, [depthTexture])
+    if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
+  }, [target, depthTexture])
 
   useImperativeHandle(ref, () => effect, [effect])
   return null
