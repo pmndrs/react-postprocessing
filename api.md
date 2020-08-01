@@ -276,7 +276,7 @@ You can switch off smaa by doing:
 <EffectComposer smaa={false}>
 ```
 
-### Custom effects
+# Custom effects
 
 If you plan to use custom effects, make sure to expose the effect itself as a reference!
 
