@@ -30,8 +30,6 @@ function App() {
 }
 ```
     
----
-
-# API
+#### Api
 
 [api.md](https://github.com/react-spring/react-postprocessing/blob/master/effects.md)
