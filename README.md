@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/v/react-postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-postprocessing?style=flat-square)
 
-This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/drcmda/react-three-fiber).
+This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber).
 
 ```bash
 # using npm
