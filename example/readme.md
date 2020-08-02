@@ -1,9 +1,8 @@
-This projects relies an on an alias pointing into `../dist/index`, the parent project has to be built previously.
+This projects will alias into `../src/index`
 
 ```bash
 cd ..
 yarn
-yarn build
 cd examples
 yarn
 ```
