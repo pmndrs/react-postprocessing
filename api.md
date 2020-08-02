@@ -46,7 +46,7 @@ return (
 
 ```jsx
 import { Glitch } from 'react-postprocessing'
-import { GlitchMode } from 'postrocessing'
+import { GlitchMode } from 'postprocessing'
 
 return (
   <Glitch
