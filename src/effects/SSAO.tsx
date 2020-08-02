@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { Ref, ForwardRefExoticComponent, forwardRef, useContext, useMemo } from 'react'
 import { useThree } from 'react-three-fiber'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
 import { EffectComposerContext } from '../EffectComposer'
@@ -6,7 +6,10 @@ import { EffectComposerContext } from '../EffectComposer'
 // first two args are camera and texture
 type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2]
 
-export const SSAO = (props: SSAOProps) => {
+export const SSAO: ForwardRefExoticComponent<SSAOEffect> = forwardRef(function SSAO(
+  props: SSAOProps,
+  ref: Ref<SSAOEffect>
+) {
   const { camera } = useThree()
   const { normalPass } = useContext(EffectComposerContext)
   const effect = useMemo(
@@ -27,5 +30,5 @@ export const SSAO = (props: SSAOProps) => {
       }),
     [props]
   )
-  return <primitive object={effect} dispose={null} />
-}
+  return <primitive ref={ref} object={effect} dispose={null} />
+})

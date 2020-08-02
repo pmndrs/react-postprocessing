@@ -1,12 +1,26 @@
 import { Color } from 'three'
-import React, { Suspense, useState } from 'react'
-import { Canvas } from 'react-three-fiber'
-import { EffectComposer, Bloom, SSAO, Glitch } from 'react-postprocessing'
+import React, { Suspense, useRef } from 'react'
+import { Canvas, useFrame } from 'react-three-fiber'
+import { EffectComposer, Bloom, SSAO } from 'react-postprocessing'
+import { KernelSize } from 'postprocessing'
 import Model from './Model'
 
-export default function App() {
-  const [hovered, setHover] = useState(false)
+function Effects() {
+  const ref = useRef()
+  useFrame((state) => {
+    if (ref.current) {
+      ref.current.luminanceMaterial.threshold = 0.1 + (1 + Math.sin(state.clock.getElapsedTime() * 2)) / 3
+    }
+  }, [])
+  return (
+    <EffectComposer>
+      <Bloom ref={ref} KernelSize={KernelSize.VERY_LARGE} height={400} opacity={2} />
+      <SSAO />
+    </EffectComposer>
+  )
+}
 
+export default function App() {
   return (
     <Canvas
       shadowMap
@@ -24,12 +38,8 @@ export default function App() {
       <directionalLight position={[10, 5, -20]} angle={2} color="#ffc530" intensity={2} />
       <pointLight position={[-10, -10, -10]} intensity={5} />
       <Suspense fallback={null}>
-        <Model onPointerOver={(e) => setHover(true)} onPointerOut={(e) => setHover(false)} />
-        <EffectComposer>
-          <Bloom luminanceThreshold={0.6} />
-          <SSAO />
-          <Glitch delay={[0, 0]} duration={[0.5, 1]} active={hovered} ratio={1} strength={[0.3, 0.6]} />
-        </EffectComposer>
+        <Model />
+        <Effects />
       </Suspense>
     </Canvas>
   )

@@ -1,4 +1,4 @@
-import React, { useMemo, useLayoutEffect } from 'react'
+import React, { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
 import { GridEffect } from 'postprocessing'
 
 type GridProps = ConstructorParameters<typeof GridEffect>[0] &
@@ -9,10 +9,10 @@ type GridProps = ConstructorParameters<typeof GridEffect>[0] &
     }
   }>
 
-export const Grid = ({ size, ...props }: GridProps) => {
+export const Grid = forwardRef(function Grid({ size, ...props }: GridProps, ref: Ref<GridEffect>) {
   const effect = useMemo(() => new GridEffect(props), [props])
   useLayoutEffect(() => {
     if (size) effect.setSize(size.width, size.height)
   }, [size])
-  return <primitive object={effect} dispose={null} />
-}
+  return <primitive ref={ref} object={effect} dispose={null} />
+})
