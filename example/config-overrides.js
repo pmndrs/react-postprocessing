@@ -10,6 +10,7 @@ module.exports = (config, env) => {
     babelInclude([path.resolve('src'), path.resolve('../src')]),
     addWebpackAlias({
       'react-postprocessing': path.resolve('../src/index'),
+      postprocessing: path.resolve('node_modules/postprocessing'),
       react: path.resolve('node_modules/react'),
       'react-dom': path.resolve('node_modules/react-dom'),
       scheduler: path.resolve('node_modules/scheduler'),

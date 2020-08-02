@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  outline: none;
 }
 
 html,
@@ -9,36 +10,15 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  overflow: hidden;
-}
-
-#root {
-  overflow: auto;
 }
 
 body {
-  position: fixed;
-  overflow: hidden;
-  overscroll-behavior-y: none;
   font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, ubuntu, roboto, noto,
     segoe ui, arial, sans-serif;
-  color: black;
-  background: #272730;
-  image-rendering: pixelated;
+  color: white;
+  font-size: 14px;
 }
 
-a {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  text-decoration: none;
-  letter-spacing: 0px;
-  color: white;
-  margin: 0;
+#root:focus {
+  outline: none;
 }

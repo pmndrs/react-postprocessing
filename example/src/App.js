@@ -1,45 +1,103 @@
-import { Color } from 'three'
-import React, { Suspense, useRef } from 'react'
-import { Canvas, useFrame } from 'react-three-fiber'
-import { EffectComposer, Bloom, SSAO } from 'react-postprocessing'
-import { KernelSize } from 'postprocessing'
-import Model from './Model'
+import * as THREE from 'three'
+import React, { Suspense, useRef, useState } from 'react'
+import { Canvas, useFrame, useResource } from 'react-three-fiber'
+import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
+import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from 'drei'
 
-function Effects() {
-  const ref = useRef()
-  useFrame((state) => {
-    if (ref.current) {
-      ref.current.luminanceMaterial.threshold = 0.1 + (1 + Math.sin(state.clock.getElapsedTime() * 2)) / 3
-    }
-  }, [])
+function MainSphere({ material }) {
+  const main = useRef()
+  // main sphere rotates following the mouse position
+  useFrame(({ clock, mouse }) => {
+    main.current.rotation.z = clock.getElapsedTime()
+    main.current.rotation.y = THREE.MathUtils.lerp(main.current.rotation.y, mouse.x * Math.PI, 0.1)
+    main.current.rotation.x = THREE.MathUtils.lerp(main.current.rotation.x, mouse.y * Math.PI, 0.1)
+  })
+  return <Icosahedron args={[1, 4]} ref={main} material={material} position={[0, 0, 0]} />
+}
+
+function Instances({ material }) {
+  // we use this array ref to store the spheres after creating them
+  const [sphereRefs] = useState(() => [])
+  // we use this array to initialize the background spheres
+  const initialPositions = [
+    [-4, 20, -12],
+    [-10, 12, -4],
+    [-11, -12, -23],
+    [-16, -6, -10],
+    [12, -2, -3],
+    [13, 4, -12],
+    [14, -2, -23],
+    [8, 10, -20],
+  ]
+  // smaller spheres movement
+  useFrame(() => {
+    // animate each sphere in the array
+    sphereRefs.forEach((el) => {
+      el.position.y += 0.02
+      if (el.position.y > 19) el.position.y = -18
+      el.rotation.x += 0.06
+      el.rotation.y += 0.06
+      el.rotation.z += 0.02
+    })
+  })
   return (
-    <EffectComposer>
-      <Bloom ref={ref} KernelSize={KernelSize.VERY_LARGE} height={400} opacity={2} />
-      <SSAO />
-    </EffectComposer>
+    <>
+      <MainSphere material={material} />
+      {initialPositions.map((pos, i) => (
+        <Icosahedron
+          args={[1, 4]}
+          position={[pos[0], pos[1], pos[2]]}
+          material={material}
+          key={i}
+          ref={(ref) => (sphereRefs[i] = ref)}
+        />
+      ))}
+    </>
+  )
+}
+
+function Scene() {
+  const bumpMap = useTextureLoader('/bump.jpg')
+  const envMap = useCubeTextureLoader(['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'], { path: '/cube/' })
+  // We use `useResource` to be able to delay rendering the spheres until the material is ready
+  const [matRef, material] = useResource()
+
+  return (
+    <>
+      <MeshDistortMaterial
+        ref={matRef}
+        envMap={envMap}
+        bumpMap={bumpMap}
+        color={'#010101'}
+        roughness={0.1}
+        metalness={1}
+        bumpScale={0.005}
+        clearcoat={1}
+        clearcoatRoughness={1}
+        radius={1}
+        distort={0.4}
+      />
+      {material && <Instances material={material} />}
+    </>
   )
 }
 
 export default function App() {
   return (
     <Canvas
-      shadowMap
       colorManagement
-      gl={{ alpha: false, logarithmicDepthBuffer: true, precision: 'lowp' }}
-      camera={{ position: [0, 2.5, 25], fov: 35 }}
-      onCreated={({ gl, scene }) => {
-        gl.toneMappingExposure = 1.5
-        scene.background = new Color('#272730').convertGammaToLinear()
-      }}>
-      <fog attach="fog" args={['#272730', 10, 80]} />
-      <ambientLight intensity={0.2} />
-      <directionalLight castShadow position={[10, 20, 20]} intensity={1} shadow-bias={-0.0005} />
-      <directionalLight position={[-10, 5, -20]} angle={2} color="#ffc530" intensity={1} />
-      <directionalLight position={[10, 5, -20]} angle={2} color="#ffc530" intensity={2} />
-      <pointLight position={[-10, -10, -10]} intensity={5} />
-      <Suspense fallback={null}>
-        <Model />
-        <Effects />
+      camera={{ position: [0, 0, 3] }}
+      gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}>
+      <color attach="background" args={['#050505']} />
+      <fog color="#161616" attach="fog" near={8} far={30} />
+      <Suspense fallback={<Html center>Loading.</Html>}>
+        <Scene />
+        <EffectComposer>
+          <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
+          <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} opacity={3} />
+          <Noise opacity={0.025} />
+          <Vignette eskil={false} offset={0.1} darkness={1.1} />
+        </EffectComposer>
       </Suspense>
     </Canvas>
   )
