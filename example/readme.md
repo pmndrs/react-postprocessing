@@ -1,4 +1,4 @@
-This projects will alias into `../src/index`
+This projects will alias react-postprocessing as `../src/index`
 
 ```bash
 cd ..
