@@ -2,18 +2,26 @@
 
 ![npm](https://img.shields.io/npm/v/react-postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-postprocessing?style=flat-square)
 
-This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for React.
+This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/drcmda/react-three-fiber).
 
-    npm install postprocessing react-postprocessing
-    
+```bash
+# using npm
+npm install postprocessing react-postprocessing
+
+# using yarn
+yarn add postprocessing react-postprocessing
+```
+
 #### What does it look like?
 
-Well, you can do pretty much anything, but here's an example ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
+Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
 
-![](https://i.imgur.com/mZucXdX.jpg)
+<a href="https://codesandbox.io/s/vigorous-currying-3r6l2" target="_blank" rel="noopener">
+<img src="https://i.imgur.com/mZucXdX.jpg" alt="Bubbles Demo" />
+</a>
 
 ```jsx
-import React, { useState } from 'react'
+import React from 'react'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
 import { Canvas } from 'react-three-fiber'
 
