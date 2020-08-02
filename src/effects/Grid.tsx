@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useLayoutEffect, useImperativeHandle, MutableRefObject } from 'react'
+import React, { useMemo, useLayoutEffect } from 'react'
 import { GridEffect } from 'postprocessing'
 
 type GridProps = ConstructorParameters<typeof GridEffect>[0] &
@@ -9,16 +9,10 @@ type GridProps = ConstructorParameters<typeof GridEffect>[0] &
     }
   }>
 
-export const Grid = forwardRef(({ size, ...props }: GridProps, ref: MutableRefObject<GridEffect>) => {
+export const Grid = ({ size, ...props }: GridProps) => {
   const effect = useMemo(() => new GridEffect(props), [props])
-
   useLayoutEffect(() => {
-    if (size) {
-      effect.setSize(size.width, size.height)
-    }
+    if (size) effect.setSize(size.width, size.height)
   }, [size])
-
-  useImperativeHandle(ref, () => effect, [effect])
-
-  return null
-})
+  return <primitive object={effect} dispose={null} />
+}

@@ -1,5 +1,5 @@
+import React, { useMemo } from 'react'
 import { ChromaticAberrationEffect } from 'postprocessing'
-import { forwardRef, useImperativeHandle, useMemo } from 'react'
 import { ReactThreeFiber } from 'react-three-fiber'
 import { useVector2 } from '../util'
 
@@ -9,12 +9,8 @@ export type ChromaticAberrationProps = ConstructorParameters<typeof ChromaticAbe
     offset: ReactThreeFiber.Vector2
   }>
 
-export const ChromaticAberration = forwardRef((props: ChromaticAberrationProps, ref) => {
+export const ChromaticAberration = (props: ChromaticAberrationProps) => {
   const offset = useVector2(props, 'offset')
-
   const effect = useMemo(() => new ChromaticAberrationEffect({ ...props, offset }), [props])
-
-  useImperativeHandle(ref, () => effect, [effect])
-
-  return null
-})
+  return <primitive object={effect} dispose={null} />
+}

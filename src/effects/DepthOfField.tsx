@@ -1,6 +1,5 @@
 import { DepthOfFieldEffect } from 'postprocessing'
-
-import { forwardRef, useMemo, useImperativeHandle, useLayoutEffect } from 'react'
+import React, { useMemo, useLayoutEffect } from 'react'
 import { useThree, ReactThreeFiber } from 'react-three-fiber'
 import { Texture, Vector3 } from 'three'
 
@@ -14,10 +13,9 @@ type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
     blur: number
   }>
 
-export const DepthOfField = forwardRef(function DepthOfField({ target, depthTexture, ...props }: DOFProps, ref) {
+export const DepthOfField = ({ target, depthTexture, ...props }: DOFProps) => {
   const { camera } = useThree()
   const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [props])
-
   useLayoutEffect(() => {
     if (target) {
       const vec: Vector3 =
@@ -28,7 +26,5 @@ export const DepthOfField = forwardRef(function DepthOfField({ target, depthText
     }
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
   }, [target, depthTexture])
-
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+  return <primitive object={effect} dispose={null} />
+}

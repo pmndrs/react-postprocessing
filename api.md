@@ -278,15 +278,14 @@ You can switch off smaa by doing:
 
 # Custom effects
 
-If you plan to use custom effects, make sure to expose the effect itself as a reference!
+If you plan to use custom effects, make sure to expose the effect itself as a primitive!
 
 ```jsx
-import { forwardRef, useImperativeHandle, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { PixelationEffect } from 'postprocessing'
 
-export const Pixelation = forwardRef(({ granularity = 5 }, ref) => {
+export const Pixelation = ({ granularity = 5 }) => {
   const effect = useMemo(() => new PixelationEffect(granularity), [granularity])
-  useImperativeHandle(ref, () => effect, [effect])
-  return null
-})
+  return <primitive object={effect} dispose={null} />
+}
 ```
