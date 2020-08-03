@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import React, { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame, useResource } from 'react-three-fiber'
-import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
-import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from 'drei'
+import { EffectComposer, DepthOfField, Bloom, Noise, Vignette, SMAA } from 'react-postprocessing'
+import { Html, Box, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from 'drei'
 
 function MainSphere({ material }) {
   const main = useRef()
@@ -12,7 +12,7 @@ function MainSphere({ material }) {
     main.current.rotation.y = THREE.MathUtils.lerp(main.current.rotation.y, mouse.x * Math.PI, 0.1)
     main.current.rotation.x = THREE.MathUtils.lerp(main.current.rotation.x, mouse.y * Math.PI, 0.1)
   })
-  return <Icosahedron args={[1, 4]} ref={main} material={material} position={[0, 0, 0]} />
+  return <Box args={[1, 1, 1]} ref={main} material={material} position={[0, 0, 0]} />
 }
 
 function Instances({ material }) {
@@ -94,7 +94,7 @@ export default function App() {
         <Scene />
         <EffectComposer>
           <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
-          <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} opacity={3} />
+          <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} opacity={0} />
           <Noise opacity={0.025} />
           <Vignette eskil={false} offset={0.1} darkness={1.1} />
         </EffectComposer>

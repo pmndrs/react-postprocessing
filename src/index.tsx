@@ -15,6 +15,7 @@ export * from './effects/Pixelation'
 export * from './effects/ScanlineEffect'
 export * from './effects/Sepia'
 export * from './effects/SSAO'
+export * from './effects/SMAA'
 export * from './effects/Texture'
 export * from './effects/Vignette'
 

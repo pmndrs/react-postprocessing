@@ -1,13 +1,6 @@
 import React, { useMemo, useEffect, createContext, useRef } from 'react'
-import { useThree, useFrame, useLoader } from 'react-three-fiber'
-import {
-  EffectComposer as EffectComposerImpl,
-  RenderPass,
-  EffectPass,
-  NormalPass,
-  SMAAEffect,
-  SMAAImageLoader,
-} from 'postprocessing'
+import { useThree, useFrame } from 'react-three-fiber'
+import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { HalfFloatType } from 'three'
 
 export const EffectComposerContext = createContext<{
@@ -17,29 +10,23 @@ export const EffectComposerContext = createContext<{
 
 export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
-  smaa?: boolean
-  edgeDetection?: number
+  multisampling?: number
   renderPriority?: number
 }
 
 const EffectComposer = React.memo(
-  ({ children, smaa = true, edgeDetection = 0.1, renderPriority = 1 }: EffectComposerProps) => {
+  ({ children, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps) => {
     const { gl, scene, camera, size } = useThree()
 
-    // Load SMAA
-    const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
-    const [composer, smaaEffect, normalPass] = useMemo(() => {
+    const [composer, normalPass] = useMemo(() => {
       // Initialize composer
-      const effectComposer = new EffectComposerImpl(gl, { frameBufferType: HalfFloatType })
+      const effectComposer = new EffectComposerImpl(gl, { multisampling, frameBufferType: HalfFloatType, ...props })
       // Add render pass
       effectComposer.addPass(new RenderPass(scene, camera))
       // Create normal pass
       const pass = new NormalPass(scene, camera)
       effectComposer.addPass(pass)
-      // Initialiaze SMAAEffect
-      const smaaEffect = new SMAAEffect(...smaaProps)
-      smaaEffect.colorEdgesMaterial.setEdgeDetectionThreshold(edgeDetection)
-      return [effectComposer, smaaEffect, pass]
+      return [effectComposer, pass]
     }, [camera, gl, scene, children])
 
     useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
@@ -48,8 +35,7 @@ const EffectComposer = React.memo(
     const group = useRef()
     useEffect(() => {
       if (group.current) {
-        const resolvedEffects = (group.current as any).__objects
-        const effectPass = new EffectPass(camera, ...(smaa ? [smaaEffect, ...resolvedEffects] : resolvedEffects))
+        const effectPass = new EffectPass(camera, ...(group.current as any).__objects)
         composer.addPass(effectPass)
         effectPass.renderToScreen = true
         return () => composer.removePass(effectPass)
