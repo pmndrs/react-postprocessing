@@ -18,7 +18,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<ChromaticAberration />`](#chromaticaberration---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
 - [`<ColorAverage />`](#coloraverage---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 - [`<Grid />`](#grid---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
-- [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)][smaa-docs]
+- [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 
 #### `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
