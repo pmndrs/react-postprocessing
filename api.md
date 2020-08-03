@@ -18,6 +18,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<ChromaticAberration />`](#chromaticaberration---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
 - [`<ColorAverage />`](#coloraverage---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 - [`<Grid />`](#grid---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
+- [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)][smaa-docs]
 
 #### `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
@@ -260,20 +261,23 @@ return (
 [Glitch-Docs]: [https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html]
 
 
-# SMAA
+#### `<SMAA />` [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 
-By default, `SMAA` is enabled in `EffectComposer`. You can pass additional properties for configuring SMAA, such as `edgeDetection`, which sets edge detection threshold.
-
-```jsx
-<EffectComposer edgeDetection={0.3}>
-  <Glitch />
-</EffectComposer>
-```
-
-You can switch off smaa by doing:
+By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. In some effects this can [result in artefacts](https://github.com/vanruesc/postprocessing/wiki/Antialiasing#multisample-antialiasing). Should you either want to work with webgl1 exclusively, or you get artefacts, then you can switch MSAA off and use SMAA. This effect is async and relies on suspense!
 
 ```jsx
-<EffectComposer smaa={false}>
+import React, { Suspense } from 'react'
+import { EffectComposer, SMAA } from 'react-postprocessing'
+
+return (
+  <Suspense fallback={null}>
+    <EffectComposer multisamping={0}>
+      <SMAA
+        edgeDetection={0.1} // accuracy (default = 0.1)
+      />
+    </EffectComposer>
+  </Suspense>
+)
 ```
 
 # Custom effects
@@ -281,11 +285,11 @@ You can switch off smaa by doing:
 If you plan to use custom effects, make sure to expose the effect itself as a primitive!
 
 ```jsx
-import React, { useMemo } from 'react'
+import React, { forwardRef, useMemo } from 'react'
 import { PixelationEffect } from 'postprocessing'
 
-export const Pixelation = ({ granularity = 5 }) => {
+export const Pixelation = forwardRef(({ granularity = 5 }, ref) => {
   const effect = useMemo(() => new PixelationEffect(granularity), [granularity])
-  return <primitive object={effect} dispose={null} />
-}
+  return <primitive ref={ref} object={effect} dispose={null} />
+})
 ```
