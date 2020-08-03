@@ -5,7 +5,6 @@
 This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain. The composer configures webGL2 MSAA (multisamping-anti-aleasing) by default so you get high performance crisp results w/o jagged edges.
 
 ```bash
-# using npm
 npm install postprocessing react-postprocessing
 ```
 
