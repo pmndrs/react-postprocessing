@@ -16,6 +16,6 @@ export const Texture: ForwardRefExoticComponent<TextureProps> = forwardRef(funct
     t.encoding = sRGBEncoding
     t.wrapS = t.wrapT = RepeatWrapping
   }, [t])
-  const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props])
+  const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props, t, texture])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

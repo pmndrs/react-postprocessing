@@ -18,7 +18,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
   ref: Ref<DepthOfFieldEffect>
 ) {
   const { camera } = useThree()
-  const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [props])
+  const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [camera, props])
   useLayoutEffect(() => {
     if (target) {
       const vec: Vector3 =
@@ -28,6 +28,6 @@ export const DepthOfField = forwardRef(function DepthOfField(
       effect.target = vec
     }
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
-  }, [target, depthTexture])
+  }, [target, depthTexture, effect])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

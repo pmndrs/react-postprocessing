@@ -15,11 +15,11 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     }: React.PropsWithChildren<ConstructorParameters<T>[0]> & { opacity?: number; blendFunction?: number },
     ref
   ) {
-    const effect: Effect = useMemo(() => new effectImpl(props), [JSON.stringify(props)])
+    const effect: Effect = useMemo(() => new effectImpl(props), [props])
     useLayoutEffect(() => {
       effect.blendMode.blendFunction = blendFunction || defaultBlendMode
       if (opacity !== undefined) effect.blendMode.opacity.value = opacity
-    }, [blendFunction, opacity])
+    }, [blendFunction, effect.blendMode, opacity])
     return <primitive ref={ref} object={effect} dispose={null} />
   })
 
@@ -32,5 +32,5 @@ export const useVector2 = (props: any, key: string): Vector2 => {
       const [x, y] = vec
       return new Vector2().set(x, y)
     }
-  }, [props[key]])
+  }, [vec])
 }

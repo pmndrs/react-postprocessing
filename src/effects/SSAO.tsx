@@ -28,7 +28,7 @@ export const SSAO: ForwardRefExoticComponent<SSAOEffect> = forwardRef(function S
         bias: 0.5,
         ...props,
       }),
-    [props]
+    [camera, normalPass.renderTarget.texture, props]
   )
   return <primitive ref={ref} object={effect} dispose={null} />
 })
