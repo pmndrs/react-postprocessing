@@ -40,14 +40,6 @@
       "pre-commit": "pretty-quick --staged --pattern '**/*.*(js|jsx|ts|tsx)'"
     }
   },
-  "prettier": {
-    "semi": false,
-    "trailingComma": "es5",
-    "singleQuote": true,
-    "jsxBracketSameLine": true,
-    "tabWidth": 2,
-    "printWidth": 120
-  },
   "devDependencies": {
     "@babel/core": "7.11.0",
     "@babel/plugin-transform-modules-commonjs": "7.10.4",
