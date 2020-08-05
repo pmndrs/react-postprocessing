@@ -14,6 +14,6 @@ export const ChromaticAberration = forwardRef(function ChromaticAberration(
   ref: Ref<ChromaticAberrationEffect>
 ) {
   const offset = useVector2(props, 'offset')
-  const effect = useMemo(() => new ChromaticAberrationEffect({ ...props, offset }), [props])
+  const effect = useMemo(() => new ChromaticAberrationEffect({ ...props, offset }), [offset, props])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

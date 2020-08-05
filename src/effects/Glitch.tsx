@@ -20,9 +20,9 @@ export const Glitch: ForwardRefExoticComponent<GlitchEffect> = forwardRef(functi
   const delay = useVector2(props, 'delay')
   const duration = useVector2(props, 'duration')
   const strength = useVector2(props, 'strength')
-  const effect = useMemo(() => new GlitchEffect({ ...props, delay, duration, strength }), [props])
+  const effect = useMemo(() => new GlitchEffect({ ...props, delay, duration, strength }), [delay, duration, props, strength])
   useLayoutEffect(() => {
     effect.mode = active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
-  }, [active])
+  }, [active, effect, props.mode])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

@@ -19,7 +19,7 @@ export const Outline: ForwardRefExoticComponent<OutlineEffect> = forwardRef(func
         hiddenEdgeColor: 0x22090a,
         ...props,
       }),
-    [props]
+    [camera, props, scene]
   )
   return <primitive ref={ref} object={effect} dispose={null} />
 })

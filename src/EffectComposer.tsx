@@ -27,7 +27,7 @@ const EffectComposer = React.memo(
       const pass = new NormalPass(scene, camera)
       effectComposer.addPass(pass)
       return [effectComposer, pass]
-    }, [camera, gl, scene])
+    }, [camera, gl, multisampling, props, scene])
 
     useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
     useFrame((_, delta) => composer.render(delta), renderPriority)
