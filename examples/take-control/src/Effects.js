@@ -5,36 +5,13 @@ import {
   Noise,
   Vignette,
   HueSaturation,
+  GodRays,
 } from "react-postprocessing";
+import { BlendFunction } from "postprocessing";
 import { useResource, useThree } from "react-three-fiber";
-
-import { GodRaysEffect, KernelSize, BlendFunction } from "postprocessing";
 
 import { Circle } from "drei";
 import { useControl } from "react-three-gui";
-
-export const GodRays = forwardRef((props, ref) => {
-  const { camera } = useThree();
-  const { sun } = props;
-
-  const effect = useMemo(() => {
-    const godRaysEffect = new GodRaysEffect(camera, sun.current, {
-      height: 300,
-      width: 300,
-      kernelSize: KernelSize.SMALL,
-      density: 0.96,
-      decay: 0.92,
-      weight: 0.3,
-      exposure: 0.34,
-      samples: 50,
-      clampMax: 1,
-    });
-
-    return godRaysEffect;
-  }, [camera, sun]);
-
-  return <primitive ref={ref} object={effect} dispose={null} />;
-});
 
 const Sun = forwardRef(function Sun(props, forwardRef) {
   const sunColor = useControl("sun color", { type: "color", value: "#FF0000" });
@@ -50,25 +27,48 @@ function Effects() {
   const [$sun, sun] = useResource();
 
   const hue = useControl("Hue", {
-    group: "postproc",
+    group: "Postprocessing - HueSaturation",
     value: 3.11,
     min: 0,
     max: Math.PI * 2,
     type: "number",
   });
   const saturation = useControl("saturation", {
-    group: "postproc",
+    group: "Postprocessing - HueSaturation",
     value: 2.05,
     min: 0,
     max: Math.PI * 2,
     type: "number",
   });
-  const noise = useControl("noise", {
-    group: "postproc",
+  const noise = useControl("Opacity", {
+    group: "Postprocessing - Noise",
     value: 0.47,
     min: 0,
     max: 1,
     type: "number",
+  });
+
+  const exposure = useControl("exposure", {
+    group: "PostProcessing - GodRays",
+    value: 0.34,
+    min: 0,
+    max: 1,
+    type: "number",
+  });
+
+  const decay = useControl("decay", {
+    group: "PostProcessing - GodRays",
+    value: 0.9,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    type: "number",
+  });
+
+  const blur = useControl("blur", {
+    group: "PostProcessing - GodRays",
+    value: false,
+    type: "boolean",
   });
 
   return (
@@ -77,7 +77,12 @@ function Effects() {
 
       {sun && (
         <EffectComposer multisampling={false}>
-          <GodRays sun={$sun} />
+          <GodRays
+            sun={$sun.current}
+            exposure={exposure}
+            decay={decay}
+            blur={blur}
+          />
 
           <Noise
             opacity={noise}

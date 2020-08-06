@@ -5,7 +5,11 @@ function Lights() {
   const $dirLight = useRef();
   const $backLight = useRef();
 
-  const color = useControl("lights color", { type: "color", value: "#ff0000" });
+  const color = useControl("lights color", {
+    group: "Scene",
+    type: "color",
+    value: "#ff0000",
+  });
 
   return (
     <>
