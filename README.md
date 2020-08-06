@@ -8,6 +8,14 @@ This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper fo
 npm install postprocessing react-postprocessing
 ```
 
+#### Why postprocessing and not three/examples/jsm/postprocessing?
+
+From [https://vanruesc.github.io/postprocessing](https://vanruesc.github.io/postprocessing/#performance)
+
+> This library provides an EffectPass which automatically organizes and merges any given combination of effects. This minimizes the amount of render operations and makes it possible to combine many effects without the performance penalties of traditional pass chaining. Additionally, every effect can choose its own blend function.
+>
+> All fullscreen render operations also use a single triangle that fills the screen. Compared to using a quad, this approach harmonizes with modern GPU rasterization patterns and eliminates unnecessary fragment calculations along the screen diagonal. This is especially beneficial for GPGPU passes and effects that use complex fragment shaders.
+
 #### What does it look like?
 
 Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
