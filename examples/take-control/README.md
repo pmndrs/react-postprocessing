@@ -1,4 +1,4 @@
-![](https://github.com/react-spring/react-postprocessing/blob/master/examples/bubbles/screenshot.jpg?raw=true)
+![](https://github.com/react-spring/react-postprocessing/blob/master/examples/take-control/screenshot.jpg?raw=true)
 
 # Example
 To run this example:
