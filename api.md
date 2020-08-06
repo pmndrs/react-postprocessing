@@ -4,6 +4,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 
 - [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)][ssao-docs]
 - [`<Glitch />`](#glitch---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](Glitch-Docs)
+- [`<GodRays />`](#glitch---)[![](https://img.shields.io/badge/-docs-green)]([Glitch-Docs](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html))
 - [`<Noise />`](#noise---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-noise-demo-6cxje)
   [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 - [`<Bloom />`](#bloom---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
@@ -58,6 +59,32 @@ return (
     active // turn on/off the effect (switches between "mode" prop and GlitchMode.DISABLED)
     ratio={0.85} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
   />
+)
+```
+
+#### [`<GodRays />`](#glitch---) [![](https://img.shields.io/badge/-docs-green)]([Glitch-Docs](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html))
+
+The GodRays effect requires a mesh that will be used as an origin point for the rays. Refer to [this example](https://github.com/react-spring/react-postprocessing/tree/master/examples/take-control) for more details.
+
+```jsx
+import { GodRays } from 'react-postprocessing'
+
+return (
+ <GodRays
+   sun={sunRef}
+   blendFunction={BlendFunction.Screen} // The blend function of this effect.
+   samples={60} // The number of samples per pixel.
+   density={0.96} // The density of the light rays.
+   decay={0.9} // An illumination decay factor.
+   weight={0.4} // A light ray weight factor.
+   exposure={0.6} // A constant attenuation coefficient.
+   clampMax={1} // An upper bound for the saturation of the overall effect.
+   width={Resizer.AUTO_SIZE} // Render width.
+   height={Resizer.AUTO_SIZE} // Render height.
+   kernelSize={KernelSize.SMALL} // The blur kernel size. Has no effect if blur is disabled.
+   blur={true} // Whether the god rays should be blurred to reduce artifacts.
+  />
+
 )
 ```
 
