@@ -1,9 +1,9 @@
 import * as THREE from "three";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Extrude, OrbitControls } from "drei";
 import { useControl } from "react-three-gui";
 import { useFrame } from "react-three-fiber";
-import { useSpring, useSprings } from "@react-spring/core";
+import { useSprings } from "@react-spring/core";
 import { a } from "@react-spring/three";
 
 import Lights from "./lights";
@@ -53,8 +53,6 @@ function Frame({ rot, depth = 0.3, color = "#333", ...props }) {
 }
 
 function Floater(props) {
-  const { isLaunching } = props;
-
   const randomDelay = useMemo(() => Math.random() * 100, []);
   const direction = useMemo(
     () => new THREE.Vector3(Math.random(), Math.random(), Math.random()),
@@ -71,29 +69,8 @@ function Floater(props) {
       Math.sin(randomDelay + clock.getElapsedTime() / 2) / 400;
   });
 
-  const [spring, set] = useSpring(() => ({
-    loop: true,
-    position: props.position,
-    config: { mass: 10, friction: 100, tension: 1600 },
-  }));
-
-  useEffect(() => {
-    if (isLaunching) {
-      set({ position: [1, -0.5, 1.4] });
-    } else {
-      set({ position: props.position });
-    }
-  }, [isLaunching, props.position, set]);
-
   return (
-    <a.mesh
-      {...props}
-      {...spring}
-      castShadow
-      receiveShadow
-      ref={$ref}
-      onPointerDown={props.handleClick}
-    >
+    <a.mesh {...props} castShadow receiveShadow ref={$ref}>
       <boxBufferGeometry args={[0.5, 1, 0.5]} />
       <meshStandardMaterial color="#333" reflectivity={1} roughness={0.7} />
     </a.mesh>

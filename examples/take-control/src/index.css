@@ -31,21 +31,6 @@ body {
   opacity: 1;
 }
 
-.title {
-  font-size: clamp(1rem, 10vw, 110px);
-  width: 100vw;
-  text-align: center;
-  word-spacing: .23em;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  color: white;
-  font-family: "Inter", sans-serif; 
-  font-weight: 900;
-  pointer-events: none;
-}
-
 .loading {
   font-family: "Inter", sans-serif;
   color: white;

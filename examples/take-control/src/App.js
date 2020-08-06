@@ -36,9 +36,6 @@ function App() {
           }
         >
           <Scene />
-          <Html center>
-            <div className="title">TAKE CONTROL</div>
-          </Html>
         </Suspense>
       </Canvas>
 
