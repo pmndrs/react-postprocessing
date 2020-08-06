@@ -51,3 +51,18 @@ function App() {
 [react-postprocessing exports](https://github.com/react-spring/react-postprocessing/blob/master/api.md)
 
 [postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)
+
+#### Contributing
+
+##### Using the examples
+
+The examples in `./examples` can be run using the local `react-postprocessing` build:
+
+```bash
+cd examples/bubbles
+# install 
+yarn 
+
+# set the ALIAS_PP env variable
+ALIAS_PP=true yarn start
+```

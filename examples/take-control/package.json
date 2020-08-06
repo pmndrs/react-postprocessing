@@ -9,6 +9,7 @@
     "postprocessing": "^6.16.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-postprocessing": "^1.1.4",
     "react-scripts": "3.4.1",
     "react-three-fiber": "^5.0.0-beta.11",
     "react-three-gui": "^0.1.5",
