@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/v/react-postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-postprocessing?style=flat-square)
 
-This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain. The composer configures webGL2 MSAA (multi sample anti aliasing) by default so you get high performance crisp results w/o jagged edges.
+This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
 
 ```bash
 npm install postprocessing react-postprocessing
@@ -15,6 +15,8 @@ From [https://vanruesc.github.io/postprocessing](https://vanruesc.github.io/post
 > This library provides an EffectPass which automatically organizes and merges any given combination of effects. This minimizes the amount of render operations and makes it possible to combine many effects without the performance penalties of traditional pass chaining. Additionally, every effect can choose its own blend function.
 >
 > All fullscreen render operations also use a single triangle that fills the screen. Compared to using a quad, this approach harmonizes with modern GPU rasterization patterns and eliminates unnecessary fragment calculations along the screen diagonal. This is especially beneficial for GPGPU passes and effects that use complex fragment shaders.
+
+Postprocessing also supports srgb-encoding out of the box, as well as WebGL2 MSAA (multi sample anti aliasing), which is react-postprocessing's default, you get high performance crisp results w/o jagged edges.
 
 #### What does it look like?
 
