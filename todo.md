@@ -19,8 +19,8 @@ List of wrapped effects at the moment:
 - [x] [ColorDepth](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/ColorDepth.tsx)
 - [x] [DepthOfField](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/DepthOfField.tsx)
 - [x] [DotScreen](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/DotScreen.tsx)
-- [ ] GodRays
-- [ ] Grid
+- [x] GodRays
+- [x] Grid
 - [x] [HueSaturation](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/HueSaturation.tsx)
 - [ ] Outline
 - [x] [Scanline](https://github.com/react-spring/react-postprocessing/blob/master/src/effects/Scanline.tsx)
