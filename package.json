@@ -41,6 +41,7 @@
     "build": "rollup -c",
     "prepare": "yarn build",
     "eslint": "eslint --fix {src,examples}/**/*.{js,ts,jsx,tsx}",
+    "eslint:ci": "eslint {src,examples}/**/*.{js,ts,jsx,tsx}",
     "test": "echo no tests yet",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
     "typegen": "tsc --emitDeclarationOnly || true"
