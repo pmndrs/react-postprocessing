@@ -8,6 +8,9 @@ export const SMAA = forwardRef(function SMAA(
 ) {
   const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
   const effect = useMemo(() => new SMAAEffect(...smaaProps), [smaaProps])
-  useLayoutEffect(() => void effect.colorEdgesMaterial.setEdgeDetectionThreshold(edgeDetection), [edgeDetection, effect.colorEdgesMaterial])
+  useLayoutEffect(() => void effect.colorEdgesMaterial.setEdgeDetectionThreshold(edgeDetection), [
+    edgeDetection,
+    effect.colorEdgesMaterial,
+  ])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

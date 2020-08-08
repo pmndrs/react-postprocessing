@@ -1,15 +1,15 @@
-import React, { useRef } from "react";
-import { useControl } from "react-three-gui";
+import React, { useRef } from 'react'
+import { useControl } from 'react-three-gui'
 
 function Lights() {
-  const $dirLight = useRef();
-  const $backLight = useRef();
+  const $dirLight = useRef()
+  const $backLight = useRef()
 
-  const color = useControl("lights color", {
-    group: "Scene",
-    type: "color",
-    value: "#ff0000",
-  });
+  const color = useControl('lights color', {
+    group: 'Scene',
+    type: 'color',
+    value: '#ff0000',
+  })
 
   return (
     <>
@@ -27,17 +27,11 @@ function Lights() {
 
       <pointLight color={color} position={[0, 1, -10]} intensity={0.3} />
 
-      <spotLight
-        ref={$backLight}
-        position={[0, 1, 3]}
-        intensity={0.4}
-        distance={4}
-        color="blue"
-      />
+      <spotLight ref={$backLight} position={[0, 1, 3]} intensity={0.4} distance={4} color="blue" />
 
       <directionalLight position={[0, 0, 0]} intensity={0.1} />
     </>
-  );
+  )
 }
 
-export default Lights;
+export default Lights
