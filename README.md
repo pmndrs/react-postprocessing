@@ -62,7 +62,4 @@ The examples in `./examples` can be run using the local `react-postprocessing` b
 cd examples/bubbles
 # install 
 yarn 
-
-# set the ALIAS_PP env variable
-ALIAS_PP=true yarn start
 ```
