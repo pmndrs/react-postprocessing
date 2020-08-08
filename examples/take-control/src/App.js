@@ -1,12 +1,12 @@
-import React, { Suspense } from "react";
-import { Canvas } from "react-three-fiber";
-import { Html, Stats } from "drei";
-import Effects from "./Effects";
-import Scene from "./Scene";
-import { Controls } from "react-three-gui";
+import React, { Suspense } from 'react'
+import { Canvas } from 'react-three-fiber'
+import { Html, Stats } from 'drei'
+import Effects from './Effects'
+import Scene from './Scene'
+import { Controls } from 'react-three-gui'
 
 function App() {
-  const showControls = window.location.search.includes("ctrl");
+  const showControls = window.location.search.includes('ctrl')
 
   return (
     <>
@@ -14,11 +14,9 @@ function App() {
         shadowMap
         colorManagement
         camera={{ position: [0, 0, 3], far: 1000, fov: 70 }}
-        style={{
-          background: "#121212",
-        }}
+        style={{ background: '#121212' }}
         gl={{
-          powerPreference: "high-performance",
+          powerPreference: 'high-performance',
           alpha: false,
           antialias: false,
           stencil: false,
@@ -41,12 +39,12 @@ function App() {
 
       {showControls && (
         <div className="controls">
-          {" "}
-          <Controls />{" "}
+          {' '}
+          <Controls />{' '}
         </div>
       )}
     </>
-  );
+  )
 }
 
-export default App;
+export default App
