@@ -4,8 +4,10 @@ import { Html, Stats } from 'drei'
 import Effects from './Effects'
 import Scene from './Scene'
 import { Controls } from 'react-three-gui'
+import { ControlsContainer } from './styles'
+import { LoadingMsg } from '../../styles'
 
-function App() {
+function TakeControl() {
   const showControls = window.location.search.includes('ctrl')
 
   return (
@@ -14,7 +16,6 @@ function App() {
         shadowMap
         colorManagement
         camera={{ position: [0, 0, 3], far: 1000, fov: 70 }}
-        style={{ background: '#121212' }}
         gl={{
           powerPreference: 'high-performance',
           alpha: false,
@@ -29,7 +30,7 @@ function App() {
         <Suspense
           fallback={
             <Html center>
-              <span className="loading">Loading.</span>
+              <LoadingMsg>Loading...</LoadingMsg>
             </Html>
           }
         >
@@ -38,13 +39,12 @@ function App() {
       </Canvas>
 
       {showControls && (
-        <div className="controls">
-          {' '}
-          <Controls />{' '}
-        </div>
+        <ControlsContainer>
+          <Controls />
+        </ControlsContainer>
       )}
     </>
   )
 }
 
-export default App
+export default TakeControl

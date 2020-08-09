@@ -3,9 +3,18 @@ import React, { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame, useResource } from 'react-three-fiber'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
 import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from 'drei'
+import { LoadingMsg } from '../../styles'
+import bumpMapUrl from './resources/bump.jpg'
+
+import cubePxUrl from './resources/cube/px.png'
+import cubeNxUrl from './resources/cube/nx.png'
+import cubePyUrl from './resources/cube/py.png'
+import cubeNyUrl from './resources/cube/ny.png'
+import cubePzUrl from './resources/cube/pz.png'
+import cubeNzUrl from './resources/cube/nz.png'
 
 function MainSphere({ material }) {
-  const main = useRef()
+  const main = useRef(null)
   // main sphere rotates following the mouse position
   useFrame(({ clock, mouse }) => {
     main.current.rotation.z = clock.getElapsedTime()
@@ -57,8 +66,9 @@ function Instances({ material }) {
 }
 
 function Scene() {
-  const bumpMap = useTextureLoader('/bump.jpg')
-  const envMap = useCubeTextureLoader(['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'], { path: '/cube/' })
+  const bumpMap = useTextureLoader(bumpMapUrl)
+  const envMap = useCubeTextureLoader([cubePxUrl, cubeNxUrl, cubePyUrl, cubeNyUrl, cubePzUrl, cubeNzUrl], { path: '' })
+
   // We use `useResource` to be able to delay rendering the spheres until the material is ready
   const [matRef, material] = useResource()
 
@@ -82,7 +92,7 @@ function Scene() {
   )
 }
 
-export default function App() {
+export default function Bubbles() {
   return (
     <Canvas
       colorManagement
@@ -91,7 +101,13 @@ export default function App() {
     >
       <color attach="background" args={['#050505']} />
       <fog color="#161616" attach="fog" near={8} far={30} />
-      <Suspense fallback={<Html center>Loading.</Html>}>
+      <Suspense
+        fallback={
+          <Html center>
+            <LoadingMsg>Loading...</LoadingMsg>
+          </Html>
+        }
+      >
         <Scene />
       </Suspense>
       <EffectComposer>
