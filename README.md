@@ -2,11 +2,18 @@
 
 ![npm](https://img.shields.io/npm/v/react-postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-postprocessing?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
-This is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
+`react-postprocessing` is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
 
 ```bash
 npm install postprocessing react-postprocessing
 ```
+<p align="center">
+  <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="./examples/src/demos/Bubbles/resources/screenshot.jpg" alt="Bubbles" /></a>
+  <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="./examples/src/demos/TakeControl/resources/screenshot.jpg" alt="Take Control" /></a>
+</p>
+<p align="middle">
+  <i>These demos are real, you can click them! They contain the full code, too. 📦</i>
+</p>
 
 #### Why postprocessing and not three/examples/jsm/postprocessing?
 

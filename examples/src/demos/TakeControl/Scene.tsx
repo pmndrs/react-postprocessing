@@ -6,7 +6,7 @@ import { useFrame } from 'react-three-fiber'
 import { useSprings } from '@react-spring/core'
 import { a } from '@react-spring/three'
 
-import Lights from './lights'
+import Lights from './Lights'
 
 function Frame({ rot, depth = 0.3, color = '#333', ...props }) {
   const shape = useMemo(() => {
@@ -50,7 +50,7 @@ function Floater(props) {
   const randomDelay = useMemo(() => Math.random() * 100, [])
   const direction = useMemo(() => new THREE.Vector3(Math.random(), Math.random(), Math.random()), [])
 
-  const $ref = useRef()
+  const $ref = useRef(null)
   useFrame(({ clock }) => {
     $ref.current.rotation.x += direction.x / 140
     $ref.current.rotation.y += direction.y / 140
@@ -85,52 +85,52 @@ function Frames() {
     delay: (i) => 1000 + i * 12 + i,
   }))
 
-  return springs.map((spring, i) => {
-    const { theta } = spring
-
-    return <Frame key={i} depth={0.5} scale={[0.6, 1, 1]} position={[0, 0, 3 - i * 0.5]} rot={theta} />
-  })
+  return (
+    <>
+      {springs.map((spring, i) => {
+        const { theta } = spring
+        return <Frame key={i} depth={0.5} scale={[0.6, 1, 1]} position={[0, 0, 3 - i * 0.5]} rot={theta} />
+      })}
+    </>
+  )
 }
+
+const floaters = [
+  {
+    scale: [0.3, 0.3, 0.3],
+    position: [1.2, -1, -3],
+    rotation: [2, 0.3, 0.5],
+  },
+  {
+    scale: [0.3, 0.3, 0.3],
+    position: [-1, 1, -4],
+    rotation: [2, 0.3, 0.5],
+  },
+  {
+    scale: [0.6, 0.6, 0.6],
+    position: [0.8, 0, -6],
+    rotation: [0.5, 0.3, 0.5],
+  },
+  { position: [-1.5, 0.1, -6], rotation: [-2, 3, 1] },
+  { position: [0, 1, -2], rotation: [-2, 3, 1] },
+  { position: [0, -1, -4], rotation: [-2, 3, 1] },
+  { position: [1, 0, 0], rotation: [1, 4, 1] },
+  { position: [-1.2, 0, 1], rotation: [1, 4, 1] },
+]
 
 function Floaters() {
   const [launching, setLaunching] = React.useState(false)
-
-  const group = useRef()
+  const group = useRef(null)
 
   useFrame(({ mouse }) => {
     group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, mouse.x / 10, 0.06)
     group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, -mouse.y / 16, 0.05)
   })
 
-  const floaters = useMemo(() => {
-    return [
-      {
-        scale: [0.3, 0.3, 0.3],
-        position: [1.2, -1, -3],
-        rotation: [2, 0.3, 0.5],
-      },
-      {
-        scale: [0.3, 0.3, 0.3],
-        position: [-1, 1, -4],
-        rotation: [2, 0.3, 0.5],
-      },
-      {
-        scale: [0.6, 0.6, 0.6],
-        position: [0.8, 0, -6],
-        rotation: [0.5, 0.3, 0.5],
-      },
-      { position: [-1.5, 0.1, -6], rotation: [-2, 3, 1] },
-      { position: [0, 1, -2], rotation: [-2, 3, 1] },
-      { position: [0, -1, -4], rotation: [-2, 3, 1] },
-      { position: [1, 0, 0], rotation: [1, 4, 1] },
-      { position: [-1.2, 0, 1], rotation: [1, 4, 1] },
-    ]
-  }, [])
-
   return (
     <group ref={group}>
       {floaters.map((floater, i) => (
-        <Floater onClick={() => setLaunching(i)} isLaunching={launching === i} {...floater} />
+        <Floater key={i} onClick={() => setLaunching(!!i)} isLaunching={launching === !!i} {...floater} />
       ))}
     </group>
   )
