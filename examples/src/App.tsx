@@ -5,28 +5,32 @@ import demos from './demos'
 import { DemoWrapper, DemoPanel, Spot } from './styles'
 
 const demosEntries = Object.entries(demos)
+const [defaultDemoName] = demosEntries[0]
 export default function App() {
   return (
     <Router>
       <Switch>
-        {demosEntries.map(([name, { Component, bright }]) => (
-          <Route path={`/demo/${name}`} key={name} exact>
-            {({ match }) =>
-              !!match && (
-                <DemoWrapper className={cx({ bright })}>
+        <Route
+          path={`/demo/:name`}
+          exact
+          render={({ match }) => {
+            const ActiveDemo = demos[match.params.name]
+            return (
+              <DemoWrapper className={cx({ bright: ActiveDemo?.bright })}>
+                {!!ActiveDemo ? (
                   <React.Suspense fallback={null}>
-                    <Component />
+                    <ActiveDemo.Component />
                   </React.Suspense>
-                </DemoWrapper>
-              )
-            }
-          </Route>
-        ))}
+                ) : (
+                  <Redirect to={`/demo/${defaultDemoName}`} />
+                )}
+              </DemoWrapper>
+            )
+          }}
+        />
 
-        {/* Redirect to the first example on 404 */}
-        <Redirect to={`/demo/${demosEntries[0][0]}`} />
+        <Redirect to={`/demo/${defaultDemoName}`} />
       </Switch>
-
       <DemoPanel>
         {demosEntries.map(([name, { bright }]) => (
           <Spot key={name} to={`/demo/${name}`} title={name} activeClassName="active" className={cx({ bright })} />

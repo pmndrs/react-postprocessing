@@ -1,6 +1,6 @@
 import { lazy } from 'react'
 
 export default {
-  TakeControl: { descr: '', tags: [], Component: lazy(async () => await import('./TakeControl')), bright: false },
-  Bubbles: { descr: '', tags: [], Component: lazy(async () => await import('./Bubbles')), bright: false },
+  TakeControl: { descr: '', tags: [], bright: false, Component: lazy(async () => await import('./TakeControl')) },
+  Bubbles: { descr: '', tags: [], bright: false, Component: lazy(async () => await import('./Bubbles')) },
 }
