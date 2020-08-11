@@ -58,23 +58,3 @@ function App() {
 [react-postprocessing exports](https://github.com/react-spring/react-postprocessing/blob/master/api.md)
 
 [postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)
-
-#### Contributing
-
-##### Using the examples
-
-The examples in `./examples` can be run using the local `react-postprocessing` build:
-
-```bash
-# clone this repository
-git clone https://github.com/react-spring/react-postprocessing
-
-# install project dependencies & build the library
-cd react-postprocessing && yarn 
-
-# move to the examples folder & install dependencies 
-cd examples && yarn
-
-# start the dev server 
-yarn start
-```
