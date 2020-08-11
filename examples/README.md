@@ -3,7 +3,6 @@
 ```bash
 git clone https://github.com/react-spring/react-postprocessing
 
-
 # install project dependencies & build the library
 cd react-postprocessing && yarn
 
