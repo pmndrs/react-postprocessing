@@ -1,3 +1,4 @@
+import * as THREE from 'three'
 import React, { useMemo, useEffect, createContext, useRef } from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
@@ -6,17 +7,23 @@ import { HalfFloatType } from 'three'
 export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl
   normalPass: NormalPass
+  camera: THREE.Camera
+  scene: THREE.Scene
 }>(null)
 
 export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
   multisampling?: number
   renderPriority?: number
+  camera?: THREE.Camera
+  scene?: THREE.Scene
 }
 
 const EffectComposer = React.memo(
-  ({ children, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps) => {
-    const { gl, scene, camera, size } = useThree()
+  ({ children, camera, scene, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps) => {
+    const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
+    scene = scene || defaultScene
+    camera = camera || defaultCamera
 
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
@@ -43,7 +50,7 @@ const EffectComposer = React.memo(
     }, [composer, camera, children])
 
     // Memoize state, otherwise it would trigger all consumers on every render
-    const state = useMemo(() => ({ composer, normalPass }), [composer, normalPass])
+    const state = useMemo(() => ({ composer, normalPass, camera, scene }), [composer, normalPass, camera, scene])
 
     return (
       <EffectComposerContext.Provider value={state}>

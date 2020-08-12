@@ -1,6 +1,6 @@
 import { OutlineEffect } from 'postprocessing'
-import React, { Ref, ForwardRefExoticComponent, forwardRef, useMemo } from 'react'
-import { useThree } from 'react-three-fiber'
+import React, { Ref, ForwardRefExoticComponent, forwardRef, useContext, useMemo } from 'react'
+import { EffectComposerContext } from '../EffectComposer'
 
 type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2]
 
@@ -8,7 +8,7 @@ export const Outline: ForwardRefExoticComponent<OutlineEffect> = forwardRef(func
   props: OutlineProps,
   ref: Ref<OutlineEffect>
 ) {
-  const { scene, camera } = useThree()
+  const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>
       new OutlineEffect(scene, camera, {
