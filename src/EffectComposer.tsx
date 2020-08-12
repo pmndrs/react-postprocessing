@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { useMemo, useEffect, createContext, useRef } from 'react'
+import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImperativeHandle } from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { HalfFloatType } from 'three'
@@ -19,8 +19,8 @@ export type EffectComposerProps = {
   scene?: THREE.Scene
 }
 
-const EffectComposer = React.memo(
-  ({ children, camera, scene, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps) => {
+const EffectComposer = forwardRef(
+  ({ children, camera, scene, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps, ref) => {
     const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
     scene = scene || defaultScene
     camera = camera || defaultCamera
@@ -51,6 +51,9 @@ const EffectComposer = React.memo(
 
     // Memoize state, otherwise it would trigger all consumers on every render
     const state = useMemo(() => ({ composer, normalPass, camera, scene }), [composer, normalPass, camera, scene])
+
+    // Expose the composer
+    useImperativeHandle(ref, () => composer, [])
 
     return (
       <EffectComposerContext.Provider value={state}>
