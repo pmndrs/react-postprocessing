@@ -16,6 +16,7 @@ function TakeControl() {
         shadowMap
         colorManagement
         camera={{ position: [0, 0, 3], far: 1000, fov: 70 }}
+        pixelRatio={window.devicePixelRatio}
         gl={{
           powerPreference: 'high-performance',
           alpha: false,
