@@ -36,7 +36,7 @@ const EffectComposer = forwardRef(
       return [effectComposer, pass]
     }, [camera, gl, multisampling, props, scene])
 
-    useEffect(() => void composer.setSize(size.width * devicePixelRatio, size.height * devicePixelRatio), [composer, size])
+    useEffect(() => void composer.setSize(size.width * devicePixelRatio, size.height * devicePixelRatio), [composer, size, devicePixelRatio])
     useFrame((_, delta) => composer.render(delta), renderPriority)
 
     const group = useRef()
