@@ -97,6 +97,7 @@ export default function Bubbles() {
     <Canvas
       colorManagement
       camera={{ position: [0, 0, 3] }}
+      pixelRatio={window.devicePixelRatio}
       gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
     >
       <color attach="background" args={['#050505']} />
