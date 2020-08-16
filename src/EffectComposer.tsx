@@ -24,7 +24,7 @@ const EffectComposer = forwardRef(
     const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
     scene = scene || defaultScene
     camera = camera || defaultCamera
-
+    const pixelRatio = gl.getPixelRatio()
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
       const effectComposer = new EffectComposerImpl(gl, { multisampling, frameBufferType: HalfFloatType, ...props })
@@ -36,10 +36,9 @@ const EffectComposer = forwardRef(
       return [effectComposer, pass]
     }, [camera, gl, multisampling, props, scene])
 
-    useEffect(() => void composer.setSize(
-      size.width * window.devicePixelRatio,
-      size.height * window.devicePixelRatio
-    ), [composer, size, window.devicePixelRatio])
+    useEffect(() => {
+      composer.setSize(size.width * pixelRatio, size.height * pixelRatio)
+    }, [composer, size, pixelRatio])
     useFrame((_, delta) => composer.render(delta), renderPriority)
 
     const group = useRef()
