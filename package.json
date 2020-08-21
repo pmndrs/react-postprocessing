@@ -10,10 +10,6 @@
     "webgl",
     "3d"
   ],
-  "contributors": [
-    "Paul Henschel <drcmda@gmail.com>",
-    "v1rtl"
-  ],
   "license": "MIT",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
