@@ -16,7 +16,8 @@
     "declaration": true,
     "outDir": "dist",
     "paths": {
-      "*": ["types/*"]
+      "*": ["types/*"],
+      "react-postprocessing": ["./"]
     }
   },
   "include": ["./types/**/*", "./src/**/*"],

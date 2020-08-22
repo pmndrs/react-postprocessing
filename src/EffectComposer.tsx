@@ -1,4 +1,5 @@
-import React, { useMemo, useEffect, createContext, useRef } from 'react'
+import * as THREE from 'three'
+import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImperativeHandle } from 'react'
 import { useThree, useFrame } from 'react-three-fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { HalfFloatType } from 'three'
@@ -6,18 +7,24 @@ import { HalfFloatType } from 'three'
 export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl
   normalPass: NormalPass
+  camera: THREE.Camera
+  scene: THREE.Scene
 }>(null)
 
 export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
   multisampling?: number
   renderPriority?: number
+  camera?: THREE.Camera
+  scene?: THREE.Scene
 }
 
-const EffectComposer = React.memo(
-  ({ children, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps) => {
-    const { gl, scene, camera, size } = useThree()
-
+const EffectComposer = forwardRef(
+  ({ children, camera, scene, renderPriority = 1, multisampling = 8, ...props }: EffectComposerProps, ref) => {
+    const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
+    scene = scene || defaultScene
+    camera = camera || defaultCamera
+    const pixelRatio = gl.getPixelRatio()
     const [composer, normalPass] = useMemo(() => {
       // Initialize composer
       const effectComposer = new EffectComposerImpl(gl, { multisampling, frameBufferType: HalfFloatType, ...props })
@@ -29,7 +36,9 @@ const EffectComposer = React.memo(
       return [effectComposer, pass]
     }, [camera, gl, multisampling, props, scene])
 
-    useEffect(() => void composer.setSize(size.width, size.height), [composer, size])
+    useEffect(() => {
+      composer.setSize(size.width * pixelRatio, size.height * pixelRatio)
+    }, [composer, size, pixelRatio])
     useFrame((_, delta) => composer.render(delta), renderPriority)
 
     const group = useRef()
@@ -43,7 +52,10 @@ const EffectComposer = React.memo(
     }, [composer, camera, children])
 
     // Memoize state, otherwise it would trigger all consumers on every render
-    const state = useMemo(() => ({ composer, normalPass }), [composer, normalPass])
+    const state = useMemo(() => ({ composer, normalPass, camera, scene }), [composer, normalPass, camera, scene])
+
+    // Expose the composer
+    useImperativeHandle(ref, () => composer, [])
 
     return (
       <EffectComposerContext.Provider value={state}>

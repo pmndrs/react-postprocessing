@@ -1,7 +1,8 @@
 import { DepthOfFieldEffect } from 'postprocessing'
-import React, { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
-import { useThree, ReactThreeFiber } from 'react-three-fiber'
+import React, { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
+import { ReactThreeFiber } from 'react-three-fiber'
 import { Texture, Vector3 } from 'three'
+import { EffectComposerContext } from '../EffectComposer'
 
 type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
   Partial<{
@@ -17,7 +18,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
   { target, depthTexture, ...props }: DOFProps,
   ref: Ref<DepthOfFieldEffect>
 ) {
-  const { camera } = useThree()
+  const { camera } = useContext(EffectComposerContext)
   const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [camera, props])
   useLayoutEffect(() => {
     if (target) {
