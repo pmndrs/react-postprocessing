@@ -7,10 +7,10 @@ module.exports = (config, env) => {
   return override(
     addReactRefresh(),
     removeModuleScopePlugin(),
-    babelInclude([path.resolve('src'), path.resolve('../../src')]),
+    babelInclude([path.resolve('src'), path.resolve('../src')]),
     process.env.ALIAS_PP &&
       addWebpackAlias({
-        'react-postprocessing': path.resolve('../../src/index'),
+        'react-postprocessing': path.resolve('../src/index'),
         postprocessing: path.resolve('node_modules/postprocessing'),
         react: path.resolve('node_modules/react'),
         'react-dom': path.resolve('node_modules/react-dom'),

@@ -1,7 +1,7 @@
 import { OutlineEffect } from 'postprocessing'
-import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect } from 'react'
-import { useThree } from 'react-three-fiber'
+import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext } from 'react'
 import { Object3D } from 'three'
+import { EffectComposerContext } from '../EffectComposer'
 
 type ObjectRef = MutableRefObject<Object3D>
 
@@ -15,8 +15,7 @@ export const Outline = forwardRef(function Outline(
   { selection = [], selectionLayer = 10, ...props }: OutlineProps,
   ref: Ref<OutlineEffect>
 ) {
-  const { scene, camera } = useThree()
-
+  const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>
       new OutlineEffect(scene, camera, {
