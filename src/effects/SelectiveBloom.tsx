@@ -21,7 +21,7 @@ const removeLight = (light: ObjectRef, effect: SelectiveBloomEffect) => {
 }
 
 export const SelectiveBloom = forwardRef(function SelectiveBloom(
-  { selection = [], selectionLayer = 11, lights = [], ...otherProps }: SelectiveBloomProps,
+  { selection = [], selectionLayer = 10, lights = [], ...otherProps }: SelectiveBloomProps,
   ref: Ref<SelectiveBloomEffect>
 ) {
   if (lights.length === 0) {
