@@ -7,7 +7,7 @@ type ObjectRef = MutableRefObject<Object3D>
 
 export type SelectiveBloomProps = ConstructorParameters<typeof SelectiveBloomEffect>[2] &
   Partial<{
-    lights: ObjectRef[] | null
+    lights: ObjectRef[]
     selection: ObjectRef | ObjectRef[]
     selectionLayer: number
   }>
