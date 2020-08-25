@@ -12,7 +12,7 @@ export const EffectComposerContext = createContext<{
 }>(null)
 
 export type EffectComposerProps = {
-  children: JSX.Element | JSX.Element[]
+  children?: JSX.Element | JSX.Element[]
   multisampling?: number
   renderPriority?: number
   camera?: THREE.Camera
@@ -55,7 +55,7 @@ const EffectComposer = forwardRef(
     const state = useMemo(() => ({ composer, normalPass, camera, scene }), [composer, normalPass, camera, scene])
 
     // Expose the composer
-    useImperativeHandle(ref, () => composer, [])
+    useImperativeHandle(ref, () => composer, [composer])
 
     return (
       <EffectComposerContext.Provider value={state}>

@@ -5,14 +5,14 @@ import { Effect, BlendFunction } from 'postprocessing'
 
 export const wrapEffect = <T extends new (...args: any[]) => Effect>(
   effectImpl: T,
-  defaultBlendMode: number = BlendFunction.NORMAL
+  defaultBlendMode: BlendFunction = BlendFunction.NORMAL
 ): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0]> =>
   forwardRef(function Wrap(
     {
       blendFunction,
       opacity,
       ...props
-    }: React.PropsWithChildren<ConstructorParameters<T>[0]> & { opacity?: number; blendFunction?: number },
+    }: React.PropsWithChildren<{ blendFunction?: BlendFunction; opacity?: number } & ConstructorParameters<T>[0]>,
     ref
   ) {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])

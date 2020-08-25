@@ -7,8 +7,8 @@ type ObjectRef = MutableRefObject<Object3D>
 
 export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   Partial<{
-    selection: ObjectRef | ObjectRef[]
-    selectionLayer: number
+    selection?: ObjectRef | ObjectRef[]
+    selectionLayer?: number
   }>
 
 export const Outline = forwardRef(function Outline(
