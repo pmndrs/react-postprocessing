@@ -4,7 +4,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 
 - [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)][ssao-docs]
 - [`<Glitch />`](#glitch---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](Glitch-Docs)
-- [`<GodRays />`](#glitch---)[![](https://img.shields.io/badge/-docs-green)]([Glitch-Docs](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html))
+- [`<GodRays />`](#godrays---)[![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html)
 - [`<Noise />`](#noise---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-noise-demo-6cxje)
   [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 - [`<Outline />`](#outline---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/OutlineEffect.js~OutlineEffect.html)
@@ -64,7 +64,7 @@ return (
 )
 ```
 
-#### [`<GodRays />`](#glitch---) [![](https://img.shields.io/badge/-docs-green)]([Glitch-Docs](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html))
+#### [`<GodRays />`](#godrays---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html)
 
 The GodRays effect requires a mesh that will be used as an origin point for the rays. Refer to [this example](https://github.com/react-spring/react-postprocessing/tree/master/examples/take-control) for more details.
 
