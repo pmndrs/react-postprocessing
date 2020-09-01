@@ -12,7 +12,9 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
       blendFunction,
       opacity,
       ...props
-    }: React.PropsWithChildren<{ blendFunction?: BlendFunction; opacity?: number } & ConstructorParameters<T>[0]>,
+    }: React.PropsWithChildren<
+      Partial<{ blendFunction: BlendFunction; opacity: number }> & ConstructorParameters<T>[0]
+    >,
     ref
   ) {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])

@@ -77,7 +77,7 @@ function Scene() {
       <MeshDistortMaterial
         ref={matRef}
         envMap={envMap}
-        bumpMap={bumpMap}
+        bumpMap={bumpMap as THREE.Texture}
         color={'#010101'}
         roughness={0.1}
         metalness={1}
