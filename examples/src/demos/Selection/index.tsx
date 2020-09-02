@@ -1,18 +1,33 @@
 import * as THREE from 'three'
-import React, { Suspense, useRef, useState, useEffect } from 'react'
+import React, { Suspense, useRef, useState, useEffect, useCallback } from 'react'
 import { EffectComposer, Outline } from 'react-postprocessing'
 import { Canvas } from 'react-three-fiber'
-import { Html, Box } from 'drei'
+import { Html, Box, Torus } from 'drei'
 import { LoadingMsg } from '../../styles'
+
+import produce from 'immer'
+import { Mesh } from 'three'
 
 export default function Selection() {
   const box1Ref = useRef<typeof Box>()
-
   const box2Ref = useRef<typeof Box>()
+  const torusRef = useRef<typeof Torus>()
 
-  const [selected, set] = useState<React.MutableRefObject<typeof Box>[]>([box1Ref, undefined])
+  const [selected, set] = useState<React.MutableRefObject<typeof Mesh>[]>([box1Ref, box2Ref])
 
-  useEffect(() => void console.log(`Selected: ${selected.map((x) => Boolean(x))}`), [selected])
+  const toggle = useCallback((item) => {
+    set(
+      produce((draft) => {
+        const i = draft.findIndex((obj) => obj.current.uuid === item.current.uuid)
+
+        if (i > -1) {
+          draft.splice(i, 1)
+        } else {
+          draft.push(item)
+        }
+      })
+    )
+  }, [])
 
   return (
     <Canvas>
@@ -25,24 +40,19 @@ export default function Selection() {
           </Html>
         }
       >
-        <Box
-          ref={box1Ref}
-          onClick={() => set(selected[0] ? [undefined, selected[1]] : [box1Ref, selected[1]])}
-          position={[1, 1, 1]}
-        >
+        <Box ref={box1Ref} onClick={() => toggle(box1Ref)} position={[1, 1, 1]}>
           <meshNormalMaterial attach="material" />
         </Box>
-        <Box
-          ref={box2Ref}
-          onClick={() => set(selected[1] ? [selected[0], undefined] : [selected[0], box2Ref])}
-          position={[-1, 1, 0.5]}
-          rotation-z={0.2}
-        >
+        <Box ref={box2Ref} onClick={() => toggle(box2Ref)} position={[-1, 1, 0.5]} rotation-z={0.2}>
           <meshNormalMaterial attach="material" />
         </Box>
+
+        <Torus ref={torusRef} onClick={() => toggle(torusRef)} position={[0, -1, 0.5]} rotation-z={0.2}>
+          <meshNormalMaterial attach="material" />
+        </Torus>
       </Suspense>
       <EffectComposer>
-        <Outline selection={selected.filter((x) => typeof x !== 'undefined')} />
+        <Outline selection={selected} visibleEdgeColor="blue" edgeStrength={10} pulseSpeed={1} blur={true} />
       </EffectComposer>
     </Canvas>
   )
