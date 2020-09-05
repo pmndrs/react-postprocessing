@@ -41,7 +41,7 @@ export default function Selection() {
       </Box>
 
       <Torus ref={torusRef} onClick={() => toggle(torusRef)} position={[0, -1, 0.5]} rotation-z={0.2}>
-        <meshNormalMaterial att ach="material" />
+        <meshNormalMaterial attach="material" />
       </Torus>
       <EffectComposer>
         <Outline selection={selected} visibleEdgeColor="blue" edgeStrength={10} pulseSpeed={1} blur={true} />
