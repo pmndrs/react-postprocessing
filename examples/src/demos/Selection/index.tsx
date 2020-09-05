@@ -33,24 +33,16 @@ export default function Selection() {
     <Canvas>
       <color attach="background" args={['black']} />
       <fog color={new THREE.Color('#161616')} attach="fog" near={8} far={30} />
-      <Suspense
-        fallback={
-          <Html center>
-            <LoadingMsg>Loading...</LoadingMsg>
-          </Html>
-        }
-      >
-        <Box ref={box1Ref} onClick={() => toggle(box1Ref)} position={[1, 1, 1]}>
-          <meshNormalMaterial attach="material" />
-        </Box>
-        <Box ref={box2Ref} onClick={() => toggle(box2Ref)} position={[-1, 1, 0.5]} rotation-z={0.2}>
-          <meshNormalMaterial attach="material" />
-        </Box>
+      <Box ref={box1Ref} onClick={() => toggle(box1Ref)} position={[1, 1, 1]}>
+        <meshNormalMaterial attach="material" />
+      </Box>
+      <Box ref={box2Ref} onClick={() => toggle(box2Ref)} position={[-1, 1, 0.5]} rotation-z={0.2}>
+        <meshNormalMaterial attach="material" />
+      </Box>
 
-        <Torus ref={torusRef} onClick={() => toggle(torusRef)} position={[0, -1, 0.5]} rotation-z={0.2}>
-          <meshNormalMaterial attach="material" />
-        </Torus>
-      </Suspense>
+      <Torus ref={torusRef} onClick={() => toggle(torusRef)} position={[0, -1, 0.5]} rotation-z={0.2}>
+        <meshNormalMaterial att ach="material" />
+      </Torus>
       <EffectComposer>
         <Outline selection={selected} visibleEdgeColor="blue" edgeStrength={10} pulseSpeed={1} blur={true} />
       </EffectComposer>
