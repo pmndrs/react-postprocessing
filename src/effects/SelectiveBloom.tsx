@@ -21,7 +21,17 @@ const removeLight = (light: ObjectRef, effect: SelectiveBloomEffect) => {
 }
 
 export const SelectiveBloom = forwardRef(function SelectiveBloom(
-  { selection = [], selectionLayer = 10, lights = [], ...otherProps }: SelectiveBloomProps,
+  {
+    selection = [],
+    selectionLayer = 10,
+    lights = [],
+    luminanceThreshold,
+    luminanceSmoothing,
+    intensity,
+    width,
+    height,
+    kernelSize,
+  }: SelectiveBloomProps,
   ref: Ref<SelectiveBloomEffect>
 ) {
   if (lights.length === 0) {
@@ -33,9 +43,14 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     () =>
       new SelectiveBloomEffect(scene, camera, {
         blendFunction: BlendFunction.SCREEN,
-        ...otherProps,
+        luminanceThreshold,
+        luminanceSmoothing,
+        intensity,
+        width,
+        height,
+        kernelSize,
       }),
-    [camera, otherProps, scene]
+    [camera, height, intensity, kernelSize, luminanceSmoothing, luminanceThreshold, scene, width]
   )
 
   useEffect(() => {
