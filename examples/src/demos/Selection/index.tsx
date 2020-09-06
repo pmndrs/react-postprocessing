@@ -4,8 +4,9 @@ import { EffectComposer, Outline, SelectiveBloom } from 'react-postprocessing'
 import { Canvas, useFrame } from 'react-three-fiber'
 import { Sphere, Box } from 'drei'
 
-import produce from 'immer'
 import { Mesh } from 'three'
+
+import toggle from './toggle'
 
 export default function App() {
   return (
@@ -16,54 +17,33 @@ export default function App() {
 }
 
 export function Selection() {
-  const box1Ref = useRef<typeof Box>()
-  const box2Ref = useRef<typeof Box>()
-
+  const box1Ref = useRef<typeof Mesh>()
+  const box2Ref = useRef<typeof Mesh>()
   const [outlineSelection, setOutlineSelection] = useState<React.MutableRefObject<typeof Mesh>[]>([box1Ref, box2Ref])
 
   const toggleOutline = useCallback((item) => {
-    setOutlineSelection(
-      produce((draft) => {
-        const i = draft.findIndex((obj) => obj.current.uuid === item.current.uuid)
-
-        if (i > -1) {
-          draft.splice(i, 1)
-        } else {
-          draft.push(item)
-        }
-      })
-    )
+    setOutlineSelection((state) => toggle(state, item))
   }, [])
 
-  const sphere1Ref = useRef<typeof Sphere>()
-  const sphere2Ref = useRef<typeof Sphere>()
+  const sphere1Ref = useRef<typeof Mesh>()
+  const sphere2Ref = useRef<typeof Mesh>()
   const [bloomSelection, setBloomSelection] = useState<React.MutableRefObject<typeof Mesh>[]>([sphere1Ref])
 
   const toggleBloom = useCallback((item) => {
-    setBloomSelection(
-      produce((draft) => {
-        const i = draft.findIndex((obj) => obj.current.uuid === item.current.uuid)
-
-        if (i > -1) {
-          draft.splice(i, 1)
-        } else {
-          draft.push(item)
-        }
-      })
-    )
+    setBloomSelection((state) => toggle(state, item))
   }, [])
 
-  const lightRef = useRef()
+  const lightRef = useRef(null)
 
   /**
    * Enable the layer you will use for the selective bloom on the lights you want to use
    */
   useEffect(() => {
-    lightRef.current.layers.enable(11)
+    lightRef.current!.layers.enable(11)
   })
 
   useFrame(({ clock }) => {
-    lightRef.current.position.y = Math.sin(clock.getElapsedTime())
+    lightRef.current!.position.y = Math.sin(clock.getElapsedTime())
   })
 
   return (
