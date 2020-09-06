@@ -71,6 +71,7 @@ export function Selection() {
         <SelectiveBloom selectionLayer={11} selection={bloomSelection} luminanceThreshold={0.1} />
       </EffectComposer>
 
+      <ambientLight intensity={0.1} />
       <pointLight position={[0, 0, 0]} ref={lightRef} intensity={1} />
     </>
   )
