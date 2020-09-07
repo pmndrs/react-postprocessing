@@ -2,13 +2,13 @@
 
 Here's a list of all wrapped effects with demos, example usage (with default props) and reference to postprocessing docs.
 
-- [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)][ssao-docs]
-- [`<Glitch />`](#glitch---) [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](Glitch-Docs)
+- [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-docs-green)][ssao-docs]
+- [`<Glitch />`](#glitch---) [![](https://img.shields.io/badge/-docs-green)](Glitch-Docs)
 - [`<GodRays />`](#godrays---)[![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GodRaysEffect.js~GodRaysEffect.html)
 - [`<Noise />`](#noise---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-noise-demo-6cxje)
   [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
-- [`<Outline />`](#outline---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/OutlineEffect.js~OutlineEffect.html)
 - [`<Bloom />`](#bloom---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-showcase-demo-dr9rj) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
+- [`<Outline />`](#outline---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/OutlineEffect.js~OutlineEffect.html)
 - [`<SelectiveBloom />`](#selectivebloom---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SelectiveBloomEffect.js~SelectiveBloomEffect.html)
 - [`<Vignette />`](#vignette---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
 - [`<Sepia />`](#sepia---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SepiaEffect.js~SepiaEffect.html)
@@ -23,7 +23,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<Grid />`](#grid---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
 - [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 
-#### `<SSAO />` [![](https://img.shields.io/badge/-codesandbox-blue)][showcase-sandbox] [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
+#### `<SSAO />` [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
 ```jsx
 import { SSAO } from 'react-postprocessing'
@@ -104,6 +104,25 @@ return (
 )
 ```
 
+#### `<Bloom />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
+
+```jsx
+import { Bloom } from 'react-postprocessing'
+import { BlurPass, Resizer, KernelSize } from 'postprocessing'
+
+return (
+  <Bloom
+    intensity={1.0} // The bloom intensity.
+    blurPass={undefined} // A blur pass.
+    width={Resizer.AUTO_SIZE} // render width
+    height={Resizer.AUTO_SIZE} // render height
+    kernelSize={KernelSize.LARGE} // blur kernel size
+    luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
+    luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+  />
+)
+```
+
 #### `<Outline />` [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/OutlineEffect.js~OutlineEffect.html)
 
 ```jsx
@@ -129,25 +148,6 @@ return (
 )
 ```
 
-#### `<Bloom />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
-
-```jsx
-import { Bloom } from 'react-postprocessing'
-import { BlurPass, Resizer, KernelSize } from 'postprocessing'
-
-return (
-  <Bloom
-    intensity={1.0} // The bloom intensity.
-    blurPass={undefined} // A blur pass.
-    width={Resizer.AUTO_SIZE} // render width
-    height={Resizer.AUTO_SIZE} // render height
-    kernelSize={KernelSize.LARGE} // blur kernel size
-    luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
-    luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
-  />
-)
-```
-
 #### `<SelectiveBloom />` [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SelectiveBloomEffect.js~SelectiveBloomEffect.html)
 
 ```jsx
@@ -156,7 +156,7 @@ import { BlurPass, Resizer, KernelSize } from 'postprocessing'
 
 return (
   <SelectiveBloom
-    lights={[lightRef1, lightRef2]} // REQUIRED! all relevant lights
+    lights={[lightRef1, lightRef2]} // ⚠️ REQUIRED! all relevant lights
     selection={[meshRef1, meshRef2]} // selection of objects that will have bloom effect
     selectionLayer={10} // selection layer
     intensity={1.0} // The bloom intensity.

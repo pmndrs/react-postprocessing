@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useCallback } from 'react'
 import { EffectComposer, Outline, SelectiveBloom } from 'react-postprocessing'
 import { Canvas, useFrame } from 'react-three-fiber'
 import { Sphere, Box } from 'drei'
@@ -35,13 +35,6 @@ export function Selection() {
 
   const lightRef = useRef(null)
 
-  /**
-   * Enable the layer you will use for the selective bloom on the lights you want to use
-   */
-  useEffect(() => {
-    lightRef.current!.layers.enable(11)
-  })
-
   useFrame(({ clock }) => {
     lightRef.current!.position.y = Math.sin(clock.getElapsedTime())
   })
@@ -50,6 +43,9 @@ export function Selection() {
     <>
       <color attach="background" args={['black']} />
       <fog color={new THREE.Color('#161616')} attach="fog" near={8} far={30} />
+
+      <ambientLight intensity={0.1} />
+      <pointLight position={[0, 0, 0]} ref={lightRef} intensity={1} />
 
       <Box ref={box1Ref} onClick={() => toggleOutline(box1Ref)} position={[1, 1, 1]}>
         <meshNormalMaterial attach="material" />
@@ -68,11 +64,8 @@ export function Selection() {
 
       <EffectComposer>
         <Outline selection={outlineSelection} visibleEdgeColor="blue" edgeStrength={10} pulseSpeed={1} blur={true} />
-        <SelectiveBloom selectionLayer={11} selection={bloomSelection} luminanceThreshold={0.1} />
+        <SelectiveBloom lights={[lightRef]} selectionLayer={11} selection={bloomSelection} luminanceThreshold={0.1} />
       </EffectComposer>
-
-      <ambientLight intensity={0.1} />
-      <pointLight position={[0, 0, 0]} ref={lightRef} intensity={1} />
     </>
   )
 }
