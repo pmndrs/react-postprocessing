@@ -2,7 +2,7 @@ import { ColorAverageEffect, BlendFunction } from 'postprocessing'
 import React, { Ref, ForwardRefExoticComponent, forwardRef, useMemo } from 'react'
 
 export type ColorAverageProps = Partial<{
-  blendFunction: number
+  blendFunction: BlendFunction
 }>
 
 export const ColorAverage: ForwardRefExoticComponent<ColorAverageProps> = forwardRef(function ColorAverage(
