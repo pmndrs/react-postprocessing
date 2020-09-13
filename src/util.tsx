@@ -3,14 +3,18 @@ import { Vector2 } from 'three'
 import { ReactThreeFiber } from 'react-three-fiber'
 import { Effect, BlendFunction } from 'postprocessing'
 
-type DefaultProps = Partial<{ blendFunction: BlendFunction; opacity: number }>
-
 export const wrapEffect = <T extends new (...args: any[]) => Effect>(
   effectImpl: T,
   defaultBlendMode: BlendFunction = BlendFunction.NORMAL
-): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0] & DefaultProps> =>
+): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0]> =>
   forwardRef(function Wrap(
-    { blendFunction, opacity, ...props }: React.PropsWithChildren<DefaultProps & ConstructorParameters<T>[0]>,
+    {
+      blendFunction,
+      opacity,
+      ...props
+    }: React.PropsWithChildren<
+      Partial<{ blendFunction: BlendFunction; opacity: number }> & ConstructorParameters<T>[0]
+    >,
     ref
   ) {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
