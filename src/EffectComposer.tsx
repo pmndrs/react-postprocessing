@@ -3,6 +3,7 @@ import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImpera
 import { useThree, useFrame } from 'react-three-fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { HalfFloatType, TextureDataType } from 'three'
+import { isWebGL2Available } from './util'
 
 export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl
@@ -47,7 +48,7 @@ const EffectComposer = React.memo(
         const effectComposer = new EffectComposerImpl(gl, {
           depthBuffer,
           stencilBuffer,
-          multisampling,
+          multisampling: isWebGL2Available() ? multisampling : 0,
           frameBufferType,
         })
         // Add render pass
