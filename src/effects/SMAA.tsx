@@ -1,16 +1,19 @@
-import React, { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
+import React, { Ref, forwardRef, useMemo } from 'react'
 import { useLoader } from 'react-three-fiber'
-import { SMAAImageLoader, SMAAEffect } from 'postprocessing'
+import { SMAAImageLoader, SMAAEffect, SMAAPreset, EdgeDetectionMode } from 'postprocessing'
 
 export const SMAA = forwardRef(function SMAA(
-  { edgeDetection = 0.1 }: { edgeDetection?: number },
+  {
+    preset = SMAAPreset.HIGH,
+    edgeDetectionMode = EdgeDetectionMode.COLOR,
+  }: { preset?: number; edgeDetectionMode?: number },
   ref: Ref<SMAAEffect>
 ) {
   const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
-  const effect = useMemo(() => new SMAAEffect(...smaaProps), [smaaProps])
-  useLayoutEffect(() => void effect.colorEdgesMaterial.setEdgeDetectionThreshold(edgeDetection), [
-    edgeDetection,
-    effect.colorEdgesMaterial,
+  const effect = useMemo(() => new SMAAEffect(...smaaProps, preset, edgeDetectionMode), [
+    smaaProps,
+    preset,
+    edgeDetectionMode,
   ])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

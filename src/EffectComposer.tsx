@@ -42,7 +42,6 @@ const EffectComposer = React.memo(
       scene = scene || defaultScene
       camera = camera || defaultCamera
 
-      const pixelRatio = gl.getPixelRatio()
       const [composer, normalPass] = useMemo(() => {
         // Initialize composer
         const effectComposer = new EffectComposerImpl(gl, {
@@ -59,9 +58,7 @@ const EffectComposer = React.memo(
         return [effectComposer, pass]
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene])
 
-      useEffect(() => {
-        composer?.setSize(size.width * pixelRatio, size.height * pixelRatio)
-      }, [composer, size, pixelRatio])
+      useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
       useFrame((_, delta) => composer.render(delta), renderPriority)
 
       const group = useRef()

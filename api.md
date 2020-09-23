@@ -348,9 +348,7 @@ import { EffectComposer, SMAA } from 'react-postprocessing'
 return (
   <Suspense fallback={null}>
     <EffectComposer multisamping={0}>
-      <SMAA
-        edgeDetection={0.1} // accuracy (default = 0.1)
-      />
+      <SMAA />
     </EffectComposer>
   </Suspense>
 )
