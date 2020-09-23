@@ -15,6 +15,7 @@ function TakeControl() {
       <Canvas
         shadowMap
         colorManagement
+        pixelRatio={1.5}
         camera={{ position: [0, 0, 3], far: 1000, fov: 70 }}
         gl={{
           powerPreference: 'high-performance',
