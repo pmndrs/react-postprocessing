@@ -1,11 +1,11 @@
 # react-postprocessing
 
-![npm](https://img.shields.io/npm/v/react-postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-postprocessing?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
+![npm](https://img.shields.io/npm/v/@react-three/postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/@react-three/postprocessing?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
 
-`react-postprocessing` is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/react-spring/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
+`react-postprocessing` is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/pmndrs/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
 
 ```bash
-npm install react-postprocessing
+npm install @react-three/postprocessing
 ```
 <p align="center">
   <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="./examples/src/demos/Bubbles/resources/screenshot.jpg" alt="Bubbles" /></a>
@@ -52,9 +52,7 @@ function App() {
   )
 }
 ```
-    
+
 #### Documentation
-
-[react-postprocessing exports](https://github.com/react-spring/react-postprocessing/blob/master/api.md)
-
-[postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)
+- [react-postprocessing exports](https://github.com/react-spring/react-postprocessing/blob/master/api.md)
+- [postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)

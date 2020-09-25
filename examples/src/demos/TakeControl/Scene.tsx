@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import React, { useMemo, useRef } from 'react'
-import { Extrude, OrbitControls } from 'drei'
+import { Extrude, OrbitControls } from '@react-three/drei'
 import { useControl } from 'react-three-gui'
 import { useFrame } from 'react-three-fiber'
 import { useSprings } from '@react-spring/core'
