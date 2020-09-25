@@ -82,7 +82,7 @@
     "prettier": "^2.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-three-fiber": "^5.0.0",
+    "react-three-fiber": "^5.0.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.28.1",
     "rollup-plugin-size-snapshot": "^0.12.0",

@@ -22,7 +22,7 @@
     "react-router": "5.2.0",
     "react-router-dom": "^5.1.5",
     "react-scripts": "3.4.1",
-    "react-three-fiber": "^5.0.0",
+    "react-three-fiber": "^5.0.1",
     "react-three-gui": "^0.1.5",
     "react-use-gesture": "^7.0.15",
     "styled-components": "^5.1.1",
