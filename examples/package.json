@@ -12,21 +12,21 @@
   "dependencies": {
     "@react-spring/core": "^9.0.0-rc.3",
     "@react-spring/three": "^9.0.0-rc.3",
+    "@react-three/drei": "^1.5.7",
+    "@react-three/postprocessing": "^1.4.0",
     "classnames": "2.2.6",
-    "drei": "^0.0.71",
     "immer": "^7.0.8",
     "postprocessing": "^6.16.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-postprocessing": "^1.1.4",
     "react-router": "5.2.0",
     "react-router-dom": "^5.1.5",
     "react-scripts": "3.4.1",
-    "react-three-fiber": "^5.0.0-beta.11",
+    "react-three-fiber": "^5.0.1",
     "react-three-gui": "^0.1.5",
     "react-use-gesture": "^7.0.15",
     "styled-components": "^5.1.1",
-    "three": "^0.119.1"
+    "three": "^0.120.1"
   },
   "devDependencies": {
     "@types/react-router": "^5.1.8",

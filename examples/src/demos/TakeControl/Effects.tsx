@@ -1,10 +1,10 @@
 import React, { Suspense, forwardRef } from 'react'
 
-import { EffectComposer, Noise, Vignette, HueSaturation, GodRays } from 'react-postprocessing'
+import { EffectComposer, Noise, Vignette, HueSaturation, GodRays } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import { useResource } from 'react-three-fiber'
 
-import { Circle } from 'drei'
+import { Circle } from '@react-three/drei'
 import { useControl } from 'react-three-gui'
 
 const Sun = forwardRef(function Sun(props, forwardRef) {
