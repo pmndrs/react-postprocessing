@@ -78,7 +78,6 @@ export const Outline = forwardRef(function Outline(
   }, [effect, selection])
 
   useEffect(() => {
-    console.log('selection layarer')
     effect.selectionLayer = selectionLayer
   }, [effect, selectionLayer])
 
