@@ -70,7 +70,7 @@ function Scene() {
   const envMap = useCubeTextureLoader([cubePxUrl, cubeNxUrl, cubePyUrl, cubeNyUrl, cubePzUrl, cubeNzUrl], { path: '' })
 
   // We use `useResource` to be able to delay rendering the spheres until the material is ready
-  const [matRef, material] = useResource()
+  const matRef = useResource()
 
   return (
     <>
@@ -87,7 +87,7 @@ function Scene() {
         radius={1}
         distort={0.4}
       />
-      {material && <Instances material={material} />}
+      {matRef.current && <Instances material={matRef.current} />}
     </>
   )
 }
