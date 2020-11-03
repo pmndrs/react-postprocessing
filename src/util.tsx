@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo, useLayoutEffect, ForwardRefExoticComponent } from 'react'
+import React, { forwardRef, useMemo, useLayoutEffect } from 'react'
 import { Vector2 } from 'three'
 import { ReactThreeFiber } from 'react-three-fiber'
 import { Effect, BlendFunction } from 'postprocessing'
@@ -8,8 +8,8 @@ type DefaultProps = Partial<{ blendFunction: BlendFunction; opacity: number }>
 export const wrapEffect = <T extends new (...args: any[]) => Effect>(
   effectImpl: T,
   defaultBlendMode: BlendFunction = BlendFunction.NORMAL
-): ForwardRefExoticComponent<ConstructorParameters<typeof effectImpl>[0] & DefaultProps> =>
-  forwardRef(function Wrap(
+) =>
+  forwardRef<T, ConstructorParameters<typeof effectImpl>[0] & DefaultProps>(function Wrap(
     { blendFunction, opacity, ...props }: React.PropsWithChildren<DefaultProps & ConstructorParameters<T>[0]>,
     ref
   ) {

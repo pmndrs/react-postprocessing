@@ -1,11 +1,11 @@
-import React, { Ref, ForwardRefExoticComponent, forwardRef, useContext, useMemo } from 'react'
+import React, { Ref, forwardRef, useContext, useMemo } from 'react'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
 import { EffectComposerContext } from '../EffectComposer'
 
 // first two args are camera and texture
 type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2]
 
-export const SSAO: ForwardRefExoticComponent<SSAOEffect> = forwardRef(function SSAO(
+export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(
   props: SSAOProps,
   ref: Ref<SSAOEffect>
 ) {
