@@ -17,7 +17,7 @@
     "outDir": "dist",
     "paths": {
       "*": ["types/*"],
-      "react-postprocessing": ["./"]
+      "@react-three/postprocessing": ["./"]
     }
   },
   "include": ["./types/**/*", "./src/**/*"],

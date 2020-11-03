@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame, useResource } from 'react-three-fiber'
-import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
+import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from '@react-three/drei'
 import { LoadingMsg } from '../../styles'
 import bumpMapUrl from './resources/bump.jpg'
