@@ -59,7 +59,7 @@
       },
       "alias": {
         "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"],
-        "map": [["react-postprocessing", "./src/index.tsx"]]
+        "map": [["@react-three/postprocessing", "./src/index.tsx"]]
       }
     }
   },

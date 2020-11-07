@@ -1,11 +1,10 @@
-import React, { Suspense, forwardRef } from 'react'
-
+import { Circle } from '@react-three/drei'
 import { EffectComposer, Noise, Vignette, HueSaturation, GodRays } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
+import React, { Suspense, forwardRef } from 'react'
 import { useResource } from 'react-three-fiber'
-
-import { Circle } from '@react-three/drei'
 import { useControl } from 'react-three-gui'
+import { Mesh } from 'three'
 
 const Sun = forwardRef(function Sun(props, forwardRef) {
   const sunColor = useControl('sun color', { type: 'color', value: '#FF0000' })
@@ -18,7 +17,7 @@ const Sun = forwardRef(function Sun(props, forwardRef) {
 })
 
 function Effects() {
-  const [$sun, sun] = useResource()
+  const sunRef = useResource<Mesh>()
 
   const hue = useControl('Hue', {
     group: 'Postprocessing - HueSaturation',
@@ -67,11 +66,11 @@ function Effects() {
 
   return (
     <Suspense fallback={null}>
-      <Sun ref={$sun} />
+      <Sun ref={sunRef} />
 
-      {sun && (
+      {sunRef.current && (
         <EffectComposer multisampling={0}>
-          <GodRays sun={$sun.current} exposure={exposure} decay={decay} blur={blur} />
+          <GodRays sun={sunRef.current} exposure={exposure} decay={decay} blur={blur} />
 
           <Noise
             opacity={noise}

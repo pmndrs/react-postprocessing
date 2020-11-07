@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { Suspense, useRef, useState } from 'react'
 import { Canvas, useFrame, useResource } from 'react-three-fiber'
-import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from 'react-postprocessing'
+import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
 import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from '@react-three/drei'
 import { LoadingMsg } from '../../styles'
 import bumpMapUrl from './resources/bump.jpg'
@@ -70,7 +70,7 @@ function Scene() {
   const envMap = useCubeTextureLoader([cubePxUrl, cubeNxUrl, cubePyUrl, cubeNyUrl, cubePzUrl, cubeNzUrl], { path: '' })
 
   // We use `useResource` to be able to delay rendering the spheres until the material is ready
-  const [matRef, material] = useResource()
+  const matRef = useResource()
 
   return (
     <>
@@ -87,7 +87,7 @@ function Scene() {
         radius={1}
         distort={0.4}
       />
-      {material && <Instances material={material} />}
+      {matRef.current && <Instances material={matRef.current} />}
     </>
   )
 }
