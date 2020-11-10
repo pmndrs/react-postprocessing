@@ -1,6 +1,8 @@
 # react-postprocessing
 
-![npm](https://img.shields.io/npm/v/react-three/postprocessing?label=npm%20package&style=flat-square) ![npm](https://img.shields.io/npm/dt/react-three/postprocessing?style=flat-square) [![Discord Shield](https://discordapp.com/api/guilds/740090768164651008/widget.png?style=shield)](https://discord.gg/ZZjjNvJ)
+[![Version](https://img.shields.io/npm/v/@react-three/postprocessing?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
+[![Downloads](https://img.shields.io/npm/dt/@react-three/postprocessing.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
+[![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 
 `react-postprocessing` is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/pmndrs/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
 
