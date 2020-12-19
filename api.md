@@ -367,3 +367,36 @@ export const Pixelation = forwardRef(({ granularity = 5 }, ref) => {
   return <primitive ref={ref} object={effect} dispose={null} />
 })
 ```
+
+For effects that aren't present in `postprocessing` you should extend the `Effect` class:
+
+```js
+import React, { forwardRef, useMemo } from 'react'
+import { Uniform } from 'three'
+import { Effect } from 'postprocessing'
+
+const fragmentShader = `some_shader_code`
+
+let _uParam
+
+// Effect implementation
+class MyCustomEffectImpl extends Effect {
+  constructor({ param = 0.1 } = {}) {
+    super('MyCustomEffect', fragmentShader, {
+      uniforms: new Map([['strength', new Uniform(strength)]])
+    })
+
+    _uParam = param
+  }
+
+  update(renderer, inputBuffer, deltaTime) {
+    this.uniforms.get('strength').value = _uStrength
+  }
+}
+
+// Effect component
+export const MyCustomEffect = forwardRef(({ param }, ref) => {
+  const effect = useMemo(() => new MyCustomEffect(param), [param])
+  return <primitive ref={ref} object={effect} dispose={null} />
+})
+```
