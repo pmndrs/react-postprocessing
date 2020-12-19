@@ -347,7 +347,7 @@ import { EffectComposer, SMAA } from 'react-postprocessing'
 
 return (
   <Suspense fallback={null}>
-    <EffectComposer multisamping={0}>
+    <EffectComposer multisampling={0}>
       <SMAA />
     </EffectComposer>
   </Suspense>
