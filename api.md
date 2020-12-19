@@ -383,14 +383,14 @@ let _uParam
 class MyCustomEffectImpl extends Effect {
   constructor({ param = 0.1 } = {}) {
     super('MyCustomEffect', fragmentShader, {
-      uniforms: new Map([['strength', new Uniform(strength)]])
+      uniforms: new Map([['param', new Uniform(param)]])
     })
 
     _uParam = param
   }
 
   update(renderer, inputBuffer, deltaTime) {
-    this.uniforms.get('strength').value = _uStrength
+    this.uniforms.get('param').value = _uParam
   }
 }
 
