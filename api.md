@@ -180,7 +180,7 @@ return (
   <Vignette
     offset={0.5} // vignette offset
     darkness={0.5} // vignette darkness
-    eskill={false} // Eskil's vignette technique
+    eskil={false} // Eskil's vignette technique
     blendFunction={BlendFunction.NORMAL} // blend mode
   />
 )
