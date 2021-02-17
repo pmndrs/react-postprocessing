@@ -7,7 +7,7 @@ import { isWebGL2Available } from './util'
 
 export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl
-  normalPass: NormalPass
+  normalPass: NormalPass | null
   camera: THREE.Camera
   scene: THREE.Scene
 }>(null)
@@ -15,6 +15,7 @@ export const EffectComposerContext = createContext<{
 export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
+  disableNormalPass?: boolean
   stencilBuffer?: boolean
   multisampling?: number
   frameBufferType?: TextureDataType
@@ -32,6 +33,7 @@ const EffectComposer = React.memo(
         scene,
         renderPriority = 1,
         depthBuffer,
+        disableNormalPass,
         stencilBuffer,
         multisampling = 8,
         frameBufferType = HalfFloatType,
@@ -53,10 +55,12 @@ const EffectComposer = React.memo(
         // Add render pass
         effectComposer.addPass(new RenderPass(scene, camera))
         // Create normal pass
-        const pass = new NormalPass(scene, camera)
-        effectComposer.addPass(pass)
+        const pass = disableNormalPass ? null : new NormalPass(scene, camera)
+        if (pass) {
+          effectComposer.addPass(pass)
+        }
         return [effectComposer, pass]
-      }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene])
+      }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene, disableNormalPass])
 
       useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
       useFrame((_, delta) => composer.render(delta), renderPriority)
