@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { useControl } from 'react-three-gui'
+import { useControl } from 'leva'
 
 function Lights() {
   const $dirLight = useRef()
