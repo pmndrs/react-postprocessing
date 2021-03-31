@@ -64,7 +64,7 @@ const EffectComposer = React.memo(
       const group = useRef()
       useEffect(() => {
         let effectPass
-        console.log(children)
+        console.log(children, group.current)
         if (group.current && composer) {
           effectPass = new EffectPass(camera, ...(group.current as any).__objects)
           composer.addPass(effectPass)
