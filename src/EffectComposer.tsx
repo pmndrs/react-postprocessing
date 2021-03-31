@@ -64,6 +64,7 @@ const EffectComposer = React.memo(
       const group = useRef()
       useEffect(() => {
         let effectPass
+        console.log(children)
         if (group.current && composer) {
           effectPass = new EffectPass(camera, ...(group.current as any).__objects)
           composer.addPass(effectPass)
@@ -72,7 +73,7 @@ const EffectComposer = React.memo(
         return () => {
           if (effectPass) composer?.removePass(effectPass)
         }
-      }, [composer, camera])
+      }, [composer, children, camera])
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(() => ({ composer, normalPass, camera, scene }), [composer, normalPass, camera, scene])
