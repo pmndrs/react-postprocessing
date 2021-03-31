@@ -1,12 +1,12 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "1.5.2",
-  "description": "postprocessing wrapper for React and react-three-fiber",
+  "version": "2.0.0",
+  "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
     "react",
     "three",
-    "react-three-fiber",
+    "@react-three/fiber",
     "webgl",
     "3d"
   ],
@@ -43,8 +43,10 @@
     "typegen": "tsc --emitDeclarationOnly || true"
   },
   "dependencies": {
+    "@react-three/drei": "^4.0.1",
     "postprocessing": "^6.20.3",
-    "react-merge-refs": "^1.1.0"
+    "react-merge-refs": "^1.1.0",
+    "three": "^0.126.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.1",
@@ -55,6 +57,7 @@
     "@babel/preset-env": "^7.13.5",
     "@babel/preset-react": "7.10.4",
     "@babel/preset-typescript": "^7.10.4",
+    "@react-three/fiber": "^6.0.1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-json": "^4.1.0",
@@ -80,21 +83,24 @@
     "jest": "^26.6.3",
     "lint-staged": "^10.4.0",
     "prettier": "^2.1.2",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-three-fiber": "^5.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.40.0",
     "rollup-plugin-filesize": "^9.1.0",
     "rollup-plugin-terser": "^7.0.2",
-    "three": "^0.125.0",
     "ts-jest": "^26.5.2",
     "typescript": "^4.0.3"
   },
   "peerDependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-three-fiber": ">=5.0",
-    "three": "^0.125.0"
+    "@react-three/fiber": ">=6.0",
+    "react": ">=17.0",
+    "react-dom": ">=17.0",
+    "three": ">=0.126.0"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    }
   }
 }

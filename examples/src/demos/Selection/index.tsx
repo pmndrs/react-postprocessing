@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { useRef, useState, useCallback } from 'react'
 import { EffectComposer, Outline, SelectiveBloom } from '@react-three/postprocessing'
-import { Canvas, useFrame } from 'react-three-fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { Sphere, Box } from '@react-three/drei'
 
 import { Mesh } from 'three'

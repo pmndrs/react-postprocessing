@@ -2,7 +2,7 @@ import { Circle } from '@react-three/drei'
 import { EffectComposer, Noise, Vignette, HueSaturation, GodRays } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import React, { Suspense, forwardRef } from 'react'
-import { useResource } from 'react-three-fiber'
+import { useResource } from '@react-three/fiber'
 import { useControl } from 'react-three-gui'
 import { Mesh } from 'three'
 

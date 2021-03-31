@@ -9473,9 +9473,9 @@ react-spring@next:
     "@react-spring/web" "9.0.0-rc.3"
     "@react-spring/zdog" "9.0.0-rc.3"
 
-react-three-fiber@^5.0.1:
+@react-three/fiber@^5.0.1:
   version "5.3.14"
-  resolved "https://registry.yarnpkg.com/react-three-fiber/-/react-three-fiber-5.3.14.tgz#6aa2e424bad5864f8963887052e54aba33f32f45"
+  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/@react-three/fiber-5.3.14.tgz#6aa2e424bad5864f8963887052e54aba33f32f45"
   integrity sha512-UKixyQZ0w17b8zoJttVcTLe62HBmXQUPtrzR4AH+3Kn9oKqOTwx2Ps88lldgHz8+gEvYZFG2tS/nGDSTBJGufw==
   dependencies:
     "@babel/runtime" "^7.12.1"

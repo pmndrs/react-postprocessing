@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import React, { useMemo, useRef } from 'react'
 import { Extrude, OrbitControls } from '@react-three/drei'
 import { useControl } from 'react-three-gui'
-import { useFrame } from 'react-three-fiber'
+import { useFrame } from '@react-three/fiber'
 import { useSprings } from '@react-spring/core'
 import { a } from '@react-spring/three'
 
