@@ -1,9 +1,8 @@
 import React, { Suspense } from 'react'
-import { Canvas } from 'react-three-fiber'
+import { Canvas } from '@react-three/fiber'
 import { Html, Stats } from '@react-three/drei'
 import Effects from './Effects'
 import Scene from './Scene'
-import { Controls } from 'react-three-gui'
 import { ControlsContainer } from './styles'
 import { LoadingMsg } from '../../styles'
 
@@ -13,9 +12,9 @@ function TakeControl() {
   return (
     <>
       <Canvas
-        shadowMap
-        colorManagement
-        pixelRatio={1.5}
+        shadows
+        linear={true}
+        dpr={1.5}
         camera={{ position: [0, 0, 3], far: 1000, fov: 70 }}
         gl={{
           powerPreference: 'high-performance',
@@ -38,12 +37,6 @@ function TakeControl() {
           <Scene />
         </Suspense>
       </Canvas>
-
-      {showControls && (
-        <ControlsContainer>
-          <Controls />
-        </ControlsContainer>
-      )}
     </>
   )
 }

@@ -1,5 +1,5 @@
 import React, { Ref, forwardRef, useMemo } from 'react'
-import { useLoader } from 'react-three-fiber'
+import { useLoader } from '@react-three/fiber'
 import { SMAAImageLoader, SMAAEffect, SMAAPreset, EdgeDetectionMode } from 'postprocessing'
 
 export const SMAA = forwardRef(function SMAA(

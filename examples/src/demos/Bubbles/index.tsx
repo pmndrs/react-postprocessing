@@ -1,17 +1,10 @@
 import * as THREE from 'three'
 import React, { Suspense, useRef, useState } from 'react'
-import { Canvas, useFrame, useResource } from 'react-three-fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
-import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from '@react-three/drei'
+import { Html, Icosahedron, Environment, MeshDistortMaterial, useTexture } from '@react-three/drei'
 import { LoadingMsg } from '../../styles'
-import bumpMapUrl from './resources/bump.jpg'
-
-import cubePxUrl from './resources/cube/px.png'
-import cubeNxUrl from './resources/cube/nx.png'
-import cubePyUrl from './resources/cube/py.png'
-import cubeNyUrl from './resources/cube/ny.png'
-import cubePzUrl from './resources/cube/pz.png'
-import cubeNzUrl from './resources/cube/nz.png'
+import img from './resources/bump.jpg'
 
 function MainSphere({ material }) {
   const main = useRef(null)
@@ -66,17 +59,12 @@ function Instances({ material }) {
 }
 
 function Scene() {
-  const bumpMap = useTextureLoader(bumpMapUrl)
-  const envMap = useCubeTextureLoader([cubePxUrl, cubeNxUrl, cubePyUrl, cubeNyUrl, cubePzUrl, cubeNzUrl], { path: '' })
-
-  // We use `useResource` to be able to delay rendering the spheres until the material is ready
-  const matRef = useResource()
-
+  const bumpMap = useTexture(img)
+  const [material, set] = useState<any>()
   return (
     <>
       <MeshDistortMaterial
-        ref={matRef}
-        envMap={envMap}
+        ref={material}
         bumpMap={bumpMap as THREE.Texture}
         color={'#010101'}
         roughness={0.1}
@@ -87,7 +75,8 @@ function Scene() {
         radius={1}
         distort={0.4}
       />
-      {matRef.current && <Instances material={matRef.current} />}
+
+      {material && <Instances material={material} />}
     </>
   )
 }
@@ -95,8 +84,8 @@ function Scene() {
 export default function Bubbles() {
   return (
     <Canvas
-      colorManagement
-      camera={{ position: [0, 0, 3] }}
+      linear={true}
+      camera={{ position: [0, 0, 10] }}
       gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
     >
       <color attach="background" args={['#050505']} />
@@ -109,6 +98,7 @@ export default function Bubbles() {
         }
       >
         <Scene />
+        <Environment preset={'studio'} />
       </Suspense>
       <EffectComposer>
         <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />

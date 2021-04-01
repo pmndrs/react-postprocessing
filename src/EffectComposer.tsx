@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImperativeHandle } from 'react'
-import { useThree, useFrame } from 'react-three-fiber'
+import { useThree, useFrame } from '@react-three/fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { HalfFloatType, TextureDataType } from 'three'
 import { isWebGL2Available } from './util'
@@ -16,6 +16,7 @@ export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
   stencilBuffer?: boolean
+  autoClear?: boolean
   multisampling?: number
   frameBufferType?: TextureDataType
   renderPriority?: number
@@ -31,6 +32,7 @@ const EffectComposer = React.memo(
         camera,
         scene,
         renderPriority = 1,
+        autoClear = true,
         depthBuffer,
         stencilBuffer,
         multisampling = 8,
@@ -59,20 +61,20 @@ const EffectComposer = React.memo(
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene])
 
       useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
-      useFrame((_, delta) => composer.render(delta), renderPriority)
+      useFrame((_, delta) => void ((gl.autoClear = autoClear), composer.render(delta)), renderPriority)
 
-      const group = useRef()
+      const group = useRef(null)
       useEffect(() => {
         let effectPass
-        if (group.current && composer) {
-          effectPass = new EffectPass(camera, ...(group.current as any).__objects)
+        if (group.current && group.current.__r3f && composer) {
+          effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
           composer.addPass(effectPass)
           effectPass.renderToScreen = true
         }
         return () => {
           if (effectPass) composer?.removePass(effectPass)
         }
-      }, [composer, camera])
+      }, [composer, children, camera])
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(() => ({ composer, normalPass, camera, scene }), [composer, normalPass, camera, scene])

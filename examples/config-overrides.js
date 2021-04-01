@@ -15,7 +15,7 @@ module.exports = (config, env) => {
         react: path.resolve('node_modules/react'),
         'react-dom': path.resolve('node_modules/react-dom'),
         'react-scheduler': path.resolve('node_modules/react-scheduler'),
-        'react-three-fiber': path.resolve('node_modules/react-three-fiber'),
+        '@react-three/fiber': path.resolve('node_modules/@react-three/fiber'),
         '@react-three/drei': path.resolve('node_modules/@react-three/drei'),
       })
   )(config, env)
