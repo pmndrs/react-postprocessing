@@ -61,12 +61,11 @@ const EffectComposer = React.memo(
       useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
       useFrame((_, delta) => composer.render(delta), renderPriority)
 
-      const group = useRef()
+      const group = useRef(null)
       useEffect(() => {
         let effectPass
-        console.log(children, group.current)
-        if (group.current && composer) {
-          effectPass = new EffectPass(camera, ...(group.current as any).__objects)
+        if (group.current && group.current.__r3f && composer) {
+          effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
           composer.addPass(effectPass)
           effectPass.renderToScreen = true
         }
