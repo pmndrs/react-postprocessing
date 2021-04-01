@@ -29,7 +29,7 @@ export default [
     external,
     plugins: [
       json(),
-      babel(getBabelOptions({ useESModules: true }, '>1%, not dead, not ie 11, not op_mini all')),
+      babel(getBabelOptions({ useESModules: true }, '>5%, not dead, not ie 11, not op_mini all, node >=12')),
       filesize(),
       resolve({ extensions }),
       terser(),
