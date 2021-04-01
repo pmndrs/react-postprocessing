@@ -13,11 +13,15 @@ export type SelectiveBloomProps = ConstructorParameters<typeof SelectiveBloomEff
   }>
 
 const addLight = (light: ObjectRef, effect: SelectiveBloomEffect) => {
-  light.current.layers.enable(effect.selection.layer)
+  if (light.current) {
+    light.current.layers.enable(effect.selection.layer)
+  }
 }
 
 const removeLight = (light: ObjectRef, effect: SelectiveBloomEffect) => {
-  light.current.layers.disable(effect.selection.layer)
+  if (light.current) {
+    light.current.layers.disable(effect.selection.layer)
+  }
 }
 
 export const SelectiveBloom = forwardRef(function SelectiveBloom(
