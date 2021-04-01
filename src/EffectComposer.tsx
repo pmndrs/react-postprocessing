@@ -16,6 +16,7 @@ export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
   stencilBuffer?: boolean
+  autoClear?: boolean
   multisampling?: number
   frameBufferType?: TextureDataType
   renderPriority?: number
@@ -31,6 +32,7 @@ const EffectComposer = React.memo(
         camera,
         scene,
         renderPriority = 1,
+        autoClear = true,
         depthBuffer,
         stencilBuffer,
         multisampling = 8,
@@ -59,7 +61,7 @@ const EffectComposer = React.memo(
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene])
 
       useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
-      useFrame((_, delta) => composer.render(delta), renderPriority)
+      useFrame((_, delta) => void ((gl.autoClear = autoClear), composer.render(delta), renderPriority))
 
       const group = useRef(null)
       useEffect(() => {
