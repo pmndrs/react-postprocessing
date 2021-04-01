@@ -4,6 +4,8 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "module": "esnext",
-    "noEmit": true
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx"
   }
 }

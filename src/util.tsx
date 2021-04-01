@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo, useLayoutEffect } from 'react'
 import { Vector2 } from 'three'
-import { ReactThreeFiber } from 'react-three-fiber'
+import { ReactThreeFiber } from '@react-three/fiber'
 import { Effect, BlendFunction } from 'postprocessing'
 
 type DefaultProps = Partial<{ blendFunction: BlendFunction; opacity: number }>

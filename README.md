@@ -4,14 +4,15 @@
 [![Downloads](https://img.shields.io/npm/dt/@react-three/postprocessing.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
 [![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 
-`react-postprocessing` is a [postprocessing](https://vanruesc.github.io/postprocessing) wrapper for [react-three-fiber](https://github.com/pmndrs/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
+`react-postprocessing` is a [postprocessing](https://github.com/vanruesc/postprocessing) wrapper for [@react-three/fiber](https://github.com/pmndrs/@react-three/fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
 
 ```bash
 npm install @react-three/postprocessing
 ```
+
 <p align="center">
-  <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="./examples/src/demos/Bubbles/resources/screenshot.jpg" alt="Bubbles" /></a>
-  <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="./examples/src/demos/TakeControl/resources/screenshot.jpg" alt="Take Control" /></a>
+  <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="bubbles.jpg" alt="Bubbles" /></a>
+  <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="control.jpg" alt="Take Control" /></a>
 </p>
 <p align="middle">
   <i>These demos are real, you can click them! They contain the full code, too. 📦</i>
@@ -19,7 +20,7 @@ npm install @react-three/postprocessing
 
 #### Why postprocessing and not three/examples/jsm/postprocessing?
 
-From [https://vanruesc.github.io/postprocessing](https://vanruesc.github.io/postprocessing/#performance)
+From [https://github.com/vanruesc/postprocessing](https://github.com/vanruesc/postprocessing#performance)
 
 > This library provides an EffectPass which automatically organizes and merges any given combination of effects. This minimizes the amount of render operations and makes it possible to combine many effects without the performance penalties of traditional pass chaining. Additionally, every effect can choose its own blend function.
 >
@@ -32,13 +33,13 @@ Postprocessing also supports srgb-encoding out of the box, as well as WebGL2 MSA
 Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
 
 <a href="https://codesandbox.io/s/vigorous-currying-3r6l2" target="_blank" rel="noopener">
-<img src="https://i.imgur.com/mZucXdX.jpg" alt="Bubbles Demo" />
+<img src="bubbles.jpg" alt="Bubbles Demo" />
 </a>
 
 ```jsx
 import React from 'react'
 import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
-import { Canvas } from 'react-three-fiber'
+import { Canvas } from '@react-three/fiber'
 
 function App() {
   return (
@@ -56,5 +57,6 @@ function App() {
 ```
 
 #### Documentation
+
 - [react-postprocessing exports](https://github.com/pmndrs/react-postprocessing/blob/master/api.md)
 - [postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)

@@ -1,6 +1,6 @@
 import { DepthOfFieldEffect } from 'postprocessing'
 import React, { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
-import { ReactThreeFiber } from 'react-three-fiber'
+import { ReactThreeFiber } from '@react-three/fiber'
 import { Texture, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 

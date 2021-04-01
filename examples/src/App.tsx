@@ -1,41 +1,44 @@
-import React from 'react'
-import cx from 'classnames'
-import { HashRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import demos from './demos'
-import { DemoWrapper, DemoPanel, Spot } from './styles'
+import React, { Fragment } from 'react'
+import { Route, Link, Redirect, useLocation } from 'wouter'
+import EvilCube from './demos/EvilCube'
+import TakeControl from './demos/TakeControl'
+import Bubbles from './demos/Bubbles'
 
-const demosEntries = Object.entries(demos)
-const [defaultDemoName] = demosEntries[0]
-export default function App() {
+const demos = [EvilCube, TakeControl, Bubbles]
+
+const App = () => {
+  const [loc] = useLocation()
+
+  const demo = demos.find((d) => d.path === loc)
+
   return (
-    <Router>
-      <Switch>
-        <Route
-          path={`/demo/:name`}
-          exact
-          render={({ match }) => {
-            const ActiveDemo = demos[match.params.name]
-            return (
-              <DemoWrapper className={cx({ bright: ActiveDemo?.bright })}>
-                {!!ActiveDemo ? (
-                  <React.Suspense fallback={null}>
-                    <ActiveDemo.Component />
-                  </React.Suspense>
-                ) : (
-                  <Redirect to={`/demo/${defaultDemoName}`} />
-                )}
-              </DemoWrapper>
-            )
-          }}
-        />
+    <>
+      <Route path="/">
+        <Redirect to="/evil-cube" />
+      </Route>
 
-        <Redirect to={`/demo/${defaultDemoName}`} />
-      </Switch>
-      <DemoPanel>
-        {demosEntries.map(([name, { bright }]) => (
-          <Spot key={name} to={`/demo/${name}`} title={name} activeClassName="active" className={cx({ bright })} />
+      {demo && (
+        <>
+          <Route path={demo.path}>
+            <demo.component />
+          </Route>
+          <div id="desc">
+            <h1>{demo.name}</h1>
+            <p>{demo.description}</p>
+          </div>
+        </>
+      )}
+      <div id="controls">
+        {demos.map((demo) => (
+          <Link href={demo.path} key={demo.name}>
+            <a>
+              <div></div>
+            </a>
+          </Link>
         ))}
-      </DemoPanel>
-    </Router>
+      </div>
+    </>
   )
 }
+
+export default App

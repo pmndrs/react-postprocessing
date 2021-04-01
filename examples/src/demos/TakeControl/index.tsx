@@ -1,11 +1,7 @@
 import React, { Suspense } from 'react'
-import { Canvas } from 'react-three-fiber'
-import { Html, Stats } from '@react-three/drei'
-import Effects from './Effects'
+import { Canvas } from '@react-three/fiber'
+import { Effects, Html, Stats } from '@react-three/drei'
 import Scene from './Scene'
-import { Controls } from 'react-three-gui'
-import { ControlsContainer } from './styles'
-import { LoadingMsg } from '../../styles'
 
 function TakeControl() {
   const showControls = window.location.search.includes('ctrl')
@@ -13,9 +9,9 @@ function TakeControl() {
   return (
     <>
       <Canvas
-        shadowMap
-        colorManagement
-        pixelRatio={1.5}
+        shadows
+        linear={true}
+        dpr={1.5}
         camera={{ position: [0, 0, 3], far: 1000, fov: 70 }}
         gl={{
           powerPreference: 'high-performance',
@@ -28,24 +24,17 @@ function TakeControl() {
         {showControls && <Stats />}
 
         <Effects />
-        <Suspense
-          fallback={
-            <Html center>
-              <LoadingMsg>Loading...</LoadingMsg>
-            </Html>
-          }
-        >
+        <Suspense fallback={<Html center>Loading...</Html>}>
           <Scene />
         </Suspense>
       </Canvas>
-
-      {showControls && (
-        <ControlsContainer>
-          <Controls />
-        </ControlsContainer>
-      )}
     </>
   )
 }
 
-export default TakeControl
+export default {
+  component: TakeControl,
+  description: 'Noise, Vignette, HueSaturation, GodRays',
+  name: 'Take Control',
+  path: '/take-control',
+}

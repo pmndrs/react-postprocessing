@@ -1,17 +1,8 @@
 import * as THREE from 'three'
-import React, { Suspense, useRef, useState } from 'react'
-import { Canvas, useFrame, useResource } from 'react-three-fiber'
-import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
-import { Html, Icosahedron, useTextureLoader, useCubeTextureLoader, MeshDistortMaterial } from '@react-three/drei'
-import { LoadingMsg } from '../../styles'
-import bumpMapUrl from './resources/bump.jpg'
-
-import cubePxUrl from './resources/cube/px.png'
-import cubeNxUrl from './resources/cube/nx.png'
-import cubePyUrl from './resources/cube/py.png'
-import cubeNyUrl from './resources/cube/ny.png'
-import cubePzUrl from './resources/cube/pz.png'
-import cubeNzUrl from './resources/cube/nz.png'
+import React, { Suspense, useMemo, useRef, useState } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { EffectComposer, Bloom, Noise, Vignette, DepthOfField } from '@react-three/postprocessing'
+import { Html, Icosahedron, Environment, MeshDistortMaterial, useTexture } from '@react-three/drei'
 
 function MainSphere({ material }) {
   const main = useRef(null)
@@ -66,18 +57,14 @@ function Instances({ material }) {
 }
 
 function Scene() {
-  const bumpMap = useTextureLoader(bumpMapUrl)
-  const envMap = useCubeTextureLoader([cubePxUrl, cubeNxUrl, cubePyUrl, cubeNyUrl, cubePzUrl, cubeNzUrl], { path: '' })
+  const bumpMap = useTexture('/bump.jpg')
 
-  // We use `useResource` to be able to delay rendering the spheres until the material is ready
-  const matRef = useResource()
+  const [material, set] = useState()
 
   return (
     <>
       <MeshDistortMaterial
-        ref={matRef}
-        envMap={envMap}
-        bumpMap={bumpMap as THREE.Texture}
+        ref={material}
         color={'#010101'}
         roughness={0.1}
         metalness={1}
@@ -86,31 +73,27 @@ function Scene() {
         clearcoatRoughness={1}
         radius={1}
         distort={0.4}
+        bumpMap={bumpMap}
       />
-      {matRef.current && <Instances material={matRef.current} />}
+      {material && <Instances material={material} />}
     </>
   )
 }
 
-export default function Bubbles() {
+function Bubbles() {
   return (
     <Canvas
-      colorManagement
-      camera={{ position: [0, 0, 3] }}
+      linear={true}
+      camera={{ position: [0, 0, 10] }}
       gl={{ powerPreference: 'high-performance', alpha: false, antialias: false, stencil: false, depth: false }}
     >
-      <color attach="background" args={['#050505']} />
+      <color attach="background" args={['#c07c7c']} />
       <fog color="#161616" attach="fog" near={8} far={30} />
-      <Suspense
-        fallback={
-          <Html center>
-            <LoadingMsg>Loading...</LoadingMsg>
-          </Html>
-        }
-      >
+      <Suspense fallback={<Html center>Loading...</Html>}>
         <Scene />
+        <Environment preset={'studio'} />
       </Suspense>
-      <EffectComposer>
+      <EffectComposer multisampling={0}>
         <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={2} height={480} />
         <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={300} opacity={0} />
         <Noise opacity={0.025} />
@@ -118,4 +101,11 @@ export default function Bubbles() {
       </EffectComposer>
     </Canvas>
   )
+}
+
+export default {
+  component: Bubbles,
+  name: 'Bubbles',
+  description: 'DOF + Bloom + Vignette + Noise',
+  path: '/bubbles',
 }

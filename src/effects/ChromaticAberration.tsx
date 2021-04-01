@@ -1,6 +1,6 @@
 import React, { Ref, forwardRef, useMemo } from 'react'
 import { ChromaticAberrationEffect } from 'postprocessing'
-import { ReactThreeFiber } from 'react-three-fiber'
+import { ReactThreeFiber } from '@react-three/fiber'
 import { useVector2 } from '../util'
 
 // type for function args should use constructor args
