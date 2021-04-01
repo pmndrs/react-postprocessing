@@ -61,7 +61,7 @@ const EffectComposer = React.memo(
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene])
 
       useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
-      useFrame((_, delta) => void ((gl.autoClear = autoClear), composer.render(delta), renderPriority))
+      useFrame((_, delta) => void ((gl.autoClear = autoClear), composer.render(delta)), renderPriority)
 
       const group = useRef(null)
       useEffect(() => {
