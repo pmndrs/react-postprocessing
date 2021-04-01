@@ -11,8 +11,8 @@ npm install @react-three/postprocessing
 ```
 
 <p align="center">
-  <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="./examples/src/demos/Bubbles/resources/screenshot.jpg" alt="Bubbles" /></a>
-  <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="./examples/src/demos/TakeControl/resources/screenshot.jpg" alt="Take Control" /></a>
+  <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="bubbles.jpg" alt="Bubbles" /></a>
+  <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="control.jpg" alt="Take Control" /></a>
 </p>
 <p align="middle">
   <i>These demos are real, you can click them! They contain the full code, too. 📦</i>
@@ -33,7 +33,7 @@ Postprocessing also supports srgb-encoding out of the box, as well as WebGL2 MSA
 Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
 
 <a href="https://codesandbox.io/s/vigorous-currying-3r6l2" target="_blank" rel="noopener">
-<img src="https://i.imgur.com/mZucXdX.jpg" alt="Bubbles Demo" />
+<img src="bubbles.jpg" alt="Bubbles Demo" />
 </a>
 
 ```jsx

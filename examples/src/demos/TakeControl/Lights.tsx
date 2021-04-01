@@ -5,7 +5,7 @@ function Lights() {
   const $dirLight = useRef()
   const $backLight = useRef()
 
-  const color = useControls('lights color', {
+  const { value: color } = useControls('lights color', {
     value: '#ff0000',
   })
 

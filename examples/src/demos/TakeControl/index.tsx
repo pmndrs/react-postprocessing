@@ -1,10 +1,7 @@
 import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Html, Stats } from '@react-three/drei'
-import Effects from './Effects'
+import { Effects, Html, Stats } from '@react-three/drei'
 import Scene from './Scene'
-import { ControlsContainer } from './styles'
-import { LoadingMsg } from '../../styles'
 
 function TakeControl() {
   const showControls = window.location.search.includes('ctrl')
@@ -27,13 +24,7 @@ function TakeControl() {
         {showControls && <Stats />}
 
         <Effects />
-        <Suspense
-          fallback={
-            <Html center>
-              <LoadingMsg>Loading...</LoadingMsg>
-            </Html>
-          }
-        >
+        <Suspense fallback={<Html center>Loading...</Html>}>
           <Scene />
         </Suspense>
       </Canvas>
@@ -41,4 +32,9 @@ function TakeControl() {
   )
 }
 
-export default TakeControl
+export default {
+  component: TakeControl,
+  description: 'Noise, Vignette, HueSaturation, GodRays',
+  name: 'Take Control',
+  path: '/take-control',
+}

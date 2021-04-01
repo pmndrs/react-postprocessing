@@ -14,7 +14,7 @@ export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
   }>
 
 export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
-  { active, ...props }: GlitchProps,
+  { active = true, ...props }: GlitchProps,
   ref: Ref<GlitchEffect>
 ) {
   const delay = useVector2(props, 'delay')

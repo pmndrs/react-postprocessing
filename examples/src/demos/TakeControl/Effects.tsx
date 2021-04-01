@@ -6,10 +6,10 @@ import { useControls } from 'leva'
 import { Mesh } from 'three'
 
 const Sun = forwardRef(function Sun(props, forwardRef) {
-  const sunColor = useControls('sun color', { value: '#FF0000' })
+  const { value: sunColor } = useControls('sun color', { value: '#FF0000' })
 
   return (
-    <Circle args={[10, 10]} ref={forwardRef} position={[0, 0, -16]}>
+    <Circle args={[10, 10]} ref={forwardRef} position={[0, 0, -16]} {...props}>
       <meshBasicMaterial color={sunColor} />
     </Circle>
   )

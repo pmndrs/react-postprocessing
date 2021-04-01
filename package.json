@@ -1,6 +1,6 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
@@ -36,8 +36,8 @@
     "prebuild": "rimraf dist && yarn typegen",
     "build": "rollup -c",
     "prepare": "yarn build",
-    "eslint": "eslint --fix {src,examples}/**/*.{js,ts,jsx,tsx}",
-    "eslint:ci": "eslint {src,examples}/**/*.{js,ts,jsx,tsx}",
+    "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
+    "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
     "test": "echo no tests yet",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
     "typegen": "tsc --emitDeclarationOnly || true"
@@ -45,8 +45,7 @@
   "dependencies": {
     "@react-three/drei": "^4.0.1",
     "postprocessing": "^6.21.2",
-    "react-merge-refs": "^1.1.0",
-    "three": "^0.127.0"
+    "react-merge-refs": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.14",
@@ -62,10 +61,6 @@
     "@rollup/plugin-commonjs": "^18.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
-    "@testing-library/jest-dom": "^5.11.10",
-    "@testing-library/react": "^11.2.6",
-    "@testing-library/user-event": "^13.1.1",
-    "@types/jest": "^26.0.22",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-test-renderer": "^17.0.1",
@@ -76,12 +71,10 @@
     "eslint-config-prettier": "^8.1.0",
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.3.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.23.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^6.0.0",
-    "jest": "^26.6.3",
     "lint-staged": "^10.5.4",
     "prettier": "^2.2.1",
     "react": "^17.0.2",
@@ -90,7 +83,6 @@
     "rollup": "^2.44.0",
     "rollup-plugin-filesize": "^9.1.1",
     "rollup-plugin-terser": "^7.0.2",
-    "ts-jest": "^26.5.4",
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
