@@ -1,13 +1,11 @@
 import React, { useRef } from 'react'
-import { useControl } from 'leva'
+import { useControls } from 'leva'
 
 function Lights() {
   const $dirLight = useRef()
   const $backLight = useRef()
 
-  const color = useControl('lights color', {
-    group: 'Scene',
-    type: 'color',
+  const color = useControls('lights color', {
     value: '#ff0000',
   })
 
