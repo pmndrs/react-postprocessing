@@ -21,5 +21,6 @@ export * from './effects/SMAA'
 export * from './effects/Texture'
 export * from './effects/ToneMapping'
 export * from './effects/Vignette'
+export * from './effects/ShockWave'
 
 export { default as EffectComposer, EffectComposerContext } from './EffectComposer'

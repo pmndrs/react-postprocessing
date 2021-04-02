@@ -14,6 +14,7 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     ref
   ) {
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
+
     useLayoutEffect(() => {
       effect.blendMode.blendFunction = blendFunction || defaultBlendMode
       if (opacity !== undefined) effect.blendMode.opacity.value = opacity
@@ -35,7 +36,7 @@ export const useVector2 = (props: any, key: string): Vector2 => {
 
 export const isWebGL2Available = () => {
   try {
-    var canvas = document.createElement('canvas')
+    const canvas = document.createElement('canvas')
     return !!(window.WebGL2RenderingContext && canvas.getContext('webgl2'))
   } catch (e) {
     return false
