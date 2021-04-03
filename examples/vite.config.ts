@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite'
-import cjs from '@rollup/plugin-commonjs'
 import path from 'path'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 

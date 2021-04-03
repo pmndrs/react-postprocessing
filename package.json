@@ -1,6 +1,6 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
@@ -43,7 +43,6 @@
     "typegen": "tsc --emitDeclarationOnly || true"
   },
   "dependencies": {
-    "@react-three/drei": "^4.0.1",
     "postprocessing": "^6.21.2",
     "react-merge-refs": "^1.1.0"
   },
