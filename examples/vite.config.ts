@@ -13,8 +13,12 @@ export default defineConfig({
     ],
   },
   plugins: [reactRefresh()],
-
+  build: {
+    rollupOptions: {
+      external: ['three'],
+    },
+  },
   optimizeDeps: {
-    exclude: ['@react-three/postprocessing'],
+    exclude: ['@react-three/postprocessing', 'three'],
   },
 })
