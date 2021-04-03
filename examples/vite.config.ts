@@ -14,6 +14,7 @@ export default defineConfig({
   },
   plugins: [reactRefresh()],
   build: {
+    outDir: 'build',
     rollupOptions: {
       external: ['three'],
     },
