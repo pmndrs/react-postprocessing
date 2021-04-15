@@ -12,7 +12,7 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       console.error('Please enable the NormalPass in the EffectComposer in order to use SSAO.')
       return null
     }
-    new SSAOEffect(camera, normalPass.renderTarget.texture, {
+    return new SSAOEffect(camera, normalPass.renderTarget.texture, {
       blendFunction: BlendFunction.MULTIPLY,
       samples: 30,
       rings: 4,
