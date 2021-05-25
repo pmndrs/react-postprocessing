@@ -26,7 +26,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 #### [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
 ```jsx
-import { SSAO } from 'react-postprocessing'
+import { SSAO } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -49,7 +49,7 @@ return (
 #### `<Glitch />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html)
 
 ```jsx
-import { Glitch } from 'react-postprocessing'
+import { Glitch } from '@react-three/postprocessing'
 import { GlitchMode } from 'postprocessing'
 
 return (
@@ -69,7 +69,7 @@ return (
 The GodRays effect requires a mesh that will be used as an origin point for the rays. Refer to [this example](https://github.com/react-spring/react-postprocessing/tree/master/examples/take-control) for more details.
 
 ```jsx
-import { GodRays } from 'react-postprocessing'
+import { GodRays } from '@react-three/postprocessing'
 
 return (
  <GodRays
@@ -93,7 +93,7 @@ return (
 #### `<Noise />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-glitchnoise-demo-wd4wx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/NoiseEffect.js~NoiseEffect.html)
 
 ```jsx
-import { Noise } from 'react-postprocessing'
+import { Noise } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -107,7 +107,7 @@ return (
 #### `<Bloom />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-ssao-smaa-and-bloom-demo-r9ujf) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/BloomEffect.js~BloomEffect.html)
 
 ```jsx
-import { Bloom } from 'react-postprocessing'
+import { Bloom } from '@react-three/postprocessing'
 import { BlurPass, Resizer, KernelSize } from 'postprocessing'
 
 return (
@@ -126,7 +126,7 @@ return (
 #### [`<Outline />`](#outline---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/OutlineEffect.js~OutlineEffect.html)
 
 ```jsx
-import { Outline } from 'react-postprocessing'
+import { Outline } from '@react-three/postprocessing'
 import { BlendFunction, Resizer, KernelSize } from 'postprocessing'
 
 return (
@@ -151,7 +151,7 @@ return (
 #### [`<SelectiveBloom />`](#selectivebloom---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SelectiveBloomEffect.js~SelectiveBloomEffect.html)
 
 ```jsx
-import { Bloom } from 'react-postprocessing'
+import { Bloom } from '@react-three/postprocessing'
 import { BlurPass, Resizer, KernelSize } from 'postprocessing'
 
 return (
@@ -173,7 +173,7 @@ return (
 #### `<Vignette />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/VignetteEffect.js~VignetteEffect.html)
 
 ```jsx
-import { Vignette } from 'react-postprocessing'
+import { Vignette } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -189,7 +189,7 @@ return (
 #### `<Sepia />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-vignette-and-sepia-demo-vt0cd) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SepiaEffect.js~SepiaEffect.html)
 
 ```jsx
-import { Sepia } from 'react-postprocessing'
+import { Sepia } from '@react-three/postprocessing'
 
 return (
   <Sepia
@@ -202,7 +202,7 @@ return (
 #### `<DotScreen />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-dotscreen-demo-vthef) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/DotScreenEffect.js~DotScreenEffect.html)
 
 ```jsx
-import { DotScreen } from 'react-postprocessing'
+import { DotScreen } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -217,7 +217,7 @@ return (
 #### `<Pixelation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-pixelation-demo-q4x1h) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/PixelationEffect.js~PixelationEffect.html)
 
 ```jsx
-import { Pixelation } from 'react-postprocessing'
+import { Pixelation } from '@react-three/postprocessing'
 
 return (
   <Pixelation
@@ -229,7 +229,7 @@ return (
 #### `<HueSaturation />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-huesaturation-demo-vqis3) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SaturationEffect.js~SaturationEffect.html)
 
 ```jsx
-import { HueSaturation } from 'react-postprocessing'
+import { HueSaturation } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -257,7 +257,7 @@ return (
 #### `<ToneMapping />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-tonemapping-demo-ljgcq) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ToneMappingEffect.js~ToneMappingEffect.html)
 
 ```jsx
-import { ToneMapping } from 'react-postprocessing'
+import { ToneMapping } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -276,7 +276,7 @@ return (
 #### `<Scanline />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-scanline-demo-luo42) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ScanlineEffect.js~ScanlineEffect.html)
 
 ```jsx
-import { Scanline } from 'react-postprocessing'
+import { Scanline } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -290,7 +290,7 @@ return (
 #### `<ChromaticAberration />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-chromaticaberration-demo-63379) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ChromaticAberrationEffect.js~ChromaticAberrationEffect.html)
 
 ```jsx
-import { ChromaticAberration } from 'react-postprocessing'
+import { ChromaticAberration } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -304,7 +304,7 @@ return (
 #### `<ColorAverage />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 
 ```jsx
-import { ColorAverage } from 'react-postprocessing'
+import { ColorAverage } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -317,7 +317,7 @@ return (
 #### `<Grid />` [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
 
 ```jsx
-import { Grid } from 'react-postprocessing'
+import { Grid } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 
 return (
@@ -343,7 +343,7 @@ By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. 
 
 ```jsx
 import React, { Suspense } from 'react'
-import { EffectComposer, SMAA } from 'react-postprocessing'
+import { EffectComposer, SMAA } from '@react-three/postprocessing'
 
 return (
   <Suspense fallback={null}>
