@@ -11,7 +11,7 @@ npm install @react-three/postprocessing
 ```
 
 <p align="center">
-  <a href="https://m94xb.csb.app" target="_blank"><img width="274" src="bubbles.jpg" alt="Bubbles" /></a>
+  <a href="https://pqrpl.csb.app" target="_blank"><img width="274" src="bubbles.jpg" alt="Bubbles" /></a>
   <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="control.jpg" alt="Take Control" /></a>
 </p>
 <p align="middle">
@@ -30,9 +30,9 @@ Postprocessing also supports srgb-encoding out of the box, as well as WebGL2 MSA
 
 #### What does it look like?
 
-Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
+Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?)).
 
-<a href="https://codesandbox.io/s/vigorous-currying-3r6l2" target="_blank" rel="noopener">
+<a href="https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?" target="_blank" rel="noopener">
 <img src="bubbles.jpg" alt="Bubbles Demo" />
 </a>
 
