@@ -2750,6 +2750,66 @@ declare module 'postprocessing' {
   }
 
   /**
+   * A LUT effect.
+   *
+   * The tetrahedral interpolation algorithm was inspired by an implementation
+   * from OpenColorIO which is licensed under the BSD 3-Clause License.
+   *
+   * The manual trilinear interpolation algorithm is based on an implementation
+   * by Garret Johnson which is licensed under the MIT License.
+   *
+   * References:
+   * https://developer.nvidia.com/gpugems/gpugems2/part-iii-high-quality-rendering/chapter-24-using-lookup-tables-accelerate-color
+   * https://www.nvidia.com/content/GTC/posters/2010/V01-Real-Time-Color-Space-Conversion-for-High-Resolution-Video.pdf
+   * https://github.com/AcademySoftwareFoundation/OpenColorIO/blob/master/src/OpenColorIO/ops/lut3d/
+   * https://github.com/gkjohnson/threejs-sandbox/tree/master/3d-lut
+   */
+  export class LUTEffect extends Effect {
+    /**
+     *
+     * @param lut - The lookup texture.
+     * @param options The options.
+     */
+    constructor(
+      lut: Texture,
+      options?: {
+        blendFunction?: BlendFunction
+        tetrahedralInterpolation?: boolean
+      }
+    )
+
+    /**
+     * Returns the current output encoding.
+     *
+     */
+    getOutputEncoding(): number
+
+    /**
+     * Returns the input encoding.
+     *
+     * This is set to `sRGBEncoding` by default since most LUTs expect sRGB input.
+     */
+
+    getInputEncoding(): number
+
+    setInputEncoding(value: number): void
+
+    getLUT(): Texture
+
+    setLUT(lut: Texture): void
+
+    /**
+     * Enables or disables tetrahedral interpolation. Requires a 3D LUT.
+     *
+     * Tetrahedral interpolation produces highly accurate results, but is slower
+     * than hardware interpolation. This feature is disabled by default.
+     *
+     * @param enabled - Whether tetrahedral interpolation should be enabled.
+     */
+    setTetrahedralInterpolationEnabled(enabled: boolean): void
+  }
+
+  /**
    * Constructs a new image data container.
    * @param [width = 0] - The width of the image.
    * @param [height = 0] - The height of the image.
@@ -2838,5 +2898,128 @@ declare module 'postprocessing' {
      * @returns The generated image data.
      */
     static generate(): RawImageData
+  }
+
+  /**
+   * A 3D lookup texture (LUT).
+   *
+   * This texture can be used as-is in a WebGL 2 context. It can also be converted
+   * into a regular 2D texture for backwards compatibility.
+   */
+
+  export class LookupTexture3D extends DataTexture3D {
+    constructor(data: TypedArray, size: number)
+    get isLookupTexture3D(): boolean
+    /**
+     * Scales this LUT up to a given target size using tetrahedral interpolation.
+     *
+     * @param  size - The target sidelength.
+     * @param [transferData=true] - Extra fast mode. Set to false to keep the original data intact.
+     * @return A promise that resolves with a new LUT upon completion.
+     */
+    scaleUp(size: number, transferData = true): Promise<LookupTexture3D>
+
+    /**
+     * Applies the given LUT to this one.
+     *
+     * @param lut - A LUT. Must have the same dimensions, type and format as this LUT.
+     * @return This texture.
+     */
+
+    applyLUT(lut: LookupTexture3D): LookupTexture3D
+
+    convertToUint8(): LookupTexture3D
+
+    convertToFloat(): LookupTexture3D
+
+    convertLinearToSRGB(): LookupTexture3D
+
+    convertSRGBToLinear(): LookupTexture3D
+
+    convertToRGBA(): LookupTexture3D
+
+    toDataTexture(): DataTexture
+
+    static from(texture: Texture): LookupTexture3D
+
+    static createNeutral(size: number): LookupTexture3D
+  }
+
+  /**
+   * A 3D LUT loader that supports the .cube file format.
+   *
+   * Based on an implementation by Garrett Johnson:
+   * https://github.com/gkjohnson/threejs-sandbox/tree/master/3d-lut
+   *
+   * For more details see:
+   * https://wwwimages2.adobe.com/content/dam/acom/en/products/speedgrade/cc/pdfs/cube-lut-specification-1.0.pdf
+   */
+  export class LUTCubeLoader extends Loader {
+    /**
+     * Loads a LUT.
+     *
+     * @param url - The URL of the CUBE-file.
+     * @param [onLoad] - A callback that receives the loaded lookup texture.
+     * @param [onProgress] - A progress callback that receives the XMLHttpRequest instance.
+     * @param [onError] - An error callback that receives the URL of the file that failed to load.
+     * @return A promise that returns the lookup texture.
+     */
+
+    /**
+     * Loads a LUT.
+     * @param url - The URL of the CUBE-file.
+     * @param onLoad - A callback that receives the loaded lookup texture.
+     * @param onProgress - A progress callback that receives the XMLHttpRequest instance.
+     * @param onError An error callback that receives the URL of the file that failed to load.
+     */
+    load(
+      url: string,
+      onLoad?: (result: any) => void,
+      onProgress?: (event: ProgressEvent) => void,
+      onError?: (event: ErrorEvent) => void
+    ): Promise<LookupTexture3D>
+
+    /**
+     * Parses the given data.
+     *
+     * @param  input - The LUT data.
+     */
+    parse(input: string): LookupTexture3D
+  }
+
+  /**
+   * A 3D LUT loader that supports the .3dl file format.
+   *
+   * Based on an implementation by Garrett Johnson:
+   * https://github.com/gkjohnson/threejs-sandbox/tree/master/3d-lut
+   *
+   * For more details see:
+   * http://download.autodesk.com/us/systemdocs/help/2011/lustre/index.html?url=./files/WSc4e151a45a3b785a24c3d9a411df9298473-7ffd.htm,topicNumber=d0e9492
+   */
+
+  export class LUT3dlLoader extends Loader {
+    /**
+     * Loads a LUT.
+     *
+     * @param url - The URL of the 3dl-file.
+     * @param [onLoad] - A callback that receives the loaded lookup texture.
+     * @param [onProgress] - A progress callback that receives the XMLHttpRequest instance.
+     * @param [onError] - An error callback that receives the URL of the file that failed to load.
+     * @return A promise that returns the lookup texture.
+     */
+    load(
+      url: string,
+      onLoad?: (result: any) => void,
+      onProgress?: (event: ProgressEvent) => void,
+      onError?: (event: ErrorEvent) => void
+    ): Promise<LookupTexture3D>
+
+    /**
+     * Parses the given data.
+     *
+     * @param input - The LUT data.
+     * @return The lookup texture.
+     */
+    parse(input: string): LookupTexture3D
   }
 }
