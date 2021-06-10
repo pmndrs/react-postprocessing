@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo, useLayoutEffect } from 'react'
+import React, { forwardRef, useMemo, useLayoutEffect, useRef } from 'react'
 import { Vector2 } from 'three'
 import { ReactThreeFiber } from '@react-three/fiber'
 import { Effect, BlendFunction } from 'postprocessing'
