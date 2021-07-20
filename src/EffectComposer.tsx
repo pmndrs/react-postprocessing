@@ -5,13 +5,12 @@ import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPas
 import { TextureDataType } from 'three'
 import { isWebGL2Available } from './util'
 
-export const EffectComposerContext =
-  createContext<{
-    composer: EffectComposerImpl
-    normalPass: NormalPass | null
-    camera: THREE.Camera
-    scene: THREE.Scene
-  }>(null)
+export const EffectComposerContext = createContext<{
+  composer: EffectComposerImpl
+  normalPass: NormalPass | null
+  camera: THREE.Camera
+  scene: THREE.Scene
+}>(null)
 
 export type EffectComposerProps = {
   children: JSX.Element | JSX.Element[]
@@ -36,9 +35,9 @@ const EffectComposer = React.memo(
         renderPriority = 1,
         autoClear = true,
         depthBuffer,
-        disableNormalPass = true,
+        disableNormalPass,
         stencilBuffer,
-        multisampling = 0,
+        multisampling = 8,
         frameBufferType,
       }: EffectComposerProps,
       ref

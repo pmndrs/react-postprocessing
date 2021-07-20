@@ -10,9 +10,10 @@ export const SMAA = forwardRef(function SMAA(
   ref: Ref<SMAAEffect>
 ) {
   const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
-  const effect = useMemo(
-    () => new SMAAEffect(...smaaProps, preset, edgeDetectionMode),
-    [smaaProps, preset, edgeDetectionMode]
-  )
+  const effect = useMemo(() => new SMAAEffect(...smaaProps, preset, edgeDetectionMode), [
+    smaaProps,
+    preset,
+    edgeDetectionMode,
+  ])
   return <primitive ref={ref} object={effect} dispose={null} />
 })
