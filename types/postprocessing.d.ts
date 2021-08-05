@@ -2591,6 +2591,8 @@ declare module 'postprocessing' {
    * @param [options.radius = 18.25] - The occlusion sampling radius.
    * @param [options.scale = 1.0] - The scale of the ambient occlusion.
    * @param [options.bias = 0.0] - An occlusion bias.
+   * @param [options.intensity = 1.0] - The intensity of the ambient occlusion.
+   * @param [options.color = null] - The color of the ambient occlusion.
    */
   export class SSAOEffect extends Effect {
     constructor(
@@ -2608,6 +2610,8 @@ declare module 'postprocessing' {
         radius?: number
         scale?: number
         bias?: number
+        intensity?: number;
+        color?: string | null;
       }
     )
     /**

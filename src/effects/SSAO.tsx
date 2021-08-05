@@ -24,6 +24,8 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       radius: 20,
       scale: 0.5,
       bias: 0.5,
+      intensity: 1.0,
+      color: null,
       ...props,
     })
   }, [camera, normalPass, props])
