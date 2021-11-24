@@ -131,7 +131,7 @@ import { BlendFunction, Resizer, KernelSize } from 'postprocessing'
 
 return (
   <Outline
-    selection={[meshRef1, meshRef2]} // selection of objects that wiill be outlined
+    selection={[meshRef1, meshRef2]} // selection of objects that will be outlined
     selectionLayer={10} // selection layer
     blendFunction={BlendFunction.SCREEN} // set this to BlendFunction.ALPHA for dark outlines
     patternTexture={null} // a pattern texture
