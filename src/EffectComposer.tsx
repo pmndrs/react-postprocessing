@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImperativeHandle } from 'react'
+import React, { forwardRef, useMemo, useLayoutEffect, createContext, useRef, useImperativeHandle } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { TextureDataType } from 'three'
@@ -58,25 +58,29 @@ const EffectComposer = React.memo(
         effectComposer.addPass(new RenderPass(scene, camera))
         // Create normal pass
         const pass = disableNormalPass ? null : new NormalPass(scene, camera)
+        if (pass) pass.enabled = false
+
         if (pass) {
           effectComposer.addPass(pass)
         }
         return [effectComposer, pass]
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene, disableNormalPass])
 
-      useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
+      useLayoutEffect(() => composer?.setSize(size.width, size.height), [composer, size])
       useFrame((_, delta) => void ((gl.autoClear = autoClear), composer.render(delta)), renderPriority)
 
       const group = useRef(null)
-      useEffect(() => {
+      useLayoutEffect(() => {
         let effectPass
         if (group.current && group.current.__r3f && composer) {
           effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
           composer.addPass(effectPass)
           effectPass.renderToScreen = true
+          if (normalPass) normalPass.enabled = false
         }
         return () => {
           if (effectPass) composer?.removePass(effectPass)
+          if (normalPass) normalPass.enabled = false
         }
       }, [composer, children, camera])
 

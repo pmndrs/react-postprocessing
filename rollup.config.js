@@ -2,7 +2,6 @@ import path from 'path'
 import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
-import { terser } from 'rollup-plugin-terser'
 import filesize from 'rollup-plugin-filesize'
 
 const root = process.platform === 'win32' ? path.resolve('/') : '/'
@@ -32,13 +31,12 @@ export default [
       babel(getBabelOptions({ useESModules: true }, '>5%, not dead, not ie 11, not op_mini all, node >=12')),
       filesize(),
       resolve({ extensions }),
-      terser(),
     ],
   },
   {
     input: `./src/index.tsx`,
     output: { file: `dist/index.cjs.js`, format: 'cjs' },
     external,
-    plugins: [json(), babel(getBabelOptions({ useESModules: false })), filesize(), resolve({ extensions }), terser()],
+    plugins: [json(), babel(getBabelOptions({ useESModules: false })), filesize(), resolve({ extensions })],
   },
 ]
