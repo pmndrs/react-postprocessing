@@ -33,12 +33,3 @@ export const useVector2 = (props: any, key: string): Vector2 => {
     }
   }, [vec])
 }
-
-export const isWebGL2Available = () => {
-  try {
-    const canvas = document.createElement('canvas')
-    return !!(window.WebGL2RenderingContext && canvas.getContext('webgl2'))
-  } catch (e) {
-    return false
-  }
-}

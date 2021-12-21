@@ -3,7 +3,7 @@ import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImpera
 import { useThree, useFrame } from '@react-three/fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { TextureDataType } from 'three'
-import { isWebGL2Available } from './util'
+import { isWebGL2Available } from 'three-stdlib'
 
 export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl

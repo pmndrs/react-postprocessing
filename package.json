@@ -39,7 +39,8 @@
   },
   "dependencies": {
     "postprocessing": "^6.22.2",
-    "react-merge-refs": "^1.1.0"
+    "react-merge-refs": "^1.1.0",
+    "three-stdlib": "^2.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
