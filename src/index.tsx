@@ -23,5 +23,6 @@ export * from './effects/ToneMapping'
 export * from './effects/Vignette'
 export * from './effects/ShockWave'
 export * from './effects/LUT'
+export * from './effects/GammaCorrection'
 
 export { default as EffectComposer, EffectComposerContext } from './EffectComposer'
