@@ -1981,10 +1981,10 @@ declare module 'postprocessing' {
    * @property CONSTANT_WILD - Constant wild glitches.
    */
   export const GlitchMode: {
-    DISABLED: number
-    SPORADIC: number
-    CONSTANT_MILD: number
-    CONSTANT_WILD: number
+    DISABLED: 0
+    SPORADIC: 1
+    CONSTANT_MILD: 2
+    CONSTANT_WILD: 3
   }
 
   /**

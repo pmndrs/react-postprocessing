@@ -5,7 +5,7 @@ import { useVector2 } from '../util'
 
 export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
   Partial<{
-    mode: typeof GlitchMode
+    mode: typeof GlitchMode[keyof typeof GlitchMode]
     active: boolean
     delay: ReactThreeFiber.Vector2
     duration: ReactThreeFiber.Vector2
