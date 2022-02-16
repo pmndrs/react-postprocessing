@@ -2,27 +2,19 @@ import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext } from 'react'
 import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
+import { resolveRef } from '../util'
 
 type ObjectRef = MutableRefObject<Object3D>
 
 export type SelectiveBloomProps = ConstructorParameters<typeof SelectiveBloomEffect>[2] &
   Partial<{
-    lights: ObjectRef[]
-    selection: ObjectRef | ObjectRef[]
+    lights: Object3D[] | ObjectRef[]
+    selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
     selectionLayer: number
   }>
 
-const addLight = (light: ObjectRef, effect: SelectiveBloomEffect) => {
-  if (light.current) {
-    light.current.layers.enable(effect.selection.layer)
-  }
-}
-
-const removeLight = (light: ObjectRef, effect: SelectiveBloomEffect) => {
-  if (light.current) {
-    light.current.layers.disable(effect.selection.layer)
-  }
-}
+const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.enable(effect.selection.layer)
+const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.disable(effect.selection.layer)
 
 export const SelectiveBloom = forwardRef(function SelectiveBloom(
   {
@@ -58,7 +50,10 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
   )
 
   useEffect(() => {
-    effect.selection.set(Array.isArray(selection) ? selection.map((ref) => ref.current) : [selection.current])
+    if (selection) {
+      effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
+      return () => void effect.selection.clear()
+    }
   }, [effect, selection])
 
   useEffect(() => {
@@ -66,9 +61,10 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
   }, [effect, selectionLayer])
 
   useEffect(() => {
-    lights.forEach((light) => addLight(light, effect))
-
-    return () => lights.forEach((light) => removeLight(light, effect))
+    if (lights && lights.length > 0) {
+      lights.forEach((light) => addLight(resolveRef(light), effect))
+      return () => lights.forEach((light) => removeLight(resolveRef(light), effect))
+    }
   }, [effect, lights, selectionLayer])
 
   return <primitive ref={ref} object={effect} dispose={null} />

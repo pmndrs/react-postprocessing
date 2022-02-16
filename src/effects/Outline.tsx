@@ -1,22 +1,14 @@
 import { OutlineEffect } from 'postprocessing'
-import React, {
-  Ref,
-  MutableRefObject,
-  forwardRef,
-  useMemo,
-  useEffect,
-  useContext,
-  useRef,
-  useLayoutEffect,
-} from 'react'
+import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext } from 'react'
 import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
+import { resolveRef } from '../util'
 
 type ObjectRef = MutableRefObject<Object3D>
 
 export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   Partial<{
-    selection: ObjectRef | ObjectRef[]
+    selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
     selectionLayer: number
   }>
 
@@ -73,8 +65,10 @@ export const Outline = forwardRef(function Outline(
   )
 
   useEffect(() => {
-    effect.clearSelection()
-    effect.setSelection(Array.isArray(selection) ? selection.map((ref) => ref.current) : [selection.current])
+    if (selection) {
+      effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
+      return () => void effect.selection.clear()
+    }
   }, [effect, selection])
 
   useEffect(() => {

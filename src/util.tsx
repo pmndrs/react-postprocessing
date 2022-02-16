@@ -1,9 +1,14 @@
-import React, { forwardRef, useMemo, useLayoutEffect, useRef } from 'react'
-import { Vector2 } from 'three'
+import React, { forwardRef, useMemo, useLayoutEffect, MutableRefObject } from 'react'
+import { Vector2, Object3D } from 'three'
 import { ReactThreeFiber } from '@react-three/fiber'
 import { Effect, BlendFunction } from 'postprocessing'
 
+type ObjectRef = MutableRefObject<Object3D>
 type DefaultProps = Partial<{ blendFunction: BlendFunction; opacity: number }>
+
+const isRef = (ref: any): ref is ObjectRef => !!ref.current
+
+export const resolveRef = (ref: Object3D | ObjectRef) => (isRef(ref) ? ref.current : ref)
 
 export const wrapEffect = <T extends new (...args: any[]) => Effect>(
   effectImpl: T,

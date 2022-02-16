@@ -38,7 +38,7 @@ const EffectComposer = React.memo(
         disableNormalPass,
         stencilBuffer,
         multisampling = 8,
-        frameBufferType,
+        frameBufferType = THREE.HalfFloatType,
       }: EffectComposerProps,
       ref
     ) => {

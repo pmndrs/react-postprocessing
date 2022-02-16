@@ -38,9 +38,9 @@
     "typegen": "tsc --emitDeclarationOnly || true"
   },
   "dependencies": {
-    "postprocessing": "^6.23.3",
+    "postprocessing": "^6.24.0",
     "react-merge-refs": "^1.1.0",
-    "three-stdlib": "^2.6.2"
+    "three-stdlib": "^2.8.6"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
@@ -85,7 +85,7 @@
     "@react-three/fiber": ">=7.0",
     "react": ">=17.0",
     "react-dom": ">=17.0",
-    "three": ">=0.130.1"
+    "three": ">=0.136.0"
   },
   "peerDependenciesMeta": {
     "react-dom": {
