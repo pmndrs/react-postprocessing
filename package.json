@@ -38,7 +38,7 @@
     "typegen": "tsc --emitDeclarationOnly || true"
   },
   "dependencies": {
-    "postprocessing": "^6.24.0",
+    "postprocessing": "^6.24.1",
     "react-merge-refs": "^1.1.0",
     "three-stdlib": "^2.8.6"
   },
