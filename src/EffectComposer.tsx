@@ -76,7 +76,7 @@ const EffectComposer = React.memo(
           effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
           composer.addPass(effectPass)
           effectPass.renderToScreen = true
-          if (normalPass) normalPass.enabled = false
+          if (normalPass) normalPass.enabled = true
         }
         return () => {
           if (effectPass) composer?.removePass(effectPass)
