@@ -13,6 +13,7 @@ export const EffectComposerContext = createContext<{
 }>(null)
 
 export type EffectComposerProps = {
+  enabled?: boolean
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
   disableNormalPass?: boolean
@@ -32,6 +33,7 @@ const EffectComposer = React.memo(
         children,
         camera,
         scene,
+        enabled = true,
         renderPriority = 1,
         autoClear = true,
         depthBuffer,
@@ -51,7 +53,7 @@ const EffectComposer = React.memo(
         const effectComposer = new EffectComposerImpl(gl, {
           depthBuffer,
           stencilBuffer,
-          multisampling: isWebGL2Available() ? multisampling : 0,
+          multisampling: multisampling > 0 && isWebGL2Available() ? multisampling : 0,
           frameBufferType,
         })
         // Add render pass
@@ -67,7 +69,15 @@ const EffectComposer = React.memo(
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene, disableNormalPass])
 
       useLayoutEffect(() => composer?.setSize(size.width, size.height), [composer, size])
-      useFrame((_, delta) => void ((gl.autoClear = autoClear), composer.render(delta)), renderPriority)
+      useFrame(
+        (_, delta) => {
+          if (enabled) {
+            gl.autoClear = autoClear
+            composer.render(delta)
+          }
+        },
+        enabled ? renderPriority : 0
+      )
 
       const group = useRef(null)
       useLayoutEffect(() => {
