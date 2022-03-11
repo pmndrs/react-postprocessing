@@ -1,6 +1,6 @@
 import { GlitchEffect, GlitchMode } from 'postprocessing'
 import React, { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
-import { ReactThreeFiber } from '@react-three/fiber'
+import { ReactThreeFiber, useThree } from '@react-three/fiber'
 import { useVector2 } from '../util'
 
 export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
@@ -17,6 +17,7 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   { active = true, ...props }: GlitchProps,
   ref: Ref<GlitchEffect>
 ) {
+  const invalidate = useThree((state) => state.invalidate)
   const delay = useVector2(props, 'delay')
   const duration = useVector2(props, 'duration')
   const strength = useVector2(props, 'strength')
@@ -28,6 +29,7 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   ])
   useLayoutEffect(() => {
     effect.mode = active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
+    invalidate()
   }, [active, effect, props.mode])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

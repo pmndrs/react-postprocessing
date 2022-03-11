@@ -1,6 +1,6 @@
 import React, { forwardRef, useMemo, useLayoutEffect, MutableRefObject } from 'react'
 import { Vector2, Object3D } from 'three'
-import { ReactThreeFiber } from '@react-three/fiber'
+import { ReactThreeFiber, useThree } from '@react-three/fiber'
 import { Effect, BlendFunction } from 'postprocessing'
 
 type ObjectRef = MutableRefObject<Object3D>
@@ -18,11 +18,13 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     { blendFunction, opacity, ...props }: React.PropsWithChildren<DefaultProps & ConstructorParameters<T>[0]>,
     ref
   ) {
+    const invalidate = useThree((state) => state.invalidate)
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
       effect.blendMode.blendFunction = blendFunction || defaultBlendMode
       if (opacity !== undefined) effect.blendMode.opacity.value = opacity
+      invalidate()
     }, [blendFunction, effect.blendMode, opacity])
     return <primitive ref={ref} object={effect} dispose={null} />
   })

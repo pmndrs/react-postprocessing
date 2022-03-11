@@ -1,6 +1,7 @@
 import { OutlineEffect } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
+import { useThree } from '@react-three/fiber'
 import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
@@ -33,6 +34,7 @@ export const Outline = forwardRef(function Outline(
   }: OutlineProps,
   forwardRef: Ref<OutlineEffect>
 ) {
+  const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
 
   const effect = useMemo(
@@ -70,12 +72,17 @@ export const Outline = forwardRef(function Outline(
   useEffect(() => {
     if (selection) {
       effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
-      return () => void effect.selection.clear()
+      invalidate()
+      return () => {
+        effect.selection.clear()
+        invalidate()
+      }
     }
   }, [effect, selection])
 
   useEffect(() => {
     effect.selectionLayer = selectionLayer
+    invalidate()
   }, [effect, selectionLayer])
 
   const api = useContext(selectionContext)
@@ -85,7 +92,11 @@ export const Outline = forwardRef(function Outline(
       const effect = ref.current
       if (api.selected?.length) {
         effect.selection.set(api.selected)
-        return () => void effect.selection.clear()
+        invalidate()
+        return () => {
+          effect.selection.clear()
+          invalidate()
+        }
       }
     }
   }, [api])

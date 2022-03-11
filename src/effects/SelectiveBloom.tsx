@@ -1,6 +1,7 @@
 import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
+import { useThree } from '@react-three/fiber'
 import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
@@ -36,6 +37,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     console.warn('SelectiveBloom requires lights to work.')
   }
 
+  const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>
@@ -54,18 +56,27 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
   useEffect(() => {
     if (selection) {
       effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
-      return () => void effect.selection.clear()
+      invalidate()
+      return () => {
+        effect.selection.clear()
+        invalidate()
+      }
     }
   }, [effect, selection])
 
   useEffect(() => {
     effect.selection.layer = selectionLayer
+    invalidate()
   }, [effect, selectionLayer])
 
   useEffect(() => {
     if (lights && lights.length > 0) {
       lights.forEach((light) => addLight(resolveRef(light), effect))
-      return () => lights.forEach((light) => removeLight(resolveRef(light), effect))
+      invalidate()
+      return () => {
+        lights.forEach((light) => removeLight(resolveRef(light), effect))
+        invalidate()
+      }
     }
   }, [effect, lights, selectionLayer])
 
@@ -76,7 +87,11 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
       const effect = ref.current
       if (api.selected?.length) {
         effect.selection.set(api.selected)
-        return () => void effect.selection.clear()
+        invalidate()
+        return () => {
+          effect.selection.clear()
+          invalidate()
+        }
       }
     }
   }, [api])

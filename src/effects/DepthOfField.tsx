@@ -1,6 +1,6 @@
 import { DepthOfFieldEffect } from 'postprocessing'
 import React, { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
-import { ReactThreeFiber } from '@react-three/fiber'
+import { ReactThreeFiber, useThree } from '@react-three/fiber'
 import { Texture, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 
@@ -18,6 +18,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
   { target, depthTexture, ...props }: DOFProps,
   ref: Ref<DepthOfFieldEffect>
 ) {
+  const invalidate = useThree((state) => state.invalidate)
   const { camera } = useContext(EffectComposerContext)
   const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [camera, props])
   useLayoutEffect(() => {
@@ -29,6 +30,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
       effect.target = vec
     }
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
+    invalidate()
   }, [target, depthTexture, effect])
   return <primitive ref={ref} object={effect} dispose={null} />
 })
