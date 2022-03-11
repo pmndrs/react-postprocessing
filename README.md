@@ -60,7 +60,7 @@ function App() {
 
 #### EffectComposer
 
-The EffectComposer is must wrap all your effects. It will manage them for you.
+The EffectComposer must wrap all your effects. It will manage them for you.
 
 ```jsx
 <EffectComposer
@@ -80,7 +80,7 @@ The EffectComposer is must wrap all your effects. It will manage them for you.
 
 #### Selection/Select
 
-Some effects, like Outline or SelectiveBloom can select specific objects. To manage this in a declarative scene with just references can be messy, so we have two components that help you.
+Some effects, like Outline or SelectiveBloom can select specific objects. To manage this in a declarative scene with just references can be messy, especially when things have to be grouped. These two components take care of it:
 
 ```jsx
 <Selection
@@ -94,7 +94,7 @@ Some effects, like Outline or SelectiveBloom can select specific objects. To man
 >
 ```
 
-You wrap everything into a selection, and then select object or groups. Effects working with selections will acknowledge the selections.
+You wrap everything into a selection, this one holds all the selections. Now you can individually select objects or groups. Effects that support selections (for instance `Outline`) will acknowledge it.
 
 ```jsx
 <Selection>
