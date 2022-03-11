@@ -24,4 +24,5 @@ export * from './effects/Vignette'
 export * from './effects/ShockWave'
 export * from './effects/LUT'
 
-export { default as EffectComposer, EffectComposerContext } from './EffectComposer'
+export * from './Selection'
+export * from './EffectComposer'

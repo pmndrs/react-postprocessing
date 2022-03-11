@@ -30,7 +30,7 @@ Postprocessing also supports srgb-encoding out of the box, as well as WebGL2 MSA
 
 #### What does it look like?
 
-Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?)).
+Here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?)).
 
 <a href="https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?" target="_blank" rel="noopener">
 <img src="bubbles.jpg" alt="Bubbles Demo" />
@@ -56,7 +56,70 @@ function App() {
 }
 ```
 
-#### Documentation
+## Documentation
+
+#### EffectComposer
+
+The EffectComposer is must wrap all your effects. It will manage them for you.
+
+```jsx
+<EffectComposer
+  enabled?: boolean
+  children: JSX.Element | JSX.Element[]
+  depthBuffer?: boolean
+  disableNormalPass?: boolean
+  stencilBuffer?: boolean
+  autoClear?: boolean
+  multisampling?: number
+  frameBufferType?: TextureDataType
+  renderPriority?: number
+  camera?: THREE.Camera
+  scene?: THREE.Scene
+>
+```
+
+#### Selection/Select
+
+Some effects, like Outline or SelectiveBloom can select specific objects. To manage this in a declarative scene with just references can be messy, so we have two components that help you.
+
+```jsx
+<Selection
+  children: JSX.Element | JSX.Element[]
+  enabled?: boolean
+>
+
+<Select
+  children: JSX.Element | JSX.Element[]
+  enabled?: boolean
+>
+```
+
+You wrap everything into a selection, and then select object or groups. Effects working with selections will acknowledge the selections.
+
+```jsx
+<Selection>
+  <EffectComposer>
+    <Outline xRay blur edgeStrength={100} width={1000} />
+  </EffectComposer>
+  <Select enabled>
+    <mesh />
+  </Select>
+</Selection>
+```
+
+Selection can be nested and group multiple object, higher up selection take precence over lower ones. The following for instance will select everything. Remove the outmost `enabled` and only the two mesh group is selected. You can flip the selections or bind them to interactions and state.
+
+```jsx
+<Select enabled>
+  <Select enabled>
+    <mesh />
+    <mesh />
+  </Select>
+  <Select>
+    <mesh />
+  </Select>
+</Select>
+```
 
 - [react-postprocessing exports](https://github.com/pmndrs/react-postprocessing/blob/master/api.md)
 - [postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)

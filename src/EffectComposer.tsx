@@ -26,7 +26,7 @@ export type EffectComposerProps = {
   scene?: THREE.Scene
 }
 
-const EffectComposer = React.memo(
+export const EffectComposer = React.memo(
   forwardRef(
     (
       {
@@ -108,5 +108,3 @@ const EffectComposer = React.memo(
     }
   )
 )
-
-export default EffectComposer

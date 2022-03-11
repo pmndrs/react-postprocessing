@@ -1,7 +1,10 @@
 import { OutlineEffect } from 'postprocessing'
-import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext } from 'react'
+import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
+import { BlendFunction } from 'postprocessing'
+import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
+import { selectionContext } from '../Selection'
 import { resolveRef } from '../util'
 
 type ObjectRef = MutableRefObject<Object3D>
@@ -16,12 +19,12 @@ export const Outline = forwardRef(function Outline(
   {
     selection = [],
     selectionLayer = 10,
-    blendFunction,
+    blendFunction = BlendFunction.ADD,
     patternTexture,
     edgeStrength,
     pulseSpeed,
-    visibleEdgeColor,
-    hiddenEdgeColor,
+    visibleEdgeColor = 0xffffff,
+    hiddenEdgeColor = 0xffffff,
     width,
     height,
     kernelSize,
@@ -29,9 +32,10 @@ export const Outline = forwardRef(function Outline(
     xRay,
     ...props
   }: OutlineProps,
-  ref: Ref<OutlineEffect>
+  forwardRef: Ref<OutlineEffect>
 ) {
   const { scene, camera } = useContext(EffectComposerContext)
+
   const effect = useMemo(
     () =>
       new OutlineEffect(scene, camera, {
@@ -75,5 +79,17 @@ export const Outline = forwardRef(function Outline(
     effect.selectionLayer = selectionLayer
   }, [effect, selectionLayer])
 
-  return <primitive ref={ref} object={effect} dispose={null} />
+  const api = useContext(selectionContext)
+  const ref = useRef<OutlineEffect>()
+  useEffect(() => {
+    if (api && api.enabled) {
+      const effect = ref.current
+      if (api.selected?.length) {
+        effect.selection.set(api.selected)
+        return () => void effect.selection.clear()
+      }
+    }
+  }, [api])
+
+  return <primitive ref={mergeRefs([ref, forwardRef])} object={effect} />
 })

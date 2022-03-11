@@ -1,7 +1,9 @@
 import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
-import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext } from 'react'
+import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
+import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
+import { selectionContext } from '../Selection'
 import { resolveRef } from '../util'
 
 type ObjectRef = MutableRefObject<Object3D>
@@ -28,7 +30,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     height,
     kernelSize,
   }: SelectiveBloomProps,
-  ref: Ref<SelectiveBloomEffect>
+  forwardRef: Ref<SelectiveBloomEffect>
 ) {
   if (lights.length === 0) {
     console.warn('SelectiveBloom requires lights to work.')
@@ -67,5 +69,17 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     }
   }, [effect, lights, selectionLayer])
 
-  return <primitive ref={ref} object={effect} dispose={null} />
+  const api = useContext(selectionContext)
+  const ref = useRef<SelectiveBloomEffect>()
+  useEffect(() => {
+    if (api && api.enabled) {
+      const effect = ref.current
+      if (api.selected?.length) {
+        effect.selection.set(api.selected)
+        return () => void effect.selection.clear()
+      }
+    }
+  }, [api])
+
+  return <primitive ref={mergeRefs([ref, forwardRef])} object={effect} dispose={null} />
 })
