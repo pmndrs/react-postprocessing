@@ -98,7 +98,7 @@ You wrap everything into a selection, and then select object or groups. Effects 
 
 ```jsx
 <Selection>
-  <EffectComposer>
+  <EffectComposer autoclear={false}>
     <Outline xRay blur edgeStrength={100} width={1000} />
   </EffectComposer>
   <Select enabled>
