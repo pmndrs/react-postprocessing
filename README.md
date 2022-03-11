@@ -60,7 +60,7 @@ function App() {
 
 #### EffectComposer
 
-The EffectComposer is must wrap all your effects. It will manage them for you.
+The EffectComposer must wrap all your effects. It will manage them for you.
 
 ```jsx
 <EffectComposer
