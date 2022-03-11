@@ -1,7 +1,6 @@
 import { OutlineEffect } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
-import { BlendFunction, KernelSize, Resizer } from 'postprocessing'
 import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
@@ -19,17 +18,17 @@ export const Outline = forwardRef(function Outline(
   {
     selection = [],
     selectionLayer = 10,
-    blendFunction = BlendFunction.SCREEN,
-    patternTexture = null,
-    edgeStrength = 1,
-    pulseSpeed = 0,
-    visibleEdgeColor = 0xffffff,
-    hiddenEdgeColor = 0xffffff,
-    width = Resizer.AUTO_SIZE,
-    height = Resizer.AUTO_SIZE,
-    kernelSize = KernelSize.VERY_SMALL,
-    blur = false,
-    xRay = true,
+    blendFunction,
+    patternTexture,
+    edgeStrength,
+    pulseSpeed,
+    visibleEdgeColor,
+    hiddenEdgeColor,
+    width,
+    height,
+    kernelSize,
+    blur,
+    xRay,
     ...props
   }: OutlineProps,
   forwardRef: Ref<OutlineEffect>
