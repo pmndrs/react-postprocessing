@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import React, { createContext, useState, useContext, useEffect, useRef, useMemo } from 'react'
-import without from 'lodash-es/without'
 
 export type Api = {
   selected: THREE.Object3D[]
@@ -33,7 +32,7 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
       if (changed) {
         api.select((state) => [...state, ...current])
         return () => {
-          api.select((state) => without(state, ...current))
+          api.select((state) => state.filter((selected) => !current.includes(selected)))
         }
       }
     }

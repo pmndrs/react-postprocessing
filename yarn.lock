@@ -3297,11 +3297,6 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
-lodash-es@^4.17.21:
-  version "4.17.21"
-  resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
-  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
-
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
@@ -3852,7 +3847,7 @@ pkg-dir@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
-postprocessing@^6.24.1:
+postprocessing@6.24.1:
   version "6.24.1"
   resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.24.1.tgz#534abd6da39a031adcaa19cd50ac0c6cfce65d59"
   integrity sha512-P11gHk5gXoxSddumWKk3Pv3MxYSWQU+rhEqPRJpLO70NOJfzmT4+80yG5hCJ0yBGUAjhzxbdF3XtRo7mHeiQZA==
