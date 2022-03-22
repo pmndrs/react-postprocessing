@@ -53,8 +53,12 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     [camera, height, intensity, kernelSize, luminanceSmoothing, luminanceThreshold, scene, width]
   )
 
+  const api = useContext(selectionContext)
+
   useEffect(() => {
-    if (selection) {
+    // Do not allow array selection if declarative selection is active
+    // TODO: array selection should probably be deprecated altogether
+    if (!api && selection) {
       effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
       invalidate()
       return () => {
@@ -62,7 +66,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         invalidate()
       }
     }
-  }, [effect, selection])
+  }, [effect, selection, api])
 
   useEffect(() => {
     effect.selection.layer = selectionLayer
@@ -80,7 +84,6 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     }
   }, [effect, lights, selectionLayer])
 
-  const api = useContext(selectionContext)
   const ref = useRef<SelectiveBloomEffect>()
   useEffect(() => {
     if (api && api.enabled) {

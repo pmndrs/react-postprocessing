@@ -69,8 +69,12 @@ export const Outline = forwardRef(function Outline(
     ]
   )
 
+  const api = useContext(selectionContext)
+
   useEffect(() => {
-    if (selection) {
+    // Do not allow array selection if declarative selection is active
+    // TODO: array selection should probably be deprecated altogether
+    if (!api && selection) {
       effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
       invalidate()
       return () => {
@@ -78,14 +82,13 @@ export const Outline = forwardRef(function Outline(
         invalidate()
       }
     }
-  }, [effect, selection])
+  }, [effect, selection, api])
 
   useEffect(() => {
     effect.selectionLayer = selectionLayer
     invalidate()
   }, [effect, selectionLayer])
 
-  const api = useContext(selectionContext)
   const ref = useRef<OutlineEffect>()
   useEffect(() => {
     if (api && api.enabled) {
