@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { forwardRef, useMemo, useLayoutEffect, createContext, useRef, useImperativeHandle } from 'react'
+import React, { forwardRef, useMemo, useEffect, useLayoutEffect, createContext, useRef, useImperativeHandle } from 'react'
 import { useThree, useFrame } from '@react-three/fiber'
 import { EffectComposer as EffectComposerImpl, RenderPass, EffectPass, NormalPass } from 'postprocessing'
 import { TextureDataType } from 'three'
@@ -68,7 +68,7 @@ export const EffectComposer = React.memo(
         return [effectComposer, pass]
       }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene, disableNormalPass])
 
-      useLayoutEffect(() => composer?.setSize(size.width, size.height), [composer, size])
+      useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
       useFrame(
         (_, delta) => {
           if (enabled) {
