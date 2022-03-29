@@ -12,7 +12,7 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       console.error('Please enable the NormalPass in the EffectComposer in order to use SSAO.')
       return null
     }
-    return new SSAOEffect(camera, normalPass ? (normalPass as any).texture : null, {
+    return new SSAOEffect(camera, normalPass && !downSamplingPass ? (normalPass as any).texture : null, {
       blendFunction: BlendFunction.MULTIPLY,
       samples: 30,
       rings: 4,
@@ -29,6 +29,7 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       // @ts-ignore
       normalDepthBuffer: downSamplingPass ? downSamplingPass.texture : null,
       resolutionScale: resolutionScale ?? 1,
+      depthAwareUpsampling: true,
       ...props,
     })
   }, [camera, normalPass, props])
