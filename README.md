@@ -72,6 +72,8 @@ The EffectComposer must wrap all your effects. It will manage them for you.
   autoClear?: boolean
   multisampling?: number
   frameBufferType?: TextureDataType
+  /** For effects that support DepthDownsamplingPass */
+  resolutionScale?: number
   renderPriority?: number
   camera?: THREE.Camera
   scene?: THREE.Scene
