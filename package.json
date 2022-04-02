@@ -40,7 +40,7 @@
   "dependencies": {
     "postprocessing": "6.26.3",
     "react-merge-refs": "^1.1.0",
-    "three-stdlib": "^2.9.1"
+    "three-stdlib": "^2.8.11"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
@@ -51,7 +51,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "7.16.7",
     "@babel/preset-typescript": "^7.16.7",
-    "@react-three/fiber": "^8.0.7",
+    "@react-three/fiber": "^7.0.26",
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-commonjs": "^21.0.3",
     "@rollup/plugin-json": "^4.1.0",
@@ -68,13 +68,13 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.4.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
     "husky-run": "^0.0.0",
     "lint-staged": "^12.3.7",
     "prettier": "^2.6.1",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.70.1",
     "rollup-plugin-filesize": "^9.1.2",
@@ -82,8 +82,9 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "@react-three/fiber": ">=8.0",
-    "react": ">=18.0",
+    "@react-three/fiber": ">=7.0",
+    "react": ">=17.0",
+    "react-dom": ">=17.0",
     "three": ">=0.136.0"
   },
   "peerDependenciesMeta": {
