@@ -22,7 +22,7 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
-      effect.blendMode.blendFunction = blendFunction || defaultBlendMode
+      effect.blendMode.blendFunction = !blendFunction && blendFunction !== 0 ? defaultBlendMode : blendFunction
       if (opacity !== undefined) effect.blendMode.opacity.value = opacity
       invalidate()
     }, [blendFunction, effect.blendMode, opacity])
