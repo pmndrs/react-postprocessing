@@ -124,4 +124,4 @@ Selection can be nested and group multiple object, higher up selection take prec
 ```
 
 - [react-postprocessing exports](https://github.com/pmndrs/react-postprocessing/blob/master/api.md)
-- [postprocessing docs](https://vanruesc.github.io/postprocessing/public/docs/)
+- [postprocessing docs](https://pmndrs.github.io/postprocessing/public/docs/)
