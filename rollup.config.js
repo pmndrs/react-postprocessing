@@ -35,7 +35,7 @@ export default [
   },
   {
     input: `./src/index.tsx`,
-    output: { file: `dist/index.cjs.js`, format: 'cjs' },
+    output: { file: `dist/index.cjs`, format: 'cjs' },
     external,
     plugins: [json(), babel(getBabelOptions({ useESModules: false })), filesize(), resolve({ extensions })],
   },
