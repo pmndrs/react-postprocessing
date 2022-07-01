@@ -95,6 +95,11 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
   }, [props])
 
   useEffect(() => {
+    // Steps
+    pass.reflectionsPass.fullscreenMaterial.defines.MAX_STEPS = Math.ceil(props.MAX_STEPS)
+    pass.reflectionsPass.fullscreenMaterial.defines.NUM_BINARY_SEARCH_STEPS = Math.ceil(props.NUM_BINARY_SEARCH_STEPS)
+
+    // Blur
     if (props.useBlur) {
       pass.fullscreenMaterial.defines.USE_BLUR = ''
       pass.reflectionsPass.fullscreenMaterial.defines.USE_BLUR = ''
@@ -102,15 +107,20 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
       delete pass.fullscreenMaterial.defines.USE_BLUR
       delete pass.reflectionsPass.fullscreenMaterial.defines.USE_BLUR
     }
+
+    // Jitter
     if (props.enableJittering) {
       pass.reflectionsPass.fullscreenMaterial.defines.USE_JITTERING = ''
     } else {
       delete pass.reflectionsPass.fullscreenMaterial.defines.USE_JITTERING
     }
-    pass.reflectionsPass.fullscreenMaterial.defines.MAX_STEPS = Math.ceil(props.MAX_STEPS)
-    pass.reflectionsPass.fullscreenMaterial.defines.NUM_BINARY_SEARCH_STEPS = Math.ceil(props.NUM_BINARY_SEARCH_STEPS)
+
+    // Enabled
     pass.fullscreenMaterial.defines.RENDER_MODE = enabled ? 0 : 4
+
+    // Update materials
     pass.reflectionsPass.fullscreenMaterial.needsUpdate = true
+    pass.fullscreenMaterial.needsUpdate = true
   }, [enabled, props.useBlur, props.enableJittering, props.NUM_BINARY_SEARCH_STEPS, props.MAX_STEPS])
 
   useEffect(() => {
