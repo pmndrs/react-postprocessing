@@ -3,7 +3,7 @@ import React, { Ref, forwardRef, useState, useEffect, useContext, useMemo, useLa
 import { KernelSize } from 'postprocessing'
 /* @ts-ignore */
 import { SSRPass } from 'screen-space-reflections'
-import { EffectComposerContext } from '@react-three/postprocessing'
+import { EffectComposerContext } from '../EffectComposer'
 import { useThree } from '@react-three/fiber'
 
 // first two args are camera and texture
