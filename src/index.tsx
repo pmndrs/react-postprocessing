@@ -24,5 +24,8 @@ export * from './effects/Vignette'
 export * from './effects/ShockWave'
 export * from './effects/LUT'
 
+// This is not an effect pass
+export * from './effects/SSR'
+
 export * from './Selection'
 export * from './EffectComposer'

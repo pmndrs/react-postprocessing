@@ -22,6 +22,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<ColorAverage />`](#coloraverage---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-coloraverage-demo-yj4gx) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/ColorAverageEffect.js~ColorAverageEffect.html)
 - [`<Grid />`](#grid---) [![](https://img.shields.io/badge/-codesandbox-blue)](https://codesandbox.io/s/react-postprocessing-grid-demo-fkzmp) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/GridEffect.js~GridEffect.html)
 - [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
+- [`<SSR />`](#ssr---) [![](https://img.shields.io/badge/-docs-green)](https://github.com/0beqz/screen-space-reflections)
 
 #### [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-docs-green)](https://vanruesc.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
@@ -351,6 +352,19 @@ return (
       <SMAA />
     </EffectComposer>
   </Suspense>
+)
+```
+
+
+#### [`<SSR />`](#ssr---) [![](https://img.shields.io/badge/-docs-green)](https://github.com/0beqz/screen-space-reflections)
+
+Implements performant Screen Space Reflections, based on https://github.com/0beqz/screen-space-reflections.
+
+```jsx
+import { EffectComposer, SSR } from '@react-three/postprocessing'
+
+return (
+  <SSR />
 )
 ```
 
