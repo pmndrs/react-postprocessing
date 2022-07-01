@@ -8,6 +8,8 @@ import { useThree } from '@react-three/fiber'
 
 // first two args are camera and texture
 type SSRProps = {
+  /** Enables the effect pass */
+  enabled: boolean
   /** Size of the blur buffer */
   blurSize: number
   /** Whether to blur the reflections and blend these blurred reflections depending on the roughness and depth of the reflection ray */
@@ -51,7 +53,7 @@ type SSRProps = {
 }
 
 export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
-  { blurSize = 512, ...props }: SSRProps,
+  { blurSize = 512, enabled = true, ...props }: SSRProps,
   ref: Ref<SSRPass>
 ) {
   const { size, viewport, invalidate } = useThree()
@@ -105,10 +107,11 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
     } else {
       delete pass.reflectionsPass.fullscreenMaterial.defines.USE_JITTERING
     }
-    pass.reflectionsPass.fullscreenMaterial.defines.MAX_STEPS = props.MAX_STEPS
-    pass.reflectionsPass.fullscreenMaterial.defines.NUM_BINARY_SEARCH_STEPS = props.NUM_BINARY_SEARCH_STEPS
+    pass.reflectionsPass.fullscreenMaterial.defines.MAX_STEPS = Math.ceil(props.MAX_STEPS)
+    pass.reflectionsPass.fullscreenMaterial.defines.NUM_BINARY_SEARCH_STEPS = Math.ceil(props.NUM_BINARY_SEARCH_STEPS)
+    pass.fullscreenMaterial.defines.RENDER_MODE = enabled ? 0 : 4
     pass.reflectionsPass.fullscreenMaterial.needsUpdate = true
-  }, [props.useBlur, props.enableJittering, props.NUM_BINARY_SEARCH_STEPS, props.MAX_STEPS])
+  }, [enabled, props.useBlur, props.enableJittering, props.NUM_BINARY_SEARCH_STEPS, props.MAX_STEPS])
 
   useEffect(() => {
     pass.setSize(size.width * viewport.dpr, size.height * viewport.dpr)
