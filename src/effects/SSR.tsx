@@ -9,47 +9,47 @@ import { useThree } from '@react-three/fiber'
 // first two args are camera and texture
 type SSRProps = {
   /** Enables the effect pass */
-  enabled: boolean
+  enabled?: boolean
   /** Size of the blur buffer */
-  blurSize: number
+  blurSize?: number
   /** Whether to blur the reflections and blend these blurred reflections depending on the roughness and depth of the reflection ray */
-  useBlur: boolean
+  useBlur?: boolean
   /** The kernel size of the blur pass which is used to blur reflections; higher kernel sizes will result in blurrier reflections with more artifacts */
-  blurKernelSize: number
+  blurKernelSize?: number
   /** How much the reflection ray should travel in each of its iteration; higher values will give deeper reflections but with more artifacts */
-  rayStep: number
+  rayStep?: number
   /** The intensity of the reflections */
-  intensity: number
+  intensity?: number
   /** The power by which the reflections should be potentiated; higher values will give a more intense and vibrant look */
-  power: number
+  power?: number
   /** How much deep reflections will be blurred (as reflections become blurrier the further away the object they are reflecting is) */
-  depthBlur: number
+  depthBlur?: number
   /** Whether jittering is enabled; jittering will randomly jitter the reflections resulting in a more noisy but overall more realistic look, enabling jittering can be expensive depending on the view angle */
-  enableJittering: boolean
+  enableJittering?: boolean
   /** How intense jittering should be */
-  jitter: number
+  jitter?: number
   /** How much the jittered rays should be spread; higher values will give a rougher look regarding the reflections but are more expensive to compute with */
-  jitterSpread: number
+  jitterSpread?: number
   /** Roughness fade out */
-  roughnessFadeOut: number
+  roughnessFadeOut?: number
   /** The number of steps a reflection ray can maximally do to find an object it intersected (and thus reflects) */
-  MAX_STEPS: number
+  MAX_STEPS?: number
   /** Once we had our ray intersect something, we need to find the exact point in space it intersected and thus it reflects; this can be done through binary search with the given number of maximum steps */
-  NUM_BINARY_SEARCH_STEPS: number
+  NUM_BINARY_SEARCH_STEPS?: number
   /** The maximum depth difference between a ray and the particular depth at its screen position after refining with binary search; lower values will result in better performance */
-  maxDepthDifference: number
+  maxDepthDifference?: number
   /** The maximum depth for which reflections will be calculated */
-  maxDepth: number
+  maxDepth?: number
   /** The maximum depth difference between a ray and the particular depth at its screen position before refining with binary search; lower values will result in better performance */
-  thickness: number
+  thickness?: number
   /** Index of Refraction, used for calculating fresnel; reflections tend to be more intense the steeper the angle between them and the viewer is, the ior parameter set how much the intensity varies */
-  ior: number
+  ior?: number
   /** WebGL2 only - whether to use multiple render targets when rendering the G-buffers (normals, depth and roughness); using them can improve performance as they will render all information to multiple buffers for each fragment in one run */
-  useMRT: boolean
+  useMRT?: boolean
   /**  If normal maps should be taken account of when calculating reflections */
-  useNormalMap: boolean
+  useNormalMap?: boolean
   /** If roughness maps should be taken account of when calculating reflections */
-  useRoughnessMap: boolean
+  useRoughnessMap?: boolean
 }
 
 export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
@@ -58,35 +58,35 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
 ) {
   const { size, viewport, invalidate } = useThree()
   const { composer, scene, camera } = useContext(EffectComposerContext)
-
-  const [options] = useState({
-    width: size.width,
-    height: size.height,
-    blurWidth: blurSize,
-    blurHeight: blurSize,
-    blurKernelSize: KernelSize.SMALL,
-    rayStep: 0.1,
-    intensity: 1,
-    power: 1,
-    depthBlur: 0.1,
-    enableJittering: false,
-    jitter: 0.1,
-    jitterSpread: 0.1,
-    roughnessFadeOut: 1,
-    MAX_STEPS: 20,
-    NUM_BINARY_SEARCH_STEPS: 5,
-    maxDepthDifference: 1,
-    maxDepth: 1,
-    thickness: 10,
-    ior: 1.45,
-    useBlur: true,
-    useMRT: true,
-    useNormalMap: true,
-    useRoughnessMap: true,
-    ...props,
-  })
-
-  const [pass] = useState(() => new SSRPass(composer, scene, camera, options))
+  const [pass] = useState(
+    () =>
+      new SSRPass(composer, scene, camera, {
+        width: size.width * viewport.dpr,
+        height: size.height * viewport.dpr,
+        blurWidth: blurSize,
+        blurHeight: blurSize,
+        blurKernelSize: KernelSize.SMALL,
+        rayStep: 0.1,
+        intensity: 1,
+        power: 1,
+        depthBlur: 0.1,
+        enableJittering: false,
+        jitter: 0.1,
+        jitterSpread: 0.1,
+        roughnessFadeOut: 1,
+        MAX_STEPS: 20,
+        NUM_BINARY_SEARCH_STEPS: 5,
+        maxDepthDifference: 1,
+        maxDepth: 1,
+        thickness: 10,
+        ior: 1.45,
+        useBlur: true,
+        useMRT: true,
+        useNormalMap: true,
+        useRoughnessMap: true,
+        ...props,
+      })
+  )
 
   useEffect(() => {
     Object.keys(props).forEach(
