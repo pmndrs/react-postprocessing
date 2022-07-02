@@ -60,7 +60,7 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
   const { composer, scene, camera } = useContext(EffectComposerContext)
   const [pass] = useState(
     () =>
-      new SSRPass(composer, scene, camera, {
+      new SSRPass(scene, camera, {
         width: size.width * viewport.dpr,
         height: size.height * viewport.dpr,
         blurWidth: blurSize,
