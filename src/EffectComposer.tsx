@@ -1,4 +1,4 @@
-import * as THREE from 'three'
+import { HalfFloatType, TextureDataType } from 'three'
 import React, {
   forwardRef,
   useMemo,
@@ -17,7 +17,6 @@ import {
   // @ts-ignore
   DepthDownsamplingPass,
 } from 'postprocessing'
-import { TextureDataType } from 'three'
 import { isWebGL2Available } from 'three-stdlib'
 
 export const EffectComposerContext = createContext<{
@@ -59,7 +58,7 @@ export const EffectComposer = React.memo(
         disableNormalPass,
         stencilBuffer,
         multisampling = 8,
-        frameBufferType = THREE.HalfFloatType,
+        frameBufferType = HalfFloatType,
       }: EffectComposerProps,
       ref
     ) => {

@@ -1,4 +1,4 @@
-import React, { Ref, forwardRef, useState, useEffect, useContext, useMemo, useLayoutEffect } from 'react'
+import { Ref, forwardRef, useState, useEffect, useContext, useMemo, useLayoutEffect } from 'react'
 /* @ts-ignore */
 import { KernelSize } from 'postprocessing'
 /* @ts-ignore */
@@ -10,6 +10,8 @@ import { useThree } from '@react-three/fiber'
 type SSRProps = {
   /** Enables the effect pass */
   enabled?: boolean
+  /** Size of the output buffer */
+  resolutionScale?: number
   /** Size of the blur buffer */
   blurSize?: number
   /** Whether to blur the reflections and blend these blurred reflections depending on the roughness and depth of the reflection ray */
@@ -53,7 +55,7 @@ type SSRProps = {
 }
 
 export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
-  { blurSize = 512, enabled = true, ...props }: SSRProps,
+  { resolutionScale = 1, blurSize = 512, enabled = true, ...props }: SSRProps,
   ref: Ref<SSRPass>
 ) {
   const { size, viewport, invalidate } = useThree()
@@ -61,8 +63,8 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
   const [pass] = useState(
     () =>
       new SSRPass(scene, camera, {
-        width: size.width * viewport.dpr,
-        height: size.height * viewport.dpr,
+        width: size.width * viewport.dpr * resolutionScale,
+        height: size.height * viewport.dpr * resolutionScale,
         blurWidth: blurSize,
         blurHeight: blurSize,
         blurKernelSize: KernelSize.SMALL,
@@ -92,6 +94,7 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
     Object.keys(props).forEach(
       (key) => pass.reflectionUniforms[key] && (pass.reflectionUniforms[key].value = props[key])
     )
+    invalidate()
   }, [props])
 
   useEffect(() => {
@@ -121,18 +124,20 @@ export const SSR = forwardRef<SSRPass, SSRProps>(function SSR(
     // Update materials
     pass.reflectionsPass.fullscreenMaterial.needsUpdate = true
     pass.fullscreenMaterial.needsUpdate = true
+    invalidate()
   }, [enabled, props.useBlur, props.enableJittering, props.NUM_BINARY_SEARCH_STEPS, props.MAX_STEPS])
 
   useEffect(() => {
-    pass.setSize(size.width * viewport.dpr, size.height * viewport.dpr)
+    pass.setSize(size.width * viewport.dpr * resolutionScale, size.height * viewport.dpr * resolutionScale)
     pass.kawaseBlurPass.setSize(blurSize, blurSize)
     invalidate()
-  }, [blurSize, size, viewport, composer, pass, invalidate])
+  }, [resolutionScale, blurSize, size, viewport, composer, pass, invalidate])
 
   useLayoutEffect(() => {
     composer.addPass(pass)
     return () => {
       composer.removePass(pass)
+      //pass.dispose()
     }
   }, [composer, pass])
 
