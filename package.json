@@ -1,6 +1,6 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "2.4.6",
+  "version": "2.5.0",
   "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
