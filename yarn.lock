@@ -3920,10 +3920,10 @@ pidtree@^0.5.0:
   resolved "https://registry.yarnpkg.com/pidtree/-/pidtree-0.5.0.tgz#ad5fbc1de78b8a5f99d6fbdd4f6e4eee21d1aca1"
   integrity sha512-9nxspIM7OpZuhBxPg73Zvyq7j1QMPMPsGKTqRc2XOaFQauDvoNz9fM1Wdkjmeo7l9GXOZiRs97sPkuayl39wjA==
 
-postprocessing@^6.28.1:
-  version "6.28.1"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.28.1.tgz#b201e6d9c9e1e2af4213a3b81af57ec599f5ed8d"
-  integrity sha512-3KwA5k9IwdB0bpyJ/jK1KnXAk1BJYV1jnywGXJnQXg5trSNVRUq0Gkas2GDIpo+6ThCbwb20NmF6WQOaeyk1Og==
+postprocessing@^6.28.4:
+  version "6.28.4"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.28.4.tgz#03dc2b5c546ef26bdd963af1ea8f75c933e88e34"
+  integrity sha512-xVw7wT9H4s/f/AWS+u3FssIZ1iMY632zweCHqcNZ1ydFChCWeHcWOpEPx0dQz2DMIUlZclFW9WmwMJQxESI+cQ==
 
 potpack@^1.0.1:
   version "1.0.2"
@@ -4317,10 +4317,10 @@ scheduler@^0.20.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-screen-space-reflections@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-1.0.8.tgz#304de62086cdcfa92151a48d19a608539e548586"
-  integrity sha512-UBahDIY3TBds7RIkiGmBMQLZKjBYuAdatOBHEs8jpkSe414cJ66nKNPh/cBFL7ZekTorluNbmxdbJ1GEw/e8xQ==
+screen-space-reflections@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-2.0.4.tgz#f27551cc69027084343e0981161babca6cca31a9"
+  integrity sha512-qIxn6ak7lkeJ/Nn0OMl6jteClm9DQyxYFShG9s4uBNDIod4bVWnmef9uuEWT7AyhY2JgcPIDWyDniBUaAj5mOg==
 
 semver@7.0.0:
   version "7.0.0"
