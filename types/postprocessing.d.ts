@@ -1620,17 +1620,25 @@ declare module 'postprocessing' {
 
   /**
    * Constructs a new bloom effect.
-   * @param [options] - The options.
-   * @param [options.blendFunction = BlendFunction.SCREEN] - The blend function of this effect.
-   * @param [options.luminanceThreshold = 0.9] - The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1].
-   * @param [options.luminanceSmoothing = 0.025] - Controls the smoothness of the luminance threshold. Range is [0, 1].
-   * @param [options.intensity = 1.0] - The intensity.
-   * @param [options.width = Resizer.AUTO_SIZE] - The render width.
-   * @param [options.height = Resizer.AUTO_SIZE] - The render height.
-   * @param [options.kernelSize = KernelSize.LARGE] - The blur kernel size.
+	 * @param {BlendFunction} [options.blendFunction=BlendFunction.SCREEN] - The blend function of this effect.
+	 * @param {Number} [options.luminanceThreshold=0.9] - The luminance threshold. Raise this value to mask out darker elements in the scene.
+	 * @param {Number} [options.luminanceSmoothing=0.025] - Controls the smoothness of the luminance threshold.
+	 * @param {Boolean} [options.mipmapBlur=false] - Enables or disables mipmap blur.
+	 * @param {Number} [options.intensity=1.0] - The bloom intensity.
+	 * @param {Number} [options.radius=0.85] - The blur radius. Only applies to mipmap blur.
+	 * @param {Number} [options.levels=8] - The amount of MIP levels. Only applies to mipmap blur.
+	 * @param {KernelSize} [options.kernelSize=KernelSize.LARGE] - Deprecated. Use mipmapBlur instead.
+	 * @param {Number} [options.resolutionScale=0.5] - Deprecated. Use mipmapBlur instead.
+	 * @param {Number} [options.resolutionX=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+	 * @param {Number} [options.resolutionY=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+	 * @param {Number} [options.width=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+	 * @param {Number} [options.height=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
    */
   export class BloomEffect extends Effect {
     constructor(options?: {
+      mipmapBlur?: boolean
+      radius?: number
+      levels?: number 
       blendFunction?: BlendFunction
       luminanceThreshold?: number
       luminanceSmoothing?: number

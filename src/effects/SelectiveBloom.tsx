@@ -30,6 +30,8 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     height,
     kernelSize,
     mipmapBlur,
+    radius,
+    levels,
     ...props
   }: SelectiveBloomProps,
   forwardRef: Ref<SelectiveBloomEffect>
@@ -51,9 +53,24 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         height,
         kernelSize,
         mipmapBlur,
+        radius,
+        levels,
         ...props,
       }),
-    [camera, height, intensity, kernelSize, luminanceSmoothing, luminanceThreshold, scene, width, height, mipmapBlur]
+    [
+      camera,
+      height,
+      intensity,
+      kernelSize,
+      luminanceSmoothing,
+      luminanceThreshold,
+      scene,
+      width,
+      height,
+      mipmapBlur,
+      radius,
+      levels,
+    ]
   )
 
   const api = useContext(selectionContext)
