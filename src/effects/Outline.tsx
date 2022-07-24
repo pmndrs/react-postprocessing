@@ -50,6 +50,7 @@ export const Outline = forwardRef(function Outline(
         kernelSize,
         blur,
         xRay,
+        ...props
       }),
     [
       blendFunction,
