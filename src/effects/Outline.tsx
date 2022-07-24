@@ -2,7 +2,6 @@ import { OutlineEffect } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
-import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
 import { resolveRef } from '../util'
@@ -92,7 +91,6 @@ export const Outline = forwardRef(function Outline(
   const ref = useRef<OutlineEffect>()
   useEffect(() => {
     if (api && api.enabled) {
-      const effect = ref.current
       if (api.selected?.length) {
         effect.selection.set(api.selected)
         invalidate()
@@ -104,5 +102,5 @@ export const Outline = forwardRef(function Outline(
     }
   }, [api])
 
-  return <primitive ref={mergeRefs([ref, forwardRef])} object={effect} />
+  return <primitive ref={forwardRef} object={effect} />
 })

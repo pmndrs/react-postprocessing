@@ -1,7 +1,8 @@
-import React, { Ref, forwardRef, useLayoutEffect, useContext, useMemo } from 'react'
+import React, { Ref, forwardRef, useLayoutEffect, useEffect, useContext, useMemo } from 'react'
 /* @ts-ignore */
 import { SSREffect } from 'screen-space-reflections'
 import { EffectComposerContext } from '../EffectComposer'
+import { selectionContext } from '../Selection'
 import { useThree } from '@react-three/fiber'
 
 // first two args are camera and texture
@@ -73,5 +74,20 @@ export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
     Object.keys(props).forEach((key) => (effect[key] = props[key]))
     invalidate()
   }, [props])
+
+  const api = useContext(selectionContext)
+  useEffect(() => {
+    if (api && api.enabled) {
+      if (api.selected?.length) {
+        effect.selection.set(api.selected)
+        invalidate()
+        return () => {
+          effect.selection.clear()
+          invalidate()
+        }
+      }
+    }
+  }, [api])
+
   return <primitive ref={ref} object={effect} />
 })

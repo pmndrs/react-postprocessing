@@ -2,7 +2,6 @@ import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
-import mergeRefs from 'react-merge-refs'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
 import { resolveRef } from '../util'
@@ -87,7 +86,6 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
   const ref = useRef<SelectiveBloomEffect>()
   useEffect(() => {
     if (api && api.enabled) {
-      const effect = ref.current
       if (api.selected?.length) {
         effect.selection.set(api.selected)
         invalidate()
@@ -99,5 +97,5 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     }
   }, [api])
 
-  return <primitive ref={mergeRefs([ref, forwardRef])} object={effect} dispose={null} />
+  return <primitive ref={forwardRef} object={effect} dispose={null} />
 })
