@@ -4347,10 +4347,10 @@ scheduler@^0.20.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-screen-space-reflections@^2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-2.0.6.tgz#ac7e2a68fc583e1eafd47ec854e1a3ec09f5047d"
-  integrity sha512-ZWMLb4YRFSkHbduJZPLVImmux5+LlCgkaya0aeYZvifMRvM83U9kYfdPVWt27NffjOtvju+jPZaM7aLOGElFYg==
+screen-space-reflections@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-2.1.0.tgz#940eacb44d8f2b6c5f1b57f95d429b0f5a6f3498"
+  integrity sha512-GbQaDTlGLVii0QmTc6/D8VbTYQk4Ul7J3gqObbpW4O/8sM/Eq73THTypl8619snq00nArWjbWtaNQZhurY5ZIA==
 
 semver@7.0.0:
   version "7.0.0"
