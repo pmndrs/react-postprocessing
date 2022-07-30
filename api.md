@@ -378,7 +378,7 @@ import { PixelationEffect } from 'postprocessing'
 
 export const Pixelation = forwardRef(({ granularity = 5 }, ref) => {
   const effect = useMemo(() => new PixelationEffect(granularity), [granularity])
-  return <primitive ref={ref} object={effect} dispose={null} />
+  return <primitive ref={ref} object={effect} />
 })
 ```
 
@@ -411,6 +411,6 @@ class MyCustomEffectImpl extends Effect {
 // Effect component
 export const MyCustomEffect = forwardRef(({ param }, ref) => {
   const effect = useMemo(() => new MyCustomEffectImpl(param), [param])
-  return <primitive ref={ref} object={effect} dispose={null} />
+  return <primitive ref={ref} object={effect} />
 })
 ```
