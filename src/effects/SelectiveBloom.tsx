@@ -45,7 +45,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
   const effect = useMemo(
     () =>
       new SelectiveBloomEffect(scene, camera, {
-        blendFunction: BlendFunction.SCREEN,
+        blendFunction: BlendFunction.ADD,
         luminanceThreshold,
         luminanceSmoothing,
         intensity,
