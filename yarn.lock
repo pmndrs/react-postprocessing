@@ -4347,7 +4347,7 @@ scheduler@^0.20.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-screen-space-reflections@^2.1.1:
+screen-space-reflections@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/screen-space-reflections/-/screen-space-reflections-2.1.1.tgz#e6ca2f0af64d997ccd94737fe7d3adce0fdaa0b1"
   integrity sha512-UwBaTb6Ss/8EfhDHEdybPhMbHXmtchOcpHHTa5guFFzjj1f0998twZRr/svOJaA/Nyi44VL2Cqf3xGhdu3hC2w==

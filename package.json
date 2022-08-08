@@ -41,7 +41,7 @@
   "dependencies": {
     "postprocessing": "^6.28.5",
     "react-merge-refs": "^1.1.0",
-    "screen-space-reflections": "^2.1.1",
+    "screen-space-reflections": "2.1.1",
     "three-stdlib": "^2.8.11"
   },
   "devDependencies": {
