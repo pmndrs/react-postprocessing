@@ -1822,6 +1822,7 @@ declare module 'postprocessing' {
         blendFunction?: BlendFunction
         focusDistance?: number
         focalLength?: number
+        focusRange?: number
         bokehScale?: number
         width?: number
         height?: number
