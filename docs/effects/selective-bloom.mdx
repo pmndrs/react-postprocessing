@@ -1,0 +1,46 @@
+---
+title: SelectiveBloom
+nav: 1
+---
+
+A selective bloom effect.
+
+This effect applies bloom to selected objects only.
+
+Attention: If you don't need to limit bloom to a subset of objects, consider using the BloomEffect instead for better performance.
+
+```jsx
+import { SelectiveBloom } from '@react-three/postprocessing'
+import { BlurPass, Resizer, KernelSize } from 'postprocessing'
+
+return (
+  <SelectiveBloom
+    lights={[lightRef1, lightRef2]} // ⚠️ REQUIRED! all relevant lights
+    selection={[meshRef1, meshRef2]} // selection of objects that will have bloom effect
+    selectionLayer={10} // selection layer
+    intensity={1.0} // The bloom intensity.
+    blurPass={undefined} // A blur pass.
+    width={Resizer.AUTO_SIZE} // render width
+    height={Resizer.AUTO_SIZE} // render height
+    kernelSize={KernelSize.LARGE} // blur kernel size
+    luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
+    luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+  />
+)
+```
+
+## Props
+
+| Name               | Type                                                                                                         | Default              | Description                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| selection          | Objects                                                                                                      |                      | Selection of objects that will be outlined                                                           |
+| lights             | Lights                                                                                                       |                      | All lights that will affect the effect                                                               |
+| blendFunction      | BlendFunction                                                                                                | BlendFunction.SCREEN | The blend function of this effect.                                                                   |
+| width              | Number                                                                                                       | Resizer.AUTO_SIZE    | The render width.                                                                                    |
+| height             | Number                                                                                                       | Resizer.AUTO_SIZE    | The render height.                                                                                   |
+| selectionLayer     | Number                                                                                                       |                      | The selection layer                                                                                  |
+| blurPass           | [BlurPass](https://vanruesc.github.io/postprocessing/public/docs/class/src/passes/BlurPass.js~BlurPass.html) | null                 | An efficient, incremental blur pass.                                                                 |
+| kernelSize         | KernelSize                                                                                                   | KernelSize.LARGE     | The blur kernel size.                                                                                |
+| luminanceThreshold | Number                                                                                                       | 0.9                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
+| luminanceSmoothing | Number                                                                                                       | 0.025                | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
+| intensity          | Number                                                                                                       | 1                    | Intensity of the effect                                                                              |

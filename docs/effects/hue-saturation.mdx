@@ -1,0 +1,31 @@
+---
+title: HueSaturation
+nav: 1
+---
+
+A hue/saturation effect.
+
+```jsx
+import { HueSaturation } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <HueSaturation
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    hue={0} // hue in radians
+    saturation={0} // saturation in radians
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="m9min" />
+
+## Props
+
+| Name          | Type          | Default | Description                        |
+| ------------- | ------------- | ------- | ---------------------------------- |
+| hue           | Number        | 0       | Hue shift in radians               |
+| saturation    | Number        | 0       | Saturation value in radians        |
+| blendFunction | BlendFunction |         | The blend function of this effect. |

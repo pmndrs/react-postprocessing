@@ -1,0 +1,34 @@
+---
+title: Grid
+nav: 1
+---
+
+A Grid effect
+
+```jsx
+import { Grid } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Grid
+    blendFunction={BlendFunction.OVERLAY} // blend mode
+    scale={1.0} // grid pattern scale
+    lineWidth={0.0} // grid pattern line width
+    size={{ width, height }} // overrides the default pass width and height
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="9ebpg" />
+
+## Props
+
+| Name          | Type          | Default              | Description                        |
+| ------------- | ------------- | -------------------- | ---------------------------------- |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect. |
+| scale         | Number        | 1                    | The scale of the grid pattern.     |
+| lineWidth     | Number        | 0                    | The blend function of this effect. |
+| width         | Number        |                      | Overrides the default pass width   |
+| height        | Number        |                      | Overrides the default pass height  |

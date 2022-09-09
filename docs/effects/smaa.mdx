@@ -1,0 +1,23 @@
+---
+title: SMAA
+nav: 1
+---
+
+Subpixel Morphological Antialiasing (SMAA).
+
+https://github.com/iryoku/smaa/releases/tag/v2.8
+
+By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. In some effects this can result in artefacts. Should you either want to work with webgl1 exclusively, or you get artefacts, then you can switch MSAA off and use SMAA. This effect is async and relies on suspense!
+
+```jsx
+import React, { Suspense } from 'react'
+import { EffectComposer, SMAA } from '@react-three/postprocessing'
+
+return (
+  <Suspense fallback={null}>
+    <EffectComposer multisampling={0}>
+      <SMAA />
+    </EffectComposer>
+  </Suspense>
+)
+```

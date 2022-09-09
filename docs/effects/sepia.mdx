@@ -1,0 +1,28 @@
+---
+title: Sepia
+nav: 1
+---
+
+A sepia effect.
+
+```jsx
+import { Sepia } from '@react-three/postprocessing'
+
+return (
+  <Sepia
+    intensity={1.0} // sepia intensity
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="6jyby" />
+
+## Props
+
+| Name          | Type          | Default              | Description                        |
+| ------------- | ------------- | -------------------- | ---------------------------------- |
+| intensity     | Boolean       | 1                    | The intensity of the effect        |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect. |

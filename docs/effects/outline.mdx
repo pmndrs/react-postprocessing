@@ -1,0 +1,47 @@
+---
+title: Outline
+nav: 1
+---
+
+An outline effect.
+
+```jsx
+import { Outline } from '@react-three/postprocessing'
+import { BlendFunction, Resizer, KernelSize } from 'postprocessing'
+
+return (
+  <Outline
+    selection={[meshRef1, meshRef2]} // selection of objects that will be outlined
+    selectionLayer={10} // selection layer
+    blendFunction={BlendFunction.SCREEN} // set this to BlendFunction.ALPHA for dark outlines
+    patternTexture={null} // a pattern texture
+    edgeStrength={2.5} // the edge strength
+    pulseSpeed={0.0} // a pulse speed. A value of zero disables the pulse effect
+    visibleEdgeColor={0xffffff} // the color of visible edges
+    hiddenEdgeColor={0x22090a} // the color of hidden edges
+    width={Resizer.AUTO_SIZE} // render width
+    height={Resizer.AUTO_SIZE} // render height
+    kernelSize={KernelSize.LARGE} // blur kernel size
+    blur={false} // whether the outline should be blurred
+    xRay={true} // indicates whether X-Ray outlines are enabled
+  />
+)
+```
+
+## Props
+
+| Name             | Type          | Default               | Description                                                   |
+| ---------------- | ------------- | --------------------- | ------------------------------------------------------------- |
+| selection        | Objects       |                       | Selection of objects that will be outlined                    |
+| blendFunction    | BlendFunction | BlendFunction.SCREEN  | The blend function of this effect.                            |
+| width            | Number        | Resizer.AUTO_SIZE     | The render width.                                             |
+| height           | Number        | Resizer.AUTO_SIZE     | The render height.                                            |
+| selectionLayer   | Number        |                       | The selection layer                                           |
+| patternTexture   | Number        | null                  | A pattern texture                                             |
+| edgeStrength     | Number        | 1                     | The edge strength                                             |
+| pulseSpeed       | Number        | 0                     | The pulse speed. A value of zero disables the pulse effect.   |
+| visibleEdgeColor | Number        | 0xffffff              | The color of visible edges.                                   |
+| hiddenEdgeColor  | Number        | 0x22090a              | The color of hidden edges.                                    |
+| kernelSize       | KernelSize    | KernelSize.VERY_SMALL | The blur kernel size.                                         |
+| blur             | Boolean       | false                 | Whether the outline should be blurred.                        |
+| xray             | Boolean       | true                  | Whether occluded parts of selected objects should be visible. |

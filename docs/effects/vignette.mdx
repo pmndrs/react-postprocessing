@@ -1,0 +1,33 @@
+---
+title: Vignette
+nav: 1
+---
+
+A vignette effect.
+
+```jsx
+import { Vignette } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Vignette
+    offset={0.5} // vignette offset
+    darkness={0.5} // vignette darkness
+    eskil={false} // Eskil's vignette technique
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="851sn" />
+
+## Props
+
+| Name          | Type          | Default              | Description                         |
+| ------------- | ------------- | -------------------- | ----------------------------------- |
+| eskil         | Boolean       | false                | Enables Eskil's vignette technique. |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.  |
+| offset        | Number        | 0.5                  | The vignette offset.                |
+| darkness      | Number        | 0.5                  | The vignette darkness.              |
