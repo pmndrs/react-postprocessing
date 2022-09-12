@@ -139,6 +139,9 @@ Bloom is selective by default, you control it not on the effect pass but on the 
 // ❌ will not glow, same as RGB [1,0,0]
 <meshBasicMaterial color="red" />
 
+// ❌ will not glow, same as RGB [1,0,0], tone-mapping will clamp colors between 0 and 1
+<meshBasicMaterial color={[2,0,0]} />
+
 // ✅ will glow, same as RGB [2,0,0]
 <meshBasicMaterial color={[2,0,0]} toneMapped={false} />
 ```
