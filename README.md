@@ -123,5 +123,25 @@ Selection can be nested and group multiple object, higher up selection take prec
 </Select>
 ```
 
+#### Selective bloom
+
+Bloom is selective by default, you control it not on the effect pass but on the materials by lifting their colors out of 0-1 range. a `luminanceThreshold` of 1 ensures that ootb nothing will glow, only the materials that you "select".
+
+```jsx
+<Bloom luminanceThreshold={1} mipmapBlur />
+
+// ❌ will not glow, same as RGB [1,0,0]
+<meshStandardMaterial color="red"/>
+
+// ✅ will glow, same as RGB [2,0,0]
+<meshStandardMaterial emissive="red" emissiveIntensity={2} toneMapped={false} />
+
+// ❌ will not glow, same as RGB [1,0,0]
+<meshBasicMaterial color="red" />
+
+// ✅ will glow, same as RGB [2,0,0]
+<meshBasicMaterial color={[2,0,0]} toneMapped={false} />
+```
+
 - [react-postprocessing exports](https://github.com/pmndrs/react-postprocessing/blob/master/api.md)
 - [postprocessing docs](https://pmndrs.github.io/postprocessing/public/docs/)
