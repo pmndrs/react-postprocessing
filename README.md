@@ -125,7 +125,7 @@ Selection can be nested and group multiple object, higher up selection take prec
 
 #### Selective bloom
 
-Bloom is selective by default, you control it not on the effect pass but on the materials by lifting their colors out of 0-1 range. a `luminanceThreshold` of 1 ensures that ootb nothing will glow, only the materials whose colors leave 0-1.
+Bloom is selective by default, you control it not on the effect pass but on the materials by lifting their colors out of 0-1 range. a `luminanceThreshold` of 1 ensures that ootb nothing will glow, only the materials you pick. For this to work `toneMapped` has to be false on the materials, because it would otherwise clamp colors between 0 and 1 again.
 
 ```jsx
 <Bloom luminanceThreshold={1} mipmapBlur />
