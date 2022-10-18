@@ -23,6 +23,7 @@ export * from './effects/ToneMapping'
 export * from './effects/Vignette'
 export * from './effects/ShockWave'
 export * from './effects/LUT'
+export * from './effects/TiltShift'
 
 // This is not an effect pass
 export * from './effects/SSR'

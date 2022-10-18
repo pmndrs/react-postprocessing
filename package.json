@@ -39,7 +39,7 @@
     "typegen": "tsc --emitDeclarationOnly || true"
   },
   "dependencies": {
-    "postprocessing": "^6.28.5",
+    "postprocessing": "^6.29.0",
     "react-merge-refs": "^1.1.0",
     "screen-space-reflections": "2.5.0",
     "three-stdlib": "^2.8.11"

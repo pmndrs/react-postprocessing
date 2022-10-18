@@ -1620,25 +1620,25 @@ declare module 'postprocessing' {
 
   /**
    * Constructs a new bloom effect.
-	 * @param {BlendFunction} [options.blendFunction=BlendFunction.SCREEN] - The blend function of this effect.
-	 * @param {Number} [options.luminanceThreshold=0.9] - The luminance threshold. Raise this value to mask out darker elements in the scene.
-	 * @param {Number} [options.luminanceSmoothing=0.025] - Controls the smoothness of the luminance threshold.
-	 * @param {Boolean} [options.mipmapBlur=false] - Enables or disables mipmap blur.
-	 * @param {Number} [options.intensity=1.0] - The bloom intensity.
-	 * @param {Number} [options.radius=0.85] - The blur radius. Only applies to mipmap blur.
-	 * @param {Number} [options.levels=8] - The amount of MIP levels. Only applies to mipmap blur.
-	 * @param {KernelSize} [options.kernelSize=KernelSize.LARGE] - Deprecated. Use mipmapBlur instead.
-	 * @param {Number} [options.resolutionScale=0.5] - Deprecated. Use mipmapBlur instead.
-	 * @param {Number} [options.resolutionX=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
-	 * @param {Number} [options.resolutionY=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
-	 * @param {Number} [options.width=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
-	 * @param {Number} [options.height=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+   * @param {BlendFunction} [options.blendFunction=BlendFunction.SCREEN] - The blend function of this effect.
+   * @param {Number} [options.luminanceThreshold=0.9] - The luminance threshold. Raise this value to mask out darker elements in the scene.
+   * @param {Number} [options.luminanceSmoothing=0.025] - Controls the smoothness of the luminance threshold.
+   * @param {Boolean} [options.mipmapBlur=false] - Enables or disables mipmap blur.
+   * @param {Number} [options.intensity=1.0] - The bloom intensity.
+   * @param {Number} [options.radius=0.85] - The blur radius. Only applies to mipmap blur.
+   * @param {Number} [options.levels=8] - The amount of MIP levels. Only applies to mipmap blur.
+   * @param {KernelSize} [options.kernelSize=KernelSize.LARGE] - Deprecated. Use mipmapBlur instead.
+   * @param {Number} [options.resolutionScale=0.5] - Deprecated. Use mipmapBlur instead.
+   * @param {Number} [options.resolutionX=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+   * @param {Number} [options.resolutionY=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+   * @param {Number} [options.width=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
+   * @param {Number} [options.height=Resolution.AUTO_SIZE] - Deprecated. Use mipmapBlur instead.
    */
   export class BloomEffect extends Effect {
     constructor(options?: {
       mipmapBlur?: boolean
       radius?: number
-      levels?: number 
+      levels?: number
       blendFunction?: BlendFunction
       luminanceThreshold?: number
       luminanceSmoothing?: number
@@ -2618,8 +2618,8 @@ declare module 'postprocessing' {
         radius?: number
         scale?: number
         bias?: number
-        intensity?: number;
-        color?: string | null;
+        intensity?: number
+        color?: string | null
       }
     )
     /**
@@ -2723,6 +2723,102 @@ declare module 'postprocessing' {
     adaptationRate: number
 
     distinction: number
+    /**
+     * Updates this effect.
+     * @param renderer - The renderer.
+     * @param inputBuffer - A frame buffer that contains the result of the previous pass.
+     * @param [deltaTime] - The time between the last frame and the current one in seconds.
+     */
+    update(renderer: WebGLRenderer, inputBuffer: WebGLRenderTarget, deltaTime?: number): void
+    /**
+     * Updates the size of internal render targets.
+     * @param width - The width.
+     * @param height - The height.
+     */
+    setSize(width: number, height: number): void
+    /**
+     * Performs initialization tasks.
+     * @param renderer - The renderer.
+     * @param alpha - Whether the renderer uses the alpha channel or not.
+     * @param frameBufferType - The type of the main frame buffers.
+     */
+    initialize(renderer: WebGLRenderer, alpha: boolean, frameBufferType: number): void
+  }
+
+  /**
+   * Constructs a new tilt shift Effect
+   *
+   * @param {Object} [options] - The options.
+   * @param {BlendFunction} [options.blendFunction] - The blend function of this effect.
+   * @param {Number} [options.offset=0.0] - The relative offset of the focus area.
+   * @param {Number} [options.rotation=0.0] - The rotation of the focus area in radians.
+   * @param {Number} [options.focusArea=0.4] - The relative size of the focus area.
+   * @param {Number} [options.feather=0.3] - The softness of the focus area edges.
+   * @param {Number} [options.bias=0.06] - A blend bias.
+   * @param {KernelSize} [options.kernelSize=KernelSize.MEDIUM] - The blur kernel size.
+   * @param {Number} [options.resolutionScale=0.5] - The resolution scale.
+   * @param {Number} [options.resolutionX=Resolution.AUTO_SIZE] - The horizontal resolution.
+   * @param {Number} [options.resolutionY=Resolution.AUTO_SIZE] - The vertical resolution.
+   */
+
+  export class TiltShiftEffect extends Effect {
+    constructor(options?: {
+      blendFunction?: BlendFunction
+      offset?: number
+      rotation?: number
+      focusArea?: number
+      feather?: number
+      bias?: number
+      kernelSize?: KernelSize
+      resolutionScale?: number
+      resolutionX?: Resolution
+      resolutionY?: Resolutio
+    })
+
+    /**
+     * The rotation of the focus area in radians.
+     *
+     * @type {Number}
+     */
+
+    get rotation() {
+      return Math.acos(this.uniforms.get('rotation').value.x)
+    }
+
+    set rotation(value) {
+      this.uniforms.get('rotation').value.set(Math.cos(value), Math.sin(value))
+      this.blurPass.blurMaterial.rotation = value
+    }
+
+    /**
+     * The relative offset of the focus area.
+     *
+     * @type {Number}
+     */
+
+    offset: number
+
+    /**
+     * The relative size of the focus area.
+     *
+     * @type {Number}
+     */
+    focusArea: number
+
+    /**
+     * The softness of the focus area edges.
+     *
+     * @type {Number}
+     */
+    feather: number
+
+    /**
+     * A blend bias.
+     *
+     * @type {Number}
+     */
+    bias: number
+
     /**
      * Updates this effect.
      * @param renderer - The renderer.
