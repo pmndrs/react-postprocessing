@@ -200,7 +200,7 @@ return (
 #### [`<SelectiveBloom />`](#selectivebloom---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SelectiveBloomEffect.js~SelectiveBloomEffect.html)
 
 ```jsx
-import { Bloom } from '@react-three/postprocessing'
+import { SelectiveBloom } from '@react-three/postprocessing'
 import { BlurPass, Resizer, KernelSize } from 'postprocessing'
 
 return (
