@@ -2,9 +2,6 @@ import { Uniform } from 'three'
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing'
 import { wrapEffect } from '../util'
 
-
-/** Forked from https://codesandbox.io/s/tilt-shift-r3f-c8qtmc?file=/src/tiltshift.js */
-
 const vertexShader = `
 varying vec2 vUV;
 void mainSupport(const in vec2 uv) {
