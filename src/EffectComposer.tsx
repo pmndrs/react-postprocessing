@@ -41,6 +41,7 @@ export type EffectComposerProps = {
   renderPriority?: number
   camera?: THREE.Camera
   scene?: THREE.Scene
+  dithering?: boolean
 }
 
 export const EffectComposer = React.memo(
@@ -59,6 +60,7 @@ export const EffectComposer = React.memo(
         stencilBuffer,
         multisampling = 8,
         frameBufferType = HalfFloatType,
+        dithering = false
       }: EffectComposerProps,
       ref
     ) => {
@@ -122,6 +124,7 @@ export const EffectComposer = React.memo(
         let effectPass
         if (group.current && group.current.__r3f && composer) {
           effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
+          effectPass.dithering = dithering
           effectPass.renderToScreen = true
           composer.addPass(effectPass)
           if (normalPass) normalPass.enabled = true
