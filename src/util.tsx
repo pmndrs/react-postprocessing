@@ -1,42 +1,73 @@
-import React, { forwardRef, useMemo, useLayoutEffect, MutableRefObject } from 'react'
-import { Vector2, Object3D } from 'three'
-import { ReactThreeFiber, useThree } from '@react-three/fiber'
-import { Effect, BlendFunction } from 'postprocessing'
+import * as React from 'react'
+import * as THREE from 'three'
+import { extend, invalidate, ReactThreeFiber } from '@react-three/fiber'
+import type { Effect, BlendFunction } from 'postprocessing'
 
-type ObjectRef = MutableRefObject<Object3D>
-type DefaultProps = Partial<{ blendFunction: BlendFunction; opacity: number }>
+export const resolveRef = <T extends object>(ref: T | React.MutableRefObject<T>) =>
+  ref && 'current' in ref ? ref.current : ref
 
-const isRef = (ref: any): ref is ObjectRef => !!ref.current
+export type EffectConstructor = new (...args: any[]) => Effect
 
-export const resolveRef = (ref: Object3D | ObjectRef) => (isRef(ref) ? ref.current : ref)
+export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
+  T extends Function ? T['prototype'] : InstanceType<T>,
+  T
+> & {
+  blendFunction?: BlendFunction
+  opacity?: number
+}
 
-export const wrapEffect = <T extends new (...args: any[]) => Effect>(
-  effectImpl: T,
-  defaultBlendMode: BlendFunction = BlendFunction.NORMAL
-) =>
-  forwardRef<T, ConstructorParameters<typeof effectImpl>[0] & DefaultProps>(function Wrap(
-    { blendFunction, opacity, ...props }: React.PropsWithChildren<DefaultProps & ConstructorParameters<T>[0]>,
-    ref
-  ) {
-    const invalidate = useThree((state) => state.invalidate)
-    const effect: Effect = useMemo(() => new effectImpl(props), [props])
+let i = 0
+export const wrapEffect = <T extends EffectConstructor>(
+  effect: T,
+  props?: EffectProps<typeof effect>
+): React.ExoticComponent<typeof props> => {
+  const identifier = `__react-postprocessing__${i++}`
+  extend({
+    [identifier]: class extends effect {
+      _camera: THREE.Camera | null = null
 
-    useLayoutEffect(() => {
-      effect.blendMode.blendFunction = !blendFunction && blendFunction !== 0 ? defaultBlendMode : blendFunction
-      if (opacity !== undefined) effect.blendMode.opacity.value = opacity
-      invalidate()
-    }, [blendFunction, effect.blendMode, opacity])
-    return <primitive ref={ref} object={effect} dispose={null} />
+      constructor(..._args: any[]) {
+        super(...((props?.args as any[]) ?? []), ..._args)
+        Object.assign(this, props)
+      }
+
+      private get _context() {
+        return (this as any).__r3f?.root.getState()
+      }
+
+      get camera() {
+        return this._camera ?? this._context?.camera
+      }
+      set camera(value) {
+        this._camera = value
+      }
+
+      get blendFunction() {
+        return this.blendMode.blendFunction
+      }
+      set blendFunction(value) {
+        this.blendMode.blendFunction = value
+      }
+
+      get opacity() {
+        return this.blendMode.opacity.value
+      }
+      set opacity(value) {
+        this.blendMode.opacity.value = value
+      }
+
+      onUpdate() {
+        invalidate(this._context)
+      }
+    },
   })
+  return identifier as any
+}
 
-export const useVector2 = (props: any, key: string): Vector2 => {
+export const useVector2 = (props: any, key: string): THREE.Vector2 => {
   const vec: ReactThreeFiber.Vector2 = props[key]
-  return useMemo(() => {
-    if (vec instanceof Vector2) {
-      return new Vector2().set(vec.x, vec.y)
-    } else if (Array.isArray(vec)) {
-      const [x, y] = vec
-      return new Vector2().set(x, y)
-    }
+  return React.useMemo(() => {
+    if (typeof vec === 'number') return new THREE.Vector2(vec, vec)
+    else return new THREE.Vector2(...(vec as THREE.Vector2Tuple))
   }, [vec])
 }
