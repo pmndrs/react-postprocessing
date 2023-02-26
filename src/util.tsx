@@ -3,8 +3,8 @@ import * as THREE from 'three'
 import { extend, invalidate, ReactThreeFiber } from '@react-three/fiber'
 import type { Effect, BlendFunction } from 'postprocessing'
 
-export const resolveRef = <T extends object>(ref: T | React.MutableRefObject<T>) =>
-  ref && 'current' in ref ? ref.current : ref
+export const resolveRef = <T,>(ref: T | React.MutableRefObject<T>) =>
+  typeof ref === 'object' && 'current' in ref ? ref.current : ref
 
 export type EffectConstructor = new (...args: any[]) => Effect
 
@@ -17,17 +17,14 @@ export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
 }
 
 let i = 0
-export const wrapEffect = <T extends EffectConstructor>(
-  effect: T,
-  props?: EffectProps<typeof effect>
-): React.ExoticComponent<typeof props> => {
-  const identifier = `__react-postprocessing__${i++}`
+export const wrapEffect = <T extends EffectConstructor>(effect: T, props?: EffectProps<typeof effect>) => {
+  const identifier = `@react-three/postprocessing/${effect.name}-${i++}`
   extend({
     [identifier]: class extends effect {
       _camera: THREE.Camera | null = null
 
-      constructor(..._args: any[]) {
-        super(...((props?.args as any[]) ?? []), ..._args)
+      constructor(...args: any[]) {
+        super(...((props?.args ?? []) as ConstructorParameters<T>), ...args)
         Object.assign(this, props)
       }
 
@@ -61,7 +58,7 @@ export const wrapEffect = <T extends EffectConstructor>(
       }
     },
   })
-  return identifier as any
+  return identifier as unknown as React.ExoticComponent<typeof props>
 }
 
 export const useVector2 = (props: any, key: string): THREE.Vector2 => {
