@@ -1,0 +1,40 @@
+---
+title: ToneMapping
+nav: 1
+---
+
+A tone mapping effect.
+
+```jsx
+import { ToneMapping } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <ToneMapping
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    adaptive={true} // toggle adaptive luminance map usage
+    resolution={256} // texture resolution of the luminance map
+    middleGrey={0.6} // middle grey factor
+    maxLuminance={16.0} // maximum luminance
+    averageLuminance={1.0} // average luminance
+    adaptationRate={1.0} // luminance adaptation rate
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="fjb06" />
+
+## Props
+
+| Name             | Type          | Default | Description                                                         |
+| ---------------- | ------------- | ------- | ------------------------------------------------------------------- |
+| resolution       | Number        | 256     | The resolution of the luminance texture. Must be a power of two.    |
+| adaptive         | boolean       | true    | Toggle adaptive luminance map usage                                 |
+| blendFunction    | BlendFunction |         | The blend function of this effect.                                  |
+| middleGrey       | Number        | 0.6     | The middle grey factor.                                             |
+| maxLuminance     | Number        | 16      | Maximum luminance                                                   |
+| minLuminance     | Number        | 0.01    | The minimum luminance. Prevents very high exposure in dark scenes.  |
+| averageLuminance | Number        | 1       | The average luminance. Used for the non-adaptive Reinhard operator. |
+| adaptationRate   | Number        | 1       | The luminance adaptation rate.                                      |

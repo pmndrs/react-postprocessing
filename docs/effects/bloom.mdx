@@ -1,0 +1,40 @@
+---
+title: Bloom
+nav: 1
+---
+
+A bloom effect.
+
+```jsx
+import { Bloom } from '@react-three/postprocessing'
+import { BlurPass, Resizer, KernelSize } from 'postprocessing'
+
+return (
+  <Bloom
+    intensity={1.0} // The bloom intensity.
+    blurPass={undefined} // A blur pass.
+    width={Resizer.AUTO_SIZE} // render width
+    height={Resizer.AUTO_SIZE} // render height
+    kernelSize={KernelSize.LARGE} // blur kernel size
+    luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
+    luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="r9ujf" />
+
+## Props
+
+| Name               | Type                                                                                                         | Default              | Description                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| luminanceThreshold | Number                                                                                                       | 0.9                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
+| luminanceSmoothing | Number                                                                                                       | 0.025                | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
+| blendFunction      | BlendFunction                                                                                                | BlendFunction.SCREEN | The blend function of this effect.                                                                   |
+| intensity          | Number                                                                                                       | 1                    | The intensity.                                                                                       |
+| width              | Number                                                                                                       | Resizer.AUTO_SIZE    | The render width.                                                                                    |
+| height             | Number                                                                                                       | Resizer.AUTO_SIZE    | The render height.                                                                                   |
+| kernelSize         | Number                                                                                                       | KernelSize.LARGE     | The blur kernel size.                                                                                |
+| blurPass           | [BlurPass](https://vanruesc.github.io/postprocessing/public/docs/class/src/passes/BlurPass.js~BlurPass.html) | null                 | An efficient, incremental blur pass.                                                                 |

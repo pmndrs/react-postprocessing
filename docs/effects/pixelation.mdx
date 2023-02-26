@@ -1,0 +1,28 @@
+---
+title: Pixelation
+nav: 1
+---
+
+A pixelation effect.
+
+Warning: This effect cannot be merged with convolution effects.
+
+```jsx
+import { Pixelation } from '@react-three/postprocessing'
+
+return (
+  <Pixelation
+    granularity={5} // pixel granularity
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="ed9yo" />
+
+## Props
+
+| Name        | Type   | Default | Description |
+| ----------- | ------ | ------- | ----------- |
+| granularity | Number | 30      | Pixel Size  |

@@ -1,0 +1,41 @@
+---
+title: Glitch
+nav: 1
+---
+
+A glitch effect.
+
+```jsx
+import { Glitch } from '@react-three/postprocessing'
+import { GlitchMode } from 'postprocessing'
+
+return (
+  <Glitch
+    delay={[1.5, 3.5]} // min and max glitch delay
+    duration={[0.6, 1.0]} // min and max glitch duration
+    strength={[0.3, 1.0]} // min and max glitch strength
+    mode={GlitchMode.SPORADIC} // glitch mode
+    active // turn on/off the effect (switches between "mode" prop and GlitchMode.DISABLED)
+    ratio={0.85} // Threshold for strong glitches, 0 - no weak glitches, 1 - no strong glitches.
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="bs1i1" />
+
+## Props
+
+| Name                      | Type          | Default              | Description                                                                               |
+| ------------------------- | ------------- | -------------------- | ----------------------------------------------------------------------------------------- |
+| active                    | Boolean       | true                 | Turn the effect on and off                                                                |
+| blendFunction             | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                                                        |
+| chromaticAberrationOffset | Vector2       |                      | A chromatic aberration offset. If provided, the glitch effect will influence this offset. |
+| delay                     | Vector2       |                      | The minimum and maximum delay between glitch activations in seconds.                      |
+| duration                  | Vector2       |                      | The minimum and maximum duration of a glitch in seconds.                                  |
+| strength                  | Vector2       |                      | The strength of weak and strong glitches.                                                 |
+| perturbationMap           | Texture       |                      | A perturbation map. If none is provided, a noise texture will be created.                 |
+| dtSize                    | Number        | 64                   | The size of the generated noise map. Will be ignored if a perturbation map is provided.   |
+| columns                   | Number        | 0.05                 | The scale of the blocky glitch columns.                                                   |
+| ratio                     | Number        | 0.85                 | The threshold for strong glitches.                                                        |

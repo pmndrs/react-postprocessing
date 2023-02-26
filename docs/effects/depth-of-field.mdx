@@ -1,0 +1,35 @@
+---
+title: DepthOfField
+nav: 1
+---
+
+A depth of field effect.
+
+Based on a graphics study by Adrian Courrèges and an article by Steve Avery: https://www.adriancourreges.com/blog/2016/09/09/doom-2016-graphics-study/ https://pixelmischiefblog.wordpress.com/2016/11/25/bokeh-depth-of-field/
+
+```jsx
+import { DepthOfField } from '@react-three/postprocessing'
+
+return (
+  <DepthOfField
+    focusDistance={0} // where to focus
+    focalLength={0.02} // focal length
+    bokehScale={2} // bokeh size
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="bu796" />
+
+## Props
+
+| Name          | Type          | Default              | Description                                         |
+| ------------- | ------------- | -------------------- | --------------------------------------------------- |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                  |
+| focusDistance | Number        | 0                    | The normalized focus distance. Range is [0.0, 1.0]. |
+| focalLength   | Number        | 0.1                  | The focal length. Range is [0.0, 1.0].              |
+| bokehScale    | Number        | 1.0                  | The scale of the bokeh blur.                        |
+| width         | Number        | Resizer.width        | The render width.                                   |
+| height        | Number        | Resizer.height       | The render height.                                  |

@@ -1,0 +1,27 @@
+---
+title: ColorAverage
+nav: 1
+---
+
+A color average effect.
+
+```jsx
+import { ColorAverage } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <ColorAverage
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="ulsyy" />
+
+## Props
+
+| Name          | Type          | Default              | Description                        |
+| ------------- | ------------- | -------------------- | ---------------------------------- |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect. |

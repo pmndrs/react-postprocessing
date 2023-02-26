@@ -1,0 +1,29 @@
+---
+title: ChromaticAberration
+nav: 1
+---
+
+A chromatic aberration effect.
+
+```jsx
+import { ChromaticAberration } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <ChromaticAberration
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    offset={[0.02, 0.002]} // color offset
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="uoyge" />
+
+## Props
+
+| Name          | Type          | Default              | Description                        |
+| ------------- | ------------- | -------------------- | ---------------------------------- |
+| offset        | Vector2       |                      | The color offset.                  |
+| blendFunction | BlendFunction | BlendFunction.Normal | The blend function of this effect. |

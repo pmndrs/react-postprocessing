@@ -1,0 +1,31 @@
+---
+title: Scanline
+nav: 1
+---
+
+A scanline effect.
+
+Based on an implementation by Georg 'Leviathan' Steinrohder (CC BY 3.0): http://www.truevision3d.com/forums/showcase/staticnoise_colorblackwhite_scanline_shaders-t18698.0.html
+
+```jsx
+import { Scanline } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Scanline
+    blendFunction={BlendFunction.OVERLAY} // blend mode
+    density={1.25} // scanline density
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="iy14d" />
+
+## Props
+
+| Name          | Type          | Default               | Description                        |
+| ------------- | ------------- | --------------------- | ---------------------------------- |
+| density       | Number        | 1.25                  | The scanline density.              |
+| blendFunction | BlendFunction | BlendFunction.OVERLAY | The blend function of this effect. |

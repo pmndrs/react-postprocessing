@@ -1,0 +1,44 @@
+---
+title: GodRays
+nav: 1
+---
+
+The GodRays effect requires a mesh that will be used as an origin point for the rays. Refer to this [example](https://github.com/pmndrs/react-postprocessing/tree/2d7edcc2ef7cc2571a86f30ede2b9ee25b38987e/examples/src/demos/TakeControl) for more details.
+
+```jsx
+import { GodRays } from '@react-three/postprocessing'
+
+return (
+  <GodRays
+    sun={sunRef}
+    blendFunction={BlendFunction.Screen} // The blend function of this effect.
+    samples={60} // The number of samples per pixel.
+    density={0.96} // The density of the light rays.
+    decay={0.9} // An illumination decay factor.
+    weight={0.4} // A light ray weight factor.
+    exposure={0.6} // A constant attenuation coefficient.
+    clampMax={1} // An upper bound for the saturation of the overall effect.
+    width={Resizer.AUTO_SIZE} // Render width.
+    height={Resizer.AUTO_SIZE} // Render height.
+    kernelSize={KernelSize.SMALL} // The blur kernel size. Has no effect if blur is disabled.
+    blur={true} // Whether the god rays should be blurred to reduce artifacts.
+  />
+)
+```
+
+## Props
+
+| Name          | Type                                                                                                               | Default              | Description                                                                  |
+| ------------- | ------------------------------------------------------------------------------------------------------------------ | -------------------- | ---------------------------------------------------------------------------- |
+| sun           | Ref                                                                                                                |                      | The light source. Must not write depth and has to be flagged as transparent. |
+| blendFunction | BlendFunction                                                                                                      | BlendFunction.Screen | The blend function of this effect.                                           |
+| samples       | Number                                                                                                             | 60                   | The number of samples per pixel.                                             |
+| density       | Number                                                                                                             | 0.96                 | The density of the light rays.                                               |
+| decay         | Number                                                                                                             | 0.9                  | An illumination decay factor.                                                |
+| weight        | Number                                                                                                             | 0.4                  | A light ray weight factor.                                                   |
+| exposure      | Number                                                                                                             | 0.6                  | A constant attenuation coefficient.                                          |
+| clampMax      | Number                                                                                                             | 1                    | An upper bound for the saturation of the overall effect.                     |
+| width         | Number                                                                                                             | Resizer.AUTO_SIZE    | The render width.                                                            |
+| height        | Number                                                                                                             | Resizer.AUTO_SIZE    | The render height.                                                           |
+| kernelSize    | [KernelSize](https://vanruesc.github.io/postprocessing/public/docs/variable/index.html#static-variable-KernelSize) | KernelSize.SMALL     | The blur kernel size. Has no effect if blur is disabled.                     |
+| blur          | Boolean                                                                                                            | true                 | Whether the god rays should be blurred to reduce artifacts                   |

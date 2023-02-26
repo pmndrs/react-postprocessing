@@ -1,0 +1,31 @@
+---
+title: Dot Screen
+nav: 1
+---
+
+A dot screen effect.
+
+```jsx
+import { DotScreen } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <DotScreen
+    blendFunction={BlendFunction.NORMAL} // blend mode
+    angle={Math.PI * 0.5} // angle of the dot pattern
+    scale={1.0} // scale of the dot pattern
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="xt3fb" />
+
+## Props
+
+| Name          | Type          | Default              | Description                        |
+| ------------- | ------------- | -------------------- | ---------------------------------- |
+| angle         | Number        | 1 .57                | The angle of the dot pattern.      |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect. |
+| scale         | Number        | 1 .57                | The scale of the dot pattern.      |
