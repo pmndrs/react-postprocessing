@@ -1,4 +1,5 @@
 import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
+import type { BloomEffectOptions } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
@@ -8,7 +9,7 @@ import { resolveRef } from '../util'
 
 type ObjectRef = MutableRefObject<Object3D>
 
-export type SelectiveBloomProps = ConstructorParameters<typeof SelectiveBloomEffect>[2] &
+export type SelectiveBloomProps = BloomEffectOptions &
   Partial<{
     lights: Object3D[] | ObjectRef[]
     selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
@@ -30,8 +31,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     height,
     kernelSize,
     mipmapBlur,
-    radius,
-    levels,
+
     ...props
   }: SelectiveBloomProps,
   forwardRef: Ref<SelectiveBloomEffect>
@@ -40,7 +40,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     console.warn('SelectiveBloom requires lights to work.')
   }
 
-  const invalidate = useThree((state) => state.invalidate)
+  const { invalidate } = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>
@@ -53,24 +53,9 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         height,
         kernelSize,
         mipmapBlur,
-        radius,
-        levels,
         ...props,
       }),
-    [
-      camera,
-      height,
-      intensity,
-      kernelSize,
-      luminanceSmoothing,
-      luminanceThreshold,
-      scene,
-      width,
-      height,
-      mipmapBlur,
-      radius,
-      levels,
-    ]
+    [scene, camera, luminanceThreshold, luminanceSmoothing, intensity, width, height, kernelSize, mipmapBlur, props]
   )
 
   const api = useContext(selectionContext)

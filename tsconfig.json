@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "ES2018",
     "allowJs": true,
-    "lib": ["DOM", "DOM.Iterable"],
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
@@ -16,7 +15,6 @@
     "declaration": true,
     "outDir": "dist",
     "paths": {
-      "*": ["types/*"],
       "@react-three/postprocessing": ["./"]
     }
   },

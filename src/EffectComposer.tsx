@@ -1,4 +1,5 @@
-import { HalfFloatType, TextureDataType } from 'three'
+import type { TextureDataType } from 'three'
+import { HalfFloatType } from 'three'
 import React, {
   forwardRef,
   useMemo,
@@ -125,7 +126,7 @@ export const EffectComposer = React.memo(
           effectPass.renderToScreen = true
           composer.addPass(effectPass)
           if (normalPass) normalPass.enabled = true
-          if (downSamplingPass) downSamplingPass.enabled = true          
+          if (downSamplingPass) downSamplingPass.enabled = true
         }
         return () => {
           if (effectPass) composer?.removePass(effectPass)

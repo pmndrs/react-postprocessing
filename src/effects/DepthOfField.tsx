@@ -18,7 +18,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
   { target, depthTexture, ...props }: DOFProps,
   ref: Ref<DepthOfFieldEffect>
 ) {
-  const invalidate = useThree((state) => state.invalidate)
+  const { invalidate } = useThree((state) => state.invalidate)
   const { camera } = useContext(EffectComposerContext)
   const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [camera, props])
   useLayoutEffect(() => {

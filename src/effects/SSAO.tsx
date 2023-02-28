@@ -22,7 +22,6 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       rangeFalloff: 0.1,
       luminanceInfluence: 0.9,
       radius: 20,
-      scale: 0.5,
       bias: 0.5,
       intensity: 1.0,
       color: null,

@@ -1,19 +1,13 @@
 import React, { Ref, forwardRef, useMemo } from 'react'
-import { useLoader } from '@react-three/fiber'
-import { SMAAImageLoader, SMAAEffect, SMAAPreset, EdgeDetectionMode } from 'postprocessing'
+import { SMAAEffect, SMAAPreset, EdgeDetectionMode, PredicationMode } from 'postprocessing'
 
-export const SMAA = forwardRef(function SMAA(
-  {
-    preset = SMAAPreset.HIGH,
-    edgeDetectionMode = EdgeDetectionMode.COLOR,
-  }: { preset?: number; edgeDetectionMode?: number },
-  ref: Ref<SMAAEffect>
-) {
-  const smaaProps: [any, any] = useLoader(SMAAImageLoader, '' as any)
-  const effect = useMemo(() => new SMAAEffect(...smaaProps, preset, edgeDetectionMode), [
-    smaaProps,
-    preset,
-    edgeDetectionMode,
-  ])
+type SMAAProps = {
+  preset?: SMAAPreset
+  edgeDetectionMode?: EdgeDetectionMode
+  predicationMode?: PredicationMode
+}
+
+export const SMAA = forwardRef(function SMAA(props: SMAAProps, ref: Ref<SMAAEffect>) {
+  const effect = useMemo(() => new SMAAEffect(props), [props])
   return <primitive ref={ref} object={effect} dispose={null} />
 })

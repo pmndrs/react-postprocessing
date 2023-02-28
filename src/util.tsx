@@ -18,7 +18,7 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     { blendFunction, opacity, ...props }: React.PropsWithChildren<DefaultProps & ConstructorParameters<T>[0]>,
     ref
   ) {
-    const invalidate = useThree((state) => state.invalidate)
+    const { invalidate } = useThree((state) => state.invalidate)
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {

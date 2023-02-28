@@ -1,5 +1,5 @@
 import path from 'path'
-import babel from '@rollup/plugin-babel'
+import { babel } from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import json from '@rollup/plugin-json'
 import filesize from 'rollup-plugin-filesize'
