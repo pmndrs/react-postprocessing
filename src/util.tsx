@@ -11,30 +11,30 @@ export type EffectConstructor = new (...args: any[]) => Effect
 export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
   T extends Function ? T['prototype'] : InstanceType<T>,
   T
-> & {
-  key?: React.Key | null
-  blendFunction?: BlendFunction
-  opacity?: number
-}
+> &
+  ConstructorParameters<T>[0] & {
+    blendFunction?: BlendFunction
+    opacity?: number
+  }
 
 let i = 0
-const components = new WeakMap<EffectConstructor, string>()
+const components = new WeakMap<EffectConstructor, React.ExoticComponent<any>>()
 
 export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>>(effect: T, defaults?: P) =>
   /* @__PURE__ */ React.forwardRef<T, P>(function Effect({ blendFunction, opacity, ...props }, ref) {
+    let Component = components.get(effect)
+    if (!Component) {
+      const key = `@react-three/postprocessing/${effect.name}-${i++}`
+      extend({ [key]: effect })
+      components.set(effect, (Component = key as any))
+    }
+
+    const camera = useThree((state) => state.camera)
     const args = React.useMemo(
       () => [...((defaults?.args ?? []) as any[]), ...((props.args ?? []) as any[]), { ...defaults, ...props }],
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [JSON.stringify(props)]
     )
-    const camera = useThree((state) => state.camera)
-
-    let Component = components.get(effect)
-    if (!Component) {
-      Component = `@react-three/postprocessing/${effect.name}-${i++}`
-      components.set(effect, Component)
-      extend({ [Component]: effect })
-    }
 
     return (
       <Component
