@@ -31,7 +31,7 @@ export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>
 
     const camera = useThree((state) => state.camera)
     const args = React.useMemo(
-      () => [...((defaults?.args ?? []) as any[]), ...((props.args ?? []) as any[]), { ...defaults, ...props }],
+      () => [...((defaults?.args ?? []) as any[]), ...((props.args ?? [{ ...defaults, ...props }]) as any[])],
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [JSON.stringify(props)]
     )
