@@ -21,7 +21,10 @@ let i = 0
 const components = new WeakMap<EffectConstructor, React.ExoticComponent<any>>()
 
 export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>>(effect: T, defaults?: P) =>
-  /* @__PURE__ */ React.forwardRef<T, P>(function Effect({ blendFunction, opacity, ...props }, ref) {
+  /* @__PURE__ */ React.forwardRef<T, P>(function Effect(
+    { blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props },
+    ref
+  ) {
     let Component = components.get(effect)
     if (!Component) {
       const key = `@react-three/postprocessing/${effect.name}-${i++}`
