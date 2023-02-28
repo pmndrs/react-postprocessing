@@ -27,7 +27,7 @@ export const EffectComposerContext = createContext<{
   camera: THREE.Camera
   scene: THREE.Scene
   resolutionScale?: number
-}>(null)
+}>(null!)
 
 export type EffectComposerProps = {
   enabled?: boolean
@@ -49,8 +49,8 @@ export const EffectComposer = React.memo(
     (
       {
         children,
-        camera,
-        scene,
+        camera: _camera,
+        scene: _scene,
         resolutionScale,
         enabled = true,
         renderPriority = 1,
@@ -64,8 +64,8 @@ export const EffectComposer = React.memo(
       ref
     ) => {
       const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
-      scene = scene || defaultScene
-      camera = camera || defaultCamera
+      const scene = _scene || defaultScene
+      const camera = _camera || defaultCamera
 
       const [composer, normalPass, downSamplingPass] = useMemo(() => {
         const webGL2Available = isWebGL2Available()
@@ -120,8 +120,8 @@ export const EffectComposer = React.memo(
 
       const group = useRef(null)
       useLayoutEffect(() => {
-        let effectPass
-        if (group.current && group.current.__r3f && composer) {
+        let effectPass: EffectPass
+        if (group.current && (group.current as any).__r3f && composer) {
           effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
           effectPass.renderToScreen = true
           composer.addPass(effectPass)

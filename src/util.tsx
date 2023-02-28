@@ -1,4 +1,5 @@
 import React, { forwardRef, useMemo, useLayoutEffect, MutableRefObject } from 'react'
+import type { RootState } from '@react-three/fiber'
 import { Vector2, Object3D } from 'three'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
 import { Effect, BlendFunction } from 'postprocessing'
@@ -18,7 +19,7 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     { blendFunction, opacity, ...props }: React.PropsWithChildren<DefaultProps & ConstructorParameters<T>[0]>,
     ref
   ) {
-    const { invalidate } = useThree((state) => state.invalidate)
+    const invalidate = useThree((state) => state.invalidate)
     const effect: Effect = useMemo(() => new effectImpl(props), [props])
 
     useLayoutEffect(() => {
@@ -29,14 +30,10 @@ export const wrapEffect = <T extends new (...args: any[]) => Effect>(
     return <primitive ref={ref} object={effect} dispose={null} />
   })
 
-export const useVector2 = (props: any, key: string): Vector2 => {
+export const useVector2 = (props: any, key: string): THREE.Vector2 => {
   const vec: ReactThreeFiber.Vector2 = props[key]
-  return useMemo(() => {
-    if (vec instanceof Vector2) {
-      return new Vector2().set(vec.x, vec.y)
-    } else if (Array.isArray(vec)) {
-      const [x, y] = vec
-      return new Vector2().set(x, y)
-    }
+  return React.useMemo(() => {
+    if (typeof vec === 'number') return new Vector2(vec, vec)
+    else return new Vector2(...(vec as THREE.Vector2Tuple))
   }, [vec])
 }

@@ -33,7 +33,7 @@ export const Outline = forwardRef(function Outline(
   }: OutlineProps,
   forwardRef: Ref<OutlineEffect>
 ) {
-  const { invalidate } = useThree((state) => state.invalidate)
+  const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
 
   const effect = useMemo(

@@ -17,7 +17,7 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   { active = true, ...props }: GlitchProps,
   ref: Ref<GlitchEffect>
 ) {
-  const { invalidate } = useThree((state) => state.invalidate)
+  const invalidate = useThree((state) => state.invalidate)
   const delay = useVector2(props, 'delay')
   const duration = useVector2(props, 'duration')
   const strength = useVector2(props, 'strength')

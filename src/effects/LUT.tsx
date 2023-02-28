@@ -9,7 +9,7 @@ type LUTProps = {
 }
 
 export const LUT = forwardRef(function LUT({ lut, ...props }: LUTProps, ref: Ref<LUT1DEffect>) {
-  const { invalidate } = useThree((state) => state.invalidate)
+  const invalidate = useThree((state) => state.invalidate)
   const effect = useMemo(() => new LUT1DEffect(lut, props), [lut, props])
 
   return <primitive ref={ref} object={effect} dispose={null} />

@@ -40,7 +40,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     console.warn('SelectiveBloom requires lights to work.')
   }
 
-  const { invalidate } = useThree((state) => state.invalidate)
+  const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>

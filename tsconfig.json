@@ -1,23 +1,21 @@
 {
   "compilerOptions": {
     "target": "ES2018",
-    "allowJs": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist",
     "esModuleInterop": true,
-    "module": "ES6",
+    "module": "ESNext",
     "moduleResolution": "node",
+    "jsx": "react-jsx",
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react",
-    "preserveSymlinks": true,
-    "baseUrl": ".",
-    "declaration": true,
-    "outDir": "dist",
+    "skipLibCheck": true,
     "paths": {
       "@react-three/postprocessing": ["./"]
     }
   },
-  "include": ["./types/**/*", "./src/**/*"],
+  "include": ["./src/**/*"],
   "exclude": ["./node_modules/**/*"]
 }

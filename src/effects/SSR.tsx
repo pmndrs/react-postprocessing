@@ -71,7 +71,7 @@ export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
     [SSREffect, scene, camera, ENABLE_BLUR, USE_MRT]
   )
   useLayoutEffect(() => {
-    Object.keys(props).forEach((key) => (effect[key] = props[key]))
+    Object.keys(props).forEach((key) => (effect[key] = (props as any)[key]))
     invalidate()
   }, [props])
 
