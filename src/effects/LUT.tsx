@@ -1,4 +1,4 @@
-import { LUT1DEffect, BlendFunction } from 'postprocessing'
+import { LUT3DEffect, BlendFunction } from 'postprocessing'
 import React, { forwardRef, Ref, useMemo } from 'react'
 import { Texture } from 'three'
 
@@ -7,8 +7,8 @@ type LUTProps = {
   blendFunction: BlendFunction
 }
 
-export const LUT = forwardRef(function LUT({ lut, ...props }: LUTProps, ref: Ref<LUT1DEffect>) {
-  const effect = useMemo(() => new LUT1DEffect(lut, props), [lut, props])
+export const LUT = forwardRef(function LUT({ lut, ...props }: LUTProps, ref: Ref<LUT3DEffect>) {
+  const effect = useMemo(() => new LUT3DEffect(lut, props), [lut, props])
 
   return <primitive ref={ref} object={effect} dispose={null} />
 })
