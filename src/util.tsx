@@ -55,7 +55,7 @@ export const useVector2 = (props: object, key: string): THREE.Vector2 => {
   const value: ReactThreeFiber.Vector2 | undefined = props[key]
   return React.useMemo(() => {
     if (typeof value === 'number') return new THREE.Vector2(value, value)
-    else if (value?.length) return new THREE.Vector2(...(value as THREE.Vector2Tuple))
+    else if (value) return new THREE.Vector2(...(value as THREE.Vector2Tuple))
     else return new THREE.Vector2()
   }, [value])
 }
