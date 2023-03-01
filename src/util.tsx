@@ -51,10 +51,10 @@ export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>
     )
   })
 
-export const useVector2 = (props: any, key: string): THREE.Vector2 => {
-  const vec: ReactThreeFiber.Vector2 = props[key]
+export const useVector2 = (props: object, key: string): THREE.Vector2 => {
+  const value: ReactThreeFiber.Vector2 | undefined = props[key]
   return React.useMemo(() => {
-    if (typeof vec === 'number') return new THREE.Vector2(vec, vec)
-    else return new THREE.Vector2(...(vec as THREE.Vector2Tuple))
-  }, [vec])
+    if (typeof value === 'number') return new THREE.Vector2(value, value)
+    else if (value?.length) return new THREE.Vector2(...(value as THREE.Vector2Tuple))
+  }, [value])
 }
