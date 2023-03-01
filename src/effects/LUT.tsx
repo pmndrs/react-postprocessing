@@ -4,7 +4,8 @@ import { Texture } from 'three'
 
 type LUTProps = {
   lut: Texture
-  blendFunction: BlendFunction
+  blendFunction?: BlendFunction
+  tetrahedralInterpolation?: boolean
 }
 
 export const LUT = forwardRef(function LUT({ lut, ...props }: LUTProps, ref: Ref<LUT3DEffect>) {
