@@ -15,6 +15,5 @@ jobs:
         with:
           node-version: "14"
           cache: "yarn"
-      - run: yarn install --frozen-lockfile
-      - name: Build package
-        run: yarn build
+      - name: "install deps and build"
+        run: yarn install --frozen-lockfile
