@@ -385,10 +385,7 @@ return (
 
 [Glitch-Docs]: [https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html]
 
-
-#### [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
-
-By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. In some effects this can [result in artefacts](https://github.com/pmndrs/postprocessing/wiki/Antialiasing#multisample-antialiasing). Should you either want to work with webgl1 exclusively, or you get artefacts, then you can switch MSAA off and use SMAA. This effect is async and relies on suspense!
+#### [`<TiltShift />`](#tiltshift---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/TiltShiftEffect.js~TiltShiftEffect.html)
 
 ```jsx
 return (
@@ -402,7 +399,7 @@ return (
 )
 ```
 
-#### [`<TiltShift />`](#tiltshift---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/TiltShiftEffect.js~TiltShiftEffect.html)
+#### [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 
 By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. In some effects this can [result in artefacts](https://github.com/pmndrs/postprocessing/wiki/Antialiasing#multisample-antialiasing). Should you either want to work with webgl1 exclusively, or you get artefacts, then you can switch MSAA off and use SMAA. This effect is async and relies on suspense!
 
@@ -418,7 +415,6 @@ return (
   </Suspense>
 )
 ```
-
 
 #### [`<SSR />`](#ssr---) [![](https://img.shields.io/badge/-docs-green)](https://github.com/0beqz/screen-space-reflections)
 
