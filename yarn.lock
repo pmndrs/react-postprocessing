@@ -3943,10 +3943,10 @@ pidtree@^0.5.0:
   resolved "https://registry.yarnpkg.com/pidtree/-/pidtree-0.5.0.tgz#ad5fbc1de78b8a5f99d6fbdd4f6e4eee21d1aca1"
   integrity sha512-9nxspIM7OpZuhBxPg73Zvyq7j1QMPMPsGKTqRc2XOaFQauDvoNz9fM1Wdkjmeo7l9GXOZiRs97sPkuayl39wjA==
 
-postprocessing@^6.29.0:
-  version "6.29.0"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.29.0.tgz#a489f0215e0402c01484bc37abef8d1aabf17921"
-  integrity sha512-bicnFesmIZu53U0f777US8zwE9QyJGKClUhjmvq8+TKMU1BDdUHPJWpXKe0SChEcTSkqvS3xBdqddMVuosgsVA==
+postprocessing@^6.30.1:
+  version "6.30.1"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.30.1.tgz#b1739eb78c26730bb86196f7dc8c759237e660b4"
+  integrity sha512-GkBrQtX6KjNz+Pz3+ABvP1aXKCCW7h/tuE37wlM90WZLbaGfJ7eSIBN2gPgKExuK584IPde0YOoNiuWMr7PNCQ==
 
 potpack@^1.0.1:
   version "1.0.2"
