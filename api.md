@@ -71,6 +71,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 - [`<SSR />`](#ssr---) [![](https://img.shields.io/badge/-docs-green)](https://github.com/0beqz/screen-space-reflections)
 - [`<TiltShift />`](#tiltshift---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/TiltShiftEffect.js~TiltShiftEffect.html)
+- [`<TiltShift2 />`](#tiltshift2---)
 
 #### [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
@@ -395,6 +396,22 @@ return (
     focusArea={0.4} // The relative offset of the focus area
     feather={0.3} // The softness of the focus area edges
     bias={0.06} //  A blend bias
+  />
+)
+```
+
+#### [`<TiltShift2 />`](#tiltshift2---)
+
+A slightly different implementation of the tilt shift effect. It uses a different blur algorithm and allows for a more precise control of the focus area. This was the original that preceded the TiltShift effect. It is not part of the official postprocessing library.
+
+```jsx
+return (
+  <TiltShift2
+    start={[0.5, 0.0]} // Start point
+    end={[0.5, 1.0]} // End point
+    blur={20} // Softness
+    gradient={1100} // The softness of the focus area edges in pixels
+    delta={[1, 1]} // Uv offset
   />
 )
 ```
