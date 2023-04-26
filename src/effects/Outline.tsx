@@ -1,5 +1,5 @@
 import { OutlineEffect } from 'postprocessing'
-import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
+import { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
 import { EffectComposerContext } from '../EffectComposer'
@@ -61,6 +61,7 @@ export const Outline = forwardRef(function Outline(
       hiddenEdgeColor,
       kernelSize,
       patternTexture,
+      props,
       pulseSpeed,
       scene,
       visibleEdgeColor,
@@ -75,19 +76,21 @@ export const Outline = forwardRef(function Outline(
     // Do not allow array selection if declarative selection is active
     // TODO: array selection should probably be deprecated altogether
     if (!api && selection) {
-      effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
+      effect.selection.set(
+        Array.isArray(selection) ? (selection as Object3D[]).map(resolveRef) : [resolveRef(selection) as Object3D]
+      )
       invalidate()
       return () => {
         effect.selection.clear()
         invalidate()
       }
     }
-  }, [effect, selection, api])
+  }, [effect, selection, api, invalidate])
 
   useEffect(() => {
     effect.selectionLayer = selectionLayer
     invalidate()
-  }, [effect, selectionLayer])
+  }, [effect, invalidate, selectionLayer])
 
   const ref = useRef<OutlineEffect>()
   useEffect(() => {
@@ -101,7 +104,7 @@ export const Outline = forwardRef(function Outline(
         }
       }
     }
-  }, [api])
+  }, [api, effect.selection, invalidate])
 
   return <primitive ref={forwardRef} object={effect} />
 })

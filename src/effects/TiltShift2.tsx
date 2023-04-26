@@ -44,7 +44,7 @@ const TiltShiftShader = {
         /* switch back from pre-multiplied alpha */
         outputColor.rgb /= outputColor.a + 0.00001;
     }
-    `
+    `,
 }
 
 export class TiltShiftEffect extends Effect {
@@ -65,9 +65,9 @@ export class TiltShiftEffect extends Effect {
         ['start', new Uniform(start)],
         ['end', new Uniform(end)],
         ['delta', new Uniform(delta)],
-      ])
+      ]),
     })
   }
 }
 
-export const TiltShift2 = wrapEffect(TiltShiftEffect, BlendFunction.NORMAL)
+export const TiltShift2 = wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.NORMAL })
