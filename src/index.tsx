@@ -24,9 +24,11 @@ export * from './effects/Vignette'
 export * from './effects/ShockWave'
 export * from './effects/LUT'
 export * from './effects/TiltShift'
+export * from './effects/TiltShift2'
 
 // This is not an effect pass
 export * from './effects/SSR'
 
 export * from './Selection'
 export * from './EffectComposer'
+export * from './util'

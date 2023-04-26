@@ -71,6 +71,7 @@ Here's a list of all wrapped effects with demos, example usage (with default pro
 - [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 - [`<SSR />`](#ssr---) [![](https://img.shields.io/badge/-docs-green)](https://github.com/0beqz/screen-space-reflections)
 - [`<TiltShift />`](#tiltshift---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/TiltShiftEffect.js~TiltShiftEffect.html)
+- [`<TiltShift2 />`](#tiltshift2---)
 
 #### [`<SSAO />`](#ssao---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SSAOEffect.js~SSAOEffect.html)
 
@@ -385,10 +386,7 @@ return (
 
 [Glitch-Docs]: [https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/GlitchEffect.js~GlitchEffect.html]
 
-
-#### [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
-
-By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. In some effects this can [result in artefacts](https://github.com/pmndrs/postprocessing/wiki/Antialiasing#multisample-antialiasing). Should you either want to work with webgl1 exclusively, or you get artefacts, then you can switch MSAA off and use SMAA. This effect is async and relies on suspense!
+#### [`<TiltShift />`](#tiltshift---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/TiltShiftEffect.js~TiltShiftEffect.html)
 
 ```jsx
 return (
@@ -402,7 +400,23 @@ return (
 )
 ```
 
-#### [`<TiltShift />`](#tiltshift---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/TiltShiftEffect.js~TiltShiftEffect.html)
+#### [`<TiltShift2 />`](#tiltshift2---)
+
+A slightly different implementation of the tilt shift effect. It uses a different blur algorithm and allows for a more precise control of the focus area. This was the original that preceded the TiltShift effect. It is not part of the official postprocessing library.
+
+```jsx
+return (
+  <TiltShift2
+    start={[0.5, 0.0]} // Start point
+    end={[0.5, 1.0]} // End point
+    blur={20} // Softness
+    gradient={1100} // The softness of the focus area edges in pixels
+    delta={[1, 1]} // Uv offset
+  />
+)
+```
+
+#### [`<SMAA />`](#smaa---) [![](https://img.shields.io/badge/-docs-green)](https://pmndrs.github.io/postprocessing/public/docs/class/src/effects/SMAAEffect.js~SMAAEffect.html)
 
 By default react-postprocessing uses webgl2 multisampling (MSAA) for native AA. In some effects this can [result in artefacts](https://github.com/pmndrs/postprocessing/wiki/Antialiasing#multisample-antialiasing). Should you either want to work with webgl1 exclusively, or you get artefacts, then you can switch MSAA off and use SMAA. This effect is async and relies on suspense!
 
@@ -418,7 +432,6 @@ return (
   </Suspense>
 )
 ```
-
 
 #### [`<SSR />`](#ssr---) [![](https://img.shields.io/badge/-docs-green)](https://github.com/0beqz/screen-space-reflections)
 
