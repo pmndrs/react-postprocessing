@@ -64,19 +64,21 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     // Do not allow array selection if declarative selection is active
     // TODO: array selection should probably be deprecated altogether
     if (!api && selection) {
-      effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
+      effect.selection.set(
+        Array.isArray(selection) ? (selection as Object3D[]).map(resolveRef) : [resolveRef(selection) as Object3D]
+      )
       invalidate()
       return () => {
         effect.selection.clear()
         invalidate()
       }
     }
-  }, [effect, selection, api])
+  }, [effect, selection, api, invalidate])
 
   useEffect(() => {
     effect.selection.layer = selectionLayer
     invalidate()
-  }, [effect, selectionLayer])
+  }, [effect, invalidate, selectionLayer])
 
   useEffect(() => {
     if (lights && lights.length > 0) {
@@ -87,7 +89,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         invalidate()
       }
     }
-  }, [effect, lights, selectionLayer])
+  }, [effect, invalidate, lights, selectionLayer])
 
   const ref = useRef<SelectiveBloomEffect>()
   useEffect(() => {
@@ -101,7 +103,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         }
       }
     }
-  }, [api])
+  }, [api, effect.selection, invalidate])
 
   return <primitive ref={forwardRef} object={effect} dispose={null} />
 })
