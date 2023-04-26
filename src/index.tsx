@@ -31,3 +31,4 @@ export * from './effects/SSR'
 
 export * from './Selection'
 export * from './EffectComposer'
+export * from './util'
