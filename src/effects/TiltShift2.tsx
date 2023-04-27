@@ -65,7 +65,7 @@ const TiltShiftShader = {
 export class TiltShiftEffect extends Effect {
   constructor({
     blendFunction = BlendFunction.NORMAL,
-    blur = 1.0, // [0, 1], can go beyond 1 for extra
+    blur = 0.15, // [0, 1], can go beyond 1 for extra
     taper = 0.5, // [0, 1], can go beyond 1 for extra
     start = [0.5, 0.0], // [0,1] percentage x,y of screenspace
     end = [0.5, 1.0], // [0,1] percentage x,y of screenspace
