@@ -411,7 +411,7 @@ return (
     end={[0.5, 1.0]} // End point, defined as % of screen dimensions
     blur={1} // Softness, in range of 0 to 1+
     taper={0.5} // The softness of the focus area edges, in range of 0 to 1+
-    direction={[1, 1]} // Blur direction
+    direction={[1, 1]} // Blur direction. Cannot be [0,0].
     sampleCount={20} // Blur quality (number of samples). Min is 3. Max is 100.
   />
 )
