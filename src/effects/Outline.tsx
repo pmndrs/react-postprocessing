@@ -50,7 +50,7 @@ export const Outline = forwardRef(function Outline(
         kernelSize,
         blur,
         xRay,
-        ...props
+        ...props,
       }),
     [
       blendFunction,
@@ -75,7 +75,7 @@ export const Outline = forwardRef(function Outline(
     // Do not allow array selection if declarative selection is active
     // TODO: array selection should probably be deprecated altogether
     if (!api && selection) {
-      effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
+      effect.selection.set(Array.isArray(selection) ? (selection.map(resolveRef) as any) : [resolveRef(selection)])
       invalidate()
       return () => {
         effect.selection.clear()
