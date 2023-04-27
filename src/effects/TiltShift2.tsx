@@ -69,7 +69,7 @@ export class TiltShiftEffect extends Effect {
     taper = 0.5, // [0, 1], can go beyond 1 for extra
     start = [0.5, 0.0], // [0,1] percentage x,y of screenspace
     end = [0.5, 1.0], // [0,1] percentage x,y of screenspace
-    sampleCount = 20.0, // number of blur samples
+    sampleCount = 10.0, // number of blur samples
     direction = [1, 1] // direction of blur
   } = {}) {
     super('TiltShiftEffect', TiltShiftShader.fragmentShader, {
