@@ -14,7 +14,7 @@ const TiltShiftShader = {
     uniform vec2 start;
     uniform vec2 end;
     uniform vec2 direction;
-    uniform int sampleCount;
+    uniform int samples;
 
     float random(vec3 scale, float seed) {
         /* use the fragment position for a different seed per-pixel */
@@ -26,7 +26,7 @@ const TiltShiftShader = {
         float total = 0.0;
         vec2 startPixel = vec2(start.x * resolution.x, start.y * resolution.y);
         vec2 endPixel = vec2(end.x * resolution.x, end.y * resolution.y);
-        float f_samples = float(sampleCount);
+        float f_samples = float(samples);
         float half_samples = f_samples / 2.0;
 
         // use screen diagonal to normalize blur radii
@@ -41,7 +41,7 @@ const TiltShiftShader = {
 
         #pragma unroll_loop_start
         for (int i = 0; i <= MAX_ITERATIONS; i++) {
-            if (i >= sampleCount) { break; } // return early if over sample count
+            if (i >= samples) { break; } // return early if over sample count
             float f_i = float(i);
             float s_i = -half_samples + f_i;
             float percent = (s_i + offset - 0.5) / half_samples;
@@ -69,7 +69,7 @@ export class TiltShiftEffect extends Effect {
     taper = 0.5, // [0, 1], can go beyond 1 for extra
     start = [0.5, 0.0], // [0,1] percentage x,y of screenspace
     end = [0.5, 1.0], // [0,1] percentage x,y of screenspace
-    sampleCount = 10.0, // number of blur samples
+    samples = 10.0, // number of blur samples
     direction = [1, 1] // direction of blur
   } = {}) {
     super('TiltShiftEffect', TiltShiftShader.fragmentShader, {
@@ -80,7 +80,7 @@ export class TiltShiftEffect extends Effect {
         ['taper', new Uniform(taper)],
         ['start', new Uniform(start)],
         ['end', new Uniform(end)],
-        ['sampleCount', new Uniform(sampleCount)],
+        ['samples', new Uniform(samples)],
         ['direction', new Uniform(direction)]
       ])
     })
