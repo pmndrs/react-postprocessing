@@ -5,7 +5,7 @@ import { useVector2 } from '../util'
 
 export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
   Partial<{
-    mode: (typeof GlitchMode)[keyof typeof GlitchMode]
+    mode: GlitchMode
     active: boolean
     delay: ReactThreeFiber.Vector2
     duration: ReactThreeFiber.Vector2
@@ -28,6 +28,6 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   useLayoutEffect(() => {
     effect.mode = active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
     invalidate()
-  }, [active, effect, props.mode])
+  }, [active, effect, invalidate, props.mode])
   return <primitive ref={ref} object={effect} dispose={null} />
 })
