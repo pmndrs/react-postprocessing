@@ -58,7 +58,6 @@
     "@react-three/fiber": "^8.13.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
-    "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
@@ -74,7 +73,6 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "husky": "^8.0.3",
-    "husky-run": "^0.0.0",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
@@ -82,7 +80,7 @@
     "rimraf": "^5.0.0",
     "rollup": "^3.21.0",
     "rollup-plugin-filesize": "^10.0.0",
-    "three": "^0.152.1",
+    "three": "^0.151.3",
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
