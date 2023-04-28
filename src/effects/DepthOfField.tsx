@@ -1,7 +1,7 @@
 import { DepthOfFieldEffect } from 'postprocessing'
-import React, { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
+import { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
-import { DepthPackingStrategies, Texture, Vector3 } from 'three'
+import { type DepthPackingStrategies, type Texture, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 
 type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &

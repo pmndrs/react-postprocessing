@@ -5,7 +5,7 @@ import { type ReactThreeFiber, extend, useThree } from '@react-three/fiber'
 import type { Effect, BlendFunction } from 'postprocessing'
 
 export const resolveRef = <T,>(ref: T | React.MutableRefObject<T>) =>
-  typeof ref === 'object' && 'current' in ref ? ref.current : ref
+  typeof ref === 'object' && ref != null && 'current' in ref ? ref.current : ref
 
 export type EffectConstructor = new (...args: any[]) => Effect
 
@@ -19,7 +19,7 @@ export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
   }
 
 let i = 0
-const components = new WeakMap<EffectConstructor, React.ExoticComponent<any>>()
+const components = new WeakMap<EffectConstructor, React.ExoticComponent<any> | string>()
 
 export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>>(effect: T, defaults?: P) =>
   /* @__PURE__ */ React.forwardRef<T, P>(function Effect(
@@ -30,7 +30,7 @@ export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>
     if (!Component) {
       const key = `@react-three/postprocessing/${effect.name}-${i++}`
       extend({ [key]: effect })
-      components.set(effect, (Component = key as any))
+      components.set(effect, (Component = key))
     }
 
     const camera = useThree((state) => state.camera)
@@ -52,8 +52,8 @@ export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T>
     )
   })
 
-export const useVector2 = (props: object, key: string): THREE.Vector2 => {
-  const value: ReactThreeFiber.Vector2 | undefined = props[key]
+export const useVector2 = (props: Record<string, unknown>, key: string): THREE.Vector2 => {
+  const value = props[key] as ReactThreeFiber.Vector2 | undefined
   return React.useMemo(() => {
     if (typeof value === 'number') return new THREE.Vector2(value, value)
     else if (value) return new THREE.Vector2(...(value as THREE.Vector2Tuple))
