@@ -9,7 +9,7 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react'
-import { useThree, useFrame } from '@react-three/fiber'
+import { useThree, useFrame, useInstanceHandle } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
@@ -17,6 +17,7 @@ import {
   NormalPass,
   // @ts-ignore
   DepthDownsamplingPass,
+  Effect,
 } from 'postprocessing'
 import { isWebGL2Available } from 'three-stdlib'
 
@@ -119,10 +120,11 @@ export const EffectComposer = React.memo(
       )
 
       const group = useRef(null)
+      const instance = useInstanceHandle(group)
       useLayoutEffect(() => {
         let effectPass: EffectPass
-        if (group.current && (group.current as any).__r3f && composer) {
-          effectPass = new EffectPass(camera, ...(group.current as any).__r3f.objects)
+        if (group.current && instance.current && composer) {
+          effectPass = new EffectPass(camera, ...(instance.current.objects as unknown as Effect[]))
           effectPass.renderToScreen = true
           composer.addPass(effectPass)
           if (normalPass) normalPass.enabled = true
@@ -133,7 +135,7 @@ export const EffectComposer = React.memo(
           if (normalPass) normalPass.enabled = false
           if (downSamplingPass) downSamplingPass.enabled = false
         }
-      }, [composer, children, camera, normalPass, downSamplingPass])
+      }, [composer, children, camera, normalPass, downSamplingPass, instance])
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(
