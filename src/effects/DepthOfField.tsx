@@ -1,7 +1,7 @@
 import { DepthOfFieldEffect } from 'postprocessing'
 import React, { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
-import { Texture, Vector3 } from 'three'
+import { DepthPackingStrategies, Texture, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 
 type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
@@ -29,7 +29,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
           : new Vector3().set(target[0], target[1], target[2])
       effect.target = vec
     }
-    if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing)
+    if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing as DepthPackingStrategies)
     invalidate()
   }, [target, depthTexture, effect])
   return <primitive ref={ref} object={effect} dispose={null} />

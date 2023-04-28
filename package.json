@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "postprocessing": "^6.30.2",
-    "react-merge-refs": "^2.0.1",
     "screen-space-reflections": "2.5.0",
     "three-stdlib": "^2.21.10"
   },

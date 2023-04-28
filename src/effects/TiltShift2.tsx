@@ -75,7 +75,7 @@ export class TiltShiftEffect extends Effect {
     super('TiltShiftEffect', TiltShiftShader.fragmentShader, {
       blendFunction,
       attributes: EffectAttribute.CONVOLUTION,
-      uniforms: new Map([
+      uniforms: new Map<string, Uniform<number | number[]>>([
         ['blur', new Uniform(blur)],
         ['taper', new Uniform(taper)],
         ['start', new Uniform(start)],
