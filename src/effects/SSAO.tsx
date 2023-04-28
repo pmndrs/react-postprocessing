@@ -1,4 +1,4 @@
-import React, { Ref, forwardRef, useContext, useMemo } from 'react'
+import { Ref, forwardRef, useContext, useMemo } from 'react'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
 import { EffectComposerContext } from '../EffectComposer'
 
@@ -7,10 +7,10 @@ type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2]
 
 export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOProps, ref: Ref<SSAOEffect>) {
   const { camera, normalPass, downSamplingPass, resolutionScale } = useContext(EffectComposerContext)
-  const effect = useMemo(() => {
+  const effect = useMemo<SSAOEffect | {}>(() => {
     if (normalPass === null && downSamplingPass === null) {
       console.error('Please enable the NormalPass in the EffectComposer in order to use SSAO.')
-      return null
+      return {}
     }
     return new SSAOEffect(camera, normalPass && !downSamplingPass ? (normalPass as any).texture : null, {
       blendFunction: BlendFunction.MULTIPLY,
@@ -24,7 +24,7 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       radius: 20,
       bias: 0.5,
       intensity: 1.0,
-      color: null,
+      color: undefined,
       // @ts-ignore
       normalDepthBuffer: downSamplingPass ? downSamplingPass.texture : null,
       resolutionScale: resolutionScale ?? 1,

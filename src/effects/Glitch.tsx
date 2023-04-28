@@ -1,5 +1,5 @@
 import { GlitchEffect, GlitchMode } from 'postprocessing'
-import React, { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
+import { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
 import { useVector2 } from '../util'
 

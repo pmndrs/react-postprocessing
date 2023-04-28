@@ -22,7 +22,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
   const { camera } = useContext(EffectComposerContext)
   const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [camera, props])
   useLayoutEffect(() => {
-    if (target) {
+    if (target && typeof target !== 'number') {
       const vec: Vector3 =
         target instanceof Vector3
           ? new Vector3().set(target.x, target.y, target.z)
