@@ -1,9 +1,9 @@
 import { useThree } from '@react-three/fiber'
 import { LUT3DEffect, BlendFunction } from 'postprocessing'
 import React, { forwardRef, Ref, useLayoutEffect, useMemo } from 'react'
-import { Texture } from 'three'
+import type { Texture } from 'three'
 
-type LUTProps = {
+export type LUTProps = {
   lut: Texture
   blendFunction?: BlendFunction
   tetrahedralInterpolation?: boolean
@@ -20,7 +20,7 @@ export const LUT = forwardRef(function LUT(
     if (tetrahedralInterpolation) effect.tetrahedralInterpolation = tetrahedralInterpolation
     if (lut) effect.lut = lut
     invalidate()
-  }, [effect, lut, tetrahedralInterpolation])
+  }, [effect, invalidate, lut, tetrahedralInterpolation])
 
   return <primitive ref={ref} object={effect} dispose={null} />
 })
