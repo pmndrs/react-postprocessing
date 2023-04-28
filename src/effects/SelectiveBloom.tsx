@@ -1,4 +1,5 @@
 import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
+import type { BloomEffectOptions } from 'postprocessing'
 import React, { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
@@ -8,7 +9,7 @@ import { resolveRef } from '../util'
 
 type ObjectRef = MutableRefObject<Object3D>
 
-export type SelectiveBloomProps = ConstructorParameters<typeof SelectiveBloomEffect>[2] &
+export type SelectiveBloomProps = BloomEffectOptions &
   Partial<{
     lights: Object3D[] | ObjectRef[]
     selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
@@ -30,8 +31,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     height,
     kernelSize,
     mipmapBlur,
-    radius,
-    levels,
+
     ...props
   }: SelectiveBloomProps,
   forwardRef: Ref<SelectiveBloomEffect>
@@ -53,24 +53,9 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         height,
         kernelSize,
         mipmapBlur,
-        radius,
-        levels,
         ...props,
       }),
-    [
-      camera,
-      height,
-      intensity,
-      kernelSize,
-      luminanceSmoothing,
-      luminanceThreshold,
-      scene,
-      width,
-      height,
-      mipmapBlur,
-      radius,
-      levels,
-    ]
+    [scene, camera, luminanceThreshold, luminanceSmoothing, intensity, width, height, kernelSize, mipmapBlur, props]
   )
 
   const api = useContext(selectionContext)
@@ -79,19 +64,21 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     // Do not allow array selection if declarative selection is active
     // TODO: array selection should probably be deprecated altogether
     if (!api && selection) {
-      effect.selection.set(Array.isArray(selection) ? selection.map(resolveRef) : [resolveRef(selection)])
+      effect.selection.set(
+        Array.isArray(selection) ? (selection as Object3D[]).map(resolveRef) : [resolveRef(selection) as Object3D]
+      )
       invalidate()
       return () => {
         effect.selection.clear()
         invalidate()
       }
     }
-  }, [effect, selection, api])
+  }, [effect, selection, api, invalidate])
 
   useEffect(() => {
     effect.selection.layer = selectionLayer
     invalidate()
-  }, [effect, selectionLayer])
+  }, [effect, invalidate, selectionLayer])
 
   useEffect(() => {
     if (lights && lights.length > 0) {
@@ -102,7 +89,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         invalidate()
       }
     }
-  }, [effect, lights, selectionLayer])
+  }, [effect, invalidate, lights, selectionLayer])
 
   const ref = useRef<SelectiveBloomEffect>()
   useEffect(() => {
@@ -116,7 +103,7 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         }
       }
     }
-  }, [api])
+  }, [api, effect.selection, invalidate])
 
   return <primitive ref={forwardRef} object={effect} dispose={null} />
 })

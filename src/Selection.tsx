@@ -18,14 +18,13 @@ export function Selection({ children, enabled = true }: { enabled?: boolean; chi
   return <selectionContext.Provider value={value}>{children}</selectionContext.Provider>
 }
 
-
 export function Select({ enabled = false, children, ...props }: SelectApi) {
   const group = useRef<THREE.Group>(null!)
   const api = useContext(selectionContext)
   useEffect(() => {
     if (api && enabled) {
       let changed = false
-      const current = []
+      const current: THREE.Object3D<THREE.Event>[] = []
       group.current.traverse((o) => {
         o.type === 'Mesh' && current.push(o)
         if (api.selected.indexOf(o) === -1) changed = true

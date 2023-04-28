@@ -68,12 +68,8 @@ export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
   const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () => new SSREffect(scene, camera, { ENABLE_BLUR, USE_MRT, ...props }),
-    [SSREffect, scene, camera, ENABLE_BLUR, USE_MRT]
+    [scene, camera, ENABLE_BLUR, USE_MRT, props]
   )
-  useLayoutEffect(() => {
-    Object.keys(props).forEach((key) => (effect[key] = props[key]))
-    invalidate()
-  }, [props])
 
   const api = useContext(selectionContext)
   useEffect(() => {
@@ -89,5 +85,5 @@ export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
     }
   }, [api])
 
-  return <primitive ref={ref} object={effect} />
+  return <primitive ref={ref} object={effect} {...props} />
 })

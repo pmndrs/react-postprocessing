@@ -59,7 +59,7 @@ const TiltShiftShader = {
         /* switch back from pre-multiplied alpha */
         outputColor.rgb /= outputColor.a + 0.00001;
     }
-    `
+    `,
 }
 
 export class TiltShiftEffect extends Effect {
@@ -70,21 +70,21 @@ export class TiltShiftEffect extends Effect {
     start = [0.5, 0.0], // [0,1] percentage x,y of screenspace
     end = [0.5, 1.0], // [0,1] percentage x,y of screenspace
     samples = 10.0, // number of blur samples
-    direction = [1, 1] // direction of blur
+    direction = [1, 1], // direction of blur
   } = {}) {
     super('TiltShiftEffect', TiltShiftShader.fragmentShader, {
       blendFunction,
       attributes: EffectAttribute.CONVOLUTION,
-      uniforms: new Map([
+      uniforms: new Map<string, Uniform<number | number[]>>([
         ['blur', new Uniform(blur)],
         ['taper', new Uniform(taper)],
         ['start', new Uniform(start)],
         ['end', new Uniform(end)],
         ['samples', new Uniform(samples)],
-        ['direction', new Uniform(direction)]
-      ])
+        ['direction', new Uniform(direction)],
+      ]),
     })
   }
 }
 
-export const TiltShift2 = wrapEffect(TiltShiftEffect)
+export const TiltShift2 = wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.NORMAL })
