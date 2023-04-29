@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo, Ref } from 'react'
+import { forwardRef, useMemo, Ref } from 'react'
 import { PixelationEffect } from 'postprocessing'
 
 export type PixelationProps = {
