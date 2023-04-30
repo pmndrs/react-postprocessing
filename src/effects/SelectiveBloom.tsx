@@ -91,7 +91,6 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     }
   }, [effect, invalidate, lights, selectionLayer])
 
-  const ref = useRef<SelectiveBloomEffect>()
   useEffect(() => {
     if (api && api.enabled) {
       if (api.selected?.length) {
