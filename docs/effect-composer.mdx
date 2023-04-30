@@ -1,0 +1,25 @@
+---
+title: EffectComposer
+nav: 0
+---
+
+The `EffectComposer` must wrap all your effects. It will manage them for you.
+
+```jsx
+<EffectComposer
+  enabled?: boolean
+  depthBuffer?: boolean
+  disableNormalPass?: boolean
+  stencilBuffer?: boolean
+  autoClear?: boolean
+  multisampling?: number
+  frameBufferType?: TextureDataType
+  /** For effects that support DepthDownsamplingPass */
+  resolutionScale?: number
+  renderPriority?: number
+  camera?: THREE.Camera
+  scene?: THREE.Scene
+>
+{/* your effects go here */}
+</EffectComposer>
+```

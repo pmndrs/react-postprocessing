@@ -1,0 +1,53 @@
+---
+title: Selection
+description: Selection/Select
+nav: 0
+---
+
+Some effects, like Outline or SelectiveBloom can select specific objects. To
+manage this in a declarative scene with just references can be messy, especially
+when things have to be grouped. These two components take care of it:
+
+```jsx
+<Selection
+  children: JSX.Element | JSX.Element[]
+  enabled?: boolean
+>
+
+<Select
+  children: JSX.Element | JSX.Element[]
+  enabled?: boolean
+>
+```
+
+You wrap everything into a selection, this one holds all the selections. Now you
+can individually select objects or groups. Effects that support selections (for
+instance `Outline`) will acknowledge it.
+
+```jsx
+<Selection>
+  <EffectComposer autoclear={false}>
+    <Outline blur edgeStrength={100} />
+  </EffectComposer>
+  <Select enabled>
+    <mesh />
+  </Select>
+</Selection>
+```
+
+Selection can be nested and group multiple object, higher up selection take
+precence over lower ones. The following for instance will select everything.
+Remove the outmost `enabled` and only the two mesh group is selected. You can
+flip the selections or bind them to interactions and state.
+
+```jsx
+<Select enabled>
+  <Select enabled>
+    <mesh />
+    <mesh />
+  </Select>
+  <Select>
+    <mesh />
+  </Select>
+</Select>
+```

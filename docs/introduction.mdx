@@ -4,41 +4,62 @@ description: What is React Postprocessing and how you can use it
 nav: 0
 ---
 
-`react-postprocessing` is a [postprocessing](https://github.com/vanruesc/postprocessing) wrapper for [@react-three/fiber](https://github.com/pmndrs/react-three-fiber). This is not (yet) meant for complex orchestration of effects, but can save you [hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a straight forward effects-chain.
+`react-postprocessing` is a
+[postprocessing](https://github.com/pmndrs/postprocessing) wrapper for
+[@react-three/fiber](https://github.com/pmndrs/react-three-fiber). This is not
+(yet) meant for complex orchestration of effects, but can save you
+[hundreds of LOC](https://twitter.com/0xca0a/status/1289501594698960897) for a
+straight forward effects-chain.
 
 ```bash
 npm install @react-three/postprocessing
 ```
 
-[![Bubbles](bubbles.jpg)](https://m94xb.csb.app)
-
-[![Control](control.jpg)](https://5jgjz.csb.app)
-
+<p align="center">
+  <a href="https://pqrpl.csb.app" target="_blank">
+    <img width="274" src="bubbles.jpg" alt="Bubbles" />
+  </a>
+  <a href="https://5jgjz.csb.app" target="_blank">
+    <img width="274" src="control.jpg" alt="Take Control" />
+  </a>
+</p>
 <p align="middle">
   <i>These demos are real, you can click them! They contain the full code, too. 📦</i>
 </p>
 
-## Why postprocessing and not three/examples/jsm/postprocessing?
+#### Why postprocessing and not three/examples/jsm/postprocessing?
 
-From [https://github.com/vanruesc/postprocessing](https://github.com/vanruesc/postprocessing#performance)
+From
+[https://github.com/pmndrs/postprocessing](https://github.com/pmndrs/postprocessing#performance)
 
-> This library provides an EffectPass which automatically organizes and merges any given combination of effects. This minimizes the amount of render operations and makes it possible to combine many effects without the performance penalties of traditional pass chaining. Additionally, every effect can choose its own blend function.
+> This library provides an EffectPass which automatically organizes and merges
+> any given combination of effects. This minimizes the amount of render
+> operations and makes it possible to combine many effects without the
+> performance penalties of traditional pass chaining. Additionally, every effect
+> can choose its own blend function.
 >
-> All fullscreen render operations also use a single triangle that fills the screen. Compared to using a quad, this approach harmonizes with modern GPU rasterization patterns and eliminates unnecessary fragment calculations along the screen diagonal. This is especially beneficial for GPGPU passes and effects that use complex fragment shaders.
+> All fullscreen render operations also use a single triangle that fills the
+> screen. Compared to using a quad, this approach harmonizes with modern GPU
+> rasterization patterns and eliminates unnecessary fragment calculations along
+> the screen diagonal. This is especially beneficial for GPGPU passes and
+> effects that use complex fragment shaders.
 
-Postprocessing also supports srgb-encoding out of the box, as well as WebGL2 MSAA (multi sample anti aliasing), which is react-postprocessing's default, you get high performance crisp results w/o jagged edges.
+Postprocessing also supports srgb-encoding out of the box, as well as WebGL2
+MSAA (multi sample anti aliasing), which is react-postprocessing's default, you
+get high performance crisp results w/o jagged edges.
 
-## What does it look like?
+#### What does it look like?
 
-Well, you can do pretty much anything, but here's an example combining a couple of effects ([live demo](https://codesandbox.io/s/vigorous-currying-3r6l2)).
+Here's an example combining a couple of effects
+([live demo](https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?)).
 
-<a href="https://codesandbox.io/s/vigorous-currying-3r6l2" target="_blank" rel="noopener">
-  <img src="control.jpg" alt="Bubbles Demo" />
+<a href="https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?" target="_blank" rel="noopener">
+  <img src="bubbles.jpg" alt="Bubbles Demo" />
 </a>
 
 ```jsx
 import React from 'react'
-import { EffectComposer, DepthOfField, Bloom, Noise, Vignette } from '@react-three/postprocessing'
+import { Bloom, DepthOfField, EffectComposer, Noise, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
 
 function App() {
@@ -55,3 +76,8 @@ function App() {
   )
 }
 ```
+
+## Documentation
+
+- [react-postprocessing docs](https://docs.pmnd.rs/react-postprocessing)
+- [postprocessing docs](https://pmndrs.github.io/postprocessing/public/docs/)
