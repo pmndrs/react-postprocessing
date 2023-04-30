@@ -140,54 +140,6 @@ Selection can be nested and group multiple object, higher up selection take prec
 </Select>
 ```
 
-#### Autofocus
-
-<p>
-  <a href="https://codesandbox.io/s/dfw6w4"><img width="20%" src="https://codesandbox.io/api/v1/sandboxes/dfw6w4/thumbnail.png" alt="Autofocus demo"/></a>
-</p>
-
-An auto-focus effect, that extends `<DepthOfField>`.
-
-```tsx
-export type AutofocusProps = typeof DepthOfField & {
-  target?: [number, number, number] // undefined
-  mouse?: boolean // false
-  debug?: number // undefined
-  manual?: boolean // false
-  smoothTime?: number // .25
-}
-```
-
-```tsx
-<EffectComposer>
-  <Autofocus />
-</EffectComposer>
-```
-
-Ref-api:
-
-```tsx
-type AutofocusApi = {
-  dofRef: RefObject<DepthOfFieldEffect>
-  hitpoint: THREE.Vector3
-  update: (delta: number, updateTarget: boolean) => void
-}
-```
-
-```tsx
-<Autofocus ref={autofocusRef} />
-```
-
-Associated with `manual` prop, you can for example, animate the DOF target yourself:
-
-```tsx
-useFrame((_, delta) => {
-  const api = autofocusRef.current
-  api.update(delta, false) // update hitpoint only
-  easing.damp3(api.dofRef.curent.target, api.hitpoint, 0.5, delta) // custom easing
-})
-```
-
 #### Selective bloom
 
 Bloom is selective by default, you control it not on the effect pass but on the materials by lifting their colors out of 0-1 range. a `luminanceThreshold` of 1 ensures that ootb nothing will glow, only the materials you pick. For this to work `toneMapped` has to be false on the materials, because it would otherwise clamp colors between 0 and 1 again.

@@ -1,0 +1,52 @@
+---
+title: Autofocus
+nav: 1
+---
+
+An auto-focus effect, that extends `<DepthOfField>`.
+
+Based on [ektogamat/AutoFocusDOF](https://github.com/ektogamat/AutoFocusDOF).
+
+```tsx
+export type AutofocusProps = typeof DepthOfField & {
+  target?: [number, number, number] // undefined
+  mouse?: boolean // false
+  debug?: number // undefined
+  manual?: boolean // false
+  smoothTime?: number // .25
+}
+```
+
+```tsx
+<EffectComposer>
+  <Autofocus />
+</EffectComposer>
+```
+
+Ref-api:
+
+```tsx
+type AutofocusApi = {
+  dofRef: RefObject<DepthOfFieldEffect>
+  hitpoint: THREE.Vector3
+  update: (delta: number, updateTarget: boolean) => void
+}
+```
+
+```tsx
+<Autofocus ref={autofocusRef} />
+```
+
+Associated with `manual` prop, you can for example, animate the DOF target yourself:
+
+```tsx
+useFrame((_, delta) => {
+  const api = autofocusRef.current
+  api.update(delta, false) // update hitpoint only
+  easing.damp3(api.dofRef.curent.target, api.hitpoint, 0.5, delta) // custom easing
+})
+```
+
+## Example
+
+<Codesandbox id="dfw6w4" />
