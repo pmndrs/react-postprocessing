@@ -30,5 +30,6 @@ export * from './effects/TiltShift2'
 export * from './effects/SSR'
 
 export * from './Selection'
+export * from './Autofocus'
 export * from './EffectComposer'
 export * from './util'
