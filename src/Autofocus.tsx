@@ -137,20 +137,21 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
 
     return (
       <>
-        {debug &&
-          createPortal(
-            <>
-              <mesh ref={hitpointRef}>
-                <sphereGeometry args={[debug, 16, 16]} />
-                <meshBasicMaterial color="#00ff00" opacity={1} transparent depthWrite={false} />
-              </mesh>
-              <mesh ref={targetRef}>
-                <sphereGeometry args={[debug / 2, 16, 16]} />
-                <meshBasicMaterial color="#00ff00" opacity={0.5} transparent depthWrite={false} />
-              </mesh>
-            </>,
-            scene
-          )}
+        {debug
+          ? createPortal(
+              <>
+                <mesh ref={hitpointRef}>
+                  <sphereGeometry args={[debug, 16, 16]} />
+                  <meshBasicMaterial color="#00ff00" opacity={1} transparent depthWrite={false} />
+                </mesh>
+                <mesh ref={targetRef}>
+                  <sphereGeometry args={[debug / 2, 16, 16]} />
+                  <meshBasicMaterial color="#00ff00" opacity={0.5} transparent depthWrite={false} />
+                </mesh>
+              </>,
+              scene
+            )
+          : null}
 
         <DepthOfField ref={dofRef} {...props} target={hitpoint} />
       </>
