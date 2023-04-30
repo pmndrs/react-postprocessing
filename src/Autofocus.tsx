@@ -10,9 +10,8 @@ import React, {
   RefObject,
 } from 'react'
 import { useThree, useFrame, createPortal } from '@react-three/fiber'
-import { CopyPass, DepthPickingPass } from 'postprocessing'
+import { CopyPass, DepthPickingPass, DepthOfFieldEffect } from 'postprocessing'
 import { DepthOfField, EffectComposerContext } from './index'
-import { DepthOfFieldEffect } from 'postprocessing'
 import { easing } from 'maath'
 
 export type AutofocusProps = typeof DepthOfField & {
@@ -43,15 +42,15 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
 
     // see: https://codesandbox.io/s/depthpickingpass-x130hg
     const [depthPickingPass] = useState(new DepthPickingPass())
+    const [copyPass] = useState(new CopyPass())
     useEffect(() => {
-      const copyPass = new CopyPass()
       composer.addPass(depthPickingPass)
       composer.addPass(copyPass)
       return () => {
-        composer.removePass(copyPass)
         composer.removePass(depthPickingPass)
+        composer.removePass(copyPass)
       }
-    }, [composer, depthPickingPass])
+    }, [composer, depthPickingPass, copyPass])
 
     const [hitpoint] = useState(new THREE.Vector3(0, 0, 0))
 
