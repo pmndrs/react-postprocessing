@@ -1,4 +1,4 @@
-import { DepthOfFieldEffect } from 'postprocessing'
+import { DepthOfFieldEffect, MaskFunction } from 'postprocessing'
 import { Ref, forwardRef, useMemo, useLayoutEffect, useContext } from 'react'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
 import { type DepthPackingStrategies, type Texture, Vector3 } from 'three'
@@ -20,7 +20,13 @@ export const DepthOfField = forwardRef(function DepthOfField(
 ) {
   const invalidate = useThree((state) => state.invalidate)
   const { camera } = useContext(EffectComposerContext)
-  const effect = useMemo(() => new DepthOfFieldEffect(camera, props), [camera, props])
+  const effect = useMemo(() => {
+    const effect = new DepthOfFieldEffect(camera, props)
+    // Temporary fix that restores DOF 6.21.3 behavior, everything since then lets shapes leak through the blur
+    const maskMaterial = (effect as any).maskPass.getFullscreenMaterial()
+    maskMaterial.maskFunction = MaskFunction.MULTIPLY_RGB_SET_ALPHA
+    return effect
+  }, [camera, props])
   useLayoutEffect(() => {
     if (target && typeof target !== 'number') {
       const vec: Vector3 =
