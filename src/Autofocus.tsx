@@ -37,7 +37,8 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
     const hitpointRef = useRef<THREE.Mesh>(null)
     const targetRef = useRef<THREE.Mesh>(null)
 
-    const { size, gl, scene } = useThree()
+    const scene = useThree(({ scene }) => scene)
+    const pointer = useThree(({ pointer }) => pointer)
     const { composer, camera } = useContext(EffectComposerContext)
 
     // see: https://codesandbox.io/s/depthpickingpass-x130hg
@@ -67,25 +68,6 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
       [ndc, depthPickingPass, camera]
     )
 
-    const [pointer] = useState(new THREE.Vector2())
-    useEffect(() => {
-      if (!followMouse) return
-
-      async function onPointermove(e: PointerEvent) {
-        const clientX = e.clientX - size.left
-        const clientY = e.clientY - size.top
-        const x = (clientX / size.width) * 2.0 - 1.0
-        const y = -(clientY / size.height) * 2.0 + 1.0
-
-        pointer.set(x, y)
-      }
-      gl.domElement.addEventListener('pointermove', onPointermove, {
-        passive: true,
-      })
-
-      return () => void gl.domElement.removeEventListener('pointermove', onPointermove)
-    }, [gl.domElement, hitpoint, size, followMouse, getHit, pointer])
-
     const update = useCallback(
       async (delta: number, updateTarget = true) => {
         // Update hitpoint
@@ -110,11 +92,9 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
     )
 
     useFrame(async (_, delta) => {
-      if (manual) return
-      update(delta)
-    })
-
-    useFrame(() => {
+      if (!manual) {
+        update(delta)
+      }
       if (hitpointRef.current) {
         hitpointRef.current.position.copy(hitpoint)
       }
