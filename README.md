@@ -1,6 +1,7 @@
 # react-postprocessing
 
 [![Version](https://img.shields.io/npm/v/@react-three/postprocessing?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
+[![Storybook](https://img.shields.io/static/v1?message=Storybook&style=flat&colorA=000000&colorB=000000&label=&logo=storybook&logoColor=ffffff)](https://pmndrs.github.io/react-postprocessing)
 [![Downloads](https://img.shields.io/npm/dt/@react-three/postprocessing.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
 [![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 
