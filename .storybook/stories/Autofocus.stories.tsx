@@ -2,11 +2,9 @@ import React, { memo } from 'react'
 import * as THREE from 'three'
 import type { Meta, StoryObj } from '@storybook/react'
 import { useGLTF, Center, Resize, AccumulativeShadows, RandomizedLight, Environment, Stats } from '@react-three/drei'
+
 import { Setup } from '../Setup'
-
-import { EffectComposer } from '../../src'
-
-import { Autofocus } from '../../src'
+import { EffectComposer, Autofocus } from '../../src'
 
 // More on how to set up stories at: https://storybook.js.org/docs/react/writing-stories/introduction
 const meta = {
