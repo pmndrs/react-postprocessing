@@ -74,8 +74,7 @@ export const Primary: Story = {
 }
 
 const Suzi = ({ children, ...props }) => {
-  console.log(import.meta.url)
-  const { nodes } = useGLTF('/suzi.gltf') as any
+  const { nodes } = useGLTF('suzi.gltf') as any
   return (
     <>
       <mesh castShadow receiveShadow geometry={nodes.Suzanne.geometry} {...props}>
