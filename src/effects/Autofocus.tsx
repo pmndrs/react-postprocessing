@@ -10,16 +10,22 @@ import React, {
   RefObject,
   useMemo,
 } from 'react'
-import { useThree, useFrame, createPortal } from '@react-three/fiber'
+import { useThree, useFrame, createPortal, Vector3 } from '@react-three/fiber'
 import { CopyPass, DepthPickingPass, DepthOfFieldEffect } from 'postprocessing'
-import { DepthOfField, EffectComposerContext } from '..'
 import { easing } from 'maath'
 
-export type AutofocusProps = typeof DepthOfField & {
-  target?: [number, number, number]
+import { DepthOfField } from './DepthOfField'
+import { EffectComposerContext } from '../EffectComposer'
+
+export type AutofocusProps = React.ComponentProps<typeof DepthOfField> & {
+  target?: Vector3
+  /** should the target follow the pointer */
   mouse?: boolean
+  /** size of the debug green point  */
   debug?: number
+  /** manual update */
   manual?: boolean
+  /** approximate time to reach the target */
   smoothTime?: number
 }
 
@@ -31,7 +37,7 @@ export type AutofocusApi = {
 
 export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
   (
-    { target = undefined, mouse: followMouse = false, debug = undefined, manual = false, smoothTime = 0, ...props },
+    { target = undefined, mouse: followMouse = false, debug = undefined, manual = false, smoothTime = 0.25, ...props },
     fref
   ) => {
     const dofRef = useRef<DepthOfFieldEffect>(null)
@@ -80,7 +86,7 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
       async (delta: number, updateTarget = true) => {
         // Update hitpoint
         if (target) {
-          hitpoint.set(...target)
+          hitpoint.set(...(target as [number, number, number]))
         } else {
           const { x, y } = followMouse ? pointer : { x: 0, y: 0 }
           const hit = await getHit(x, y)

@@ -42,7 +42,9 @@
     "test": "echo no tests yet",
     "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
     "typegen": "tsc --emitDeclarationOnly || true",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "maath": "^0.5.3",
@@ -51,10 +53,19 @@
     "three-stdlib": "^2.21.10"
   },
   "devDependencies": {
+    "@react-three/drei": "^9.68.2",
     "@react-three/fiber": "^8.13.0",
+    "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-typescript": "^11.1.0",
+    "@storybook/addon-essentials": "^7.0.10",
+    "@storybook/addon-interactions": "^7.0.10",
+    "@storybook/addon-links": "^7.0.10",
+    "@storybook/blocks": "^7.0.10",
+    "@storybook/react": "^7.0.10",
+    "@storybook/react-vite": "^7.0.11",
+    "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
     "@types/three": "^0.150.2",
@@ -67,6 +78,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.12",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
@@ -76,8 +88,10 @@
     "rollup": "^3.21.0",
     "rollup-plugin-filesize": "^10.0.0",
     "semantic-release": "^21.0.2",
+    "storybook": "^7.0.10",
     "three": "^0.151.3",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vite": "^4.3.5"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=8.0",
