@@ -21,38 +21,35 @@ export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
 let i = 0
 const components = new WeakMap<EffectConstructor, React.ExoticComponent<any> | string>()
 
-export const wrapEffect = <T extends EffectConstructor>(
-  effect: T,
-  defaults?: EffectProps<T>
- ) =>
+export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: EffectProps<T>) =>
   /* @__PURE__ */ React.forwardRef<T, EffectProps<T>>(function Effect(
-  { blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props },
-  ref
+    { blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props },
+    ref
   ) {
-  let Component = components.get(effect)
-  if (!Component) {
-  const key = `@react-three/postprocessing/${effect.name}-${i++}`
-  extend({ [key]: effect })
-  components.set(effect, (Component = key))
-  }
- 
-  const camera = useThree((state) => state.camera)
-  const args = React.useMemo(
-  () => [...((defaults?.args ?? []) as any[]), ...((props.args ?? [{ ...defaults, ...props }]) as any[])],
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  [JSON.stringify(props)]
-  )
- 
-  return (
-  <Component
-  camera={camera}
-  blendMode-blendFunction={blendFunction}
-  blendMode-opacity={opacity}
-  {...props}
-  ref={ref}
-  args={args}
-  />
-  )
+    let Component = components.get(effect)
+    if (!Component) {
+      const key = `@react-three/postprocessing/${effect.name}-${i++}`
+      extend({ [key]: effect })
+      components.set(effect, (Component = key))
+    }
+
+    const camera = useThree((state) => state.camera)
+    const args = React.useMemo(
+      () => [...((defaults?.args ?? []) as any[]), ...((props.args ?? [{ ...defaults, ...props }]) as any[])],
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [JSON.stringify(props)]
+    )
+
+    return (
+      <Component
+        camera={camera}
+        blendMode-blendFunction={blendFunction}
+        blendMode-opacity={opacity}
+        {...props}
+        ref={ref}
+        args={args}
+      />
+    )
   })
 
 export const useVector2 = (props: Record<string, unknown>, key: string): THREE.Vector2 => {

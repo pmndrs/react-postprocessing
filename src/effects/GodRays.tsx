@@ -1,8 +1,7 @@
 import { GodRaysEffect } from 'postprocessing'
-import React, { Ref, forwardRef, useMemo, useContext } from 'react'
+import React, { Ref, forwardRef, useMemo, useContext, useLayoutEffect } from 'react'
 import { Mesh, Points } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
-import { useLayoutEffect } from 'react'
 import { resolveRef } from '../util'
 
 type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
