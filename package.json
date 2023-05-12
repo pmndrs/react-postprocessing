@@ -53,11 +53,6 @@
     "three-stdlib": "^2.21.10"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
-    "@babel/plugin-transform-runtime": "^7.21.4",
-    "@babel/preset-env": "^7.21.5",
-    "@babel/preset-react": "^7.18.6",
-    "@babel/preset-typescript": "^7.21.5",
     "@react-three/fiber": "^8.13.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
@@ -68,7 +63,7 @@
     "@storybook/addon-links": "^7.0.10",
     "@storybook/blocks": "^7.0.10",
     "@storybook/react": "^7.0.10",
-    "@storybook/react-webpack5": "^7.0.10",
+    "@storybook/react-vite": "^7.0.11",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.1",
@@ -95,7 +90,8 @@
     "semantic-release": "^21.0.2",
     "storybook": "^7.0.10",
     "three": "^0.151.3",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "vite": "^4.3.5"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=8.0",
