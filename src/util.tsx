@@ -21,11 +21,8 @@ export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
 let i = 0
 const components = new WeakMap<EffectConstructor, React.ExoticComponent<any> | string>()
 
-export const wrapEffect = <T extends EffectConstructor, P extends EffectProps<T> = EffectProps<T>>(
-  effect: T,
-  defaults?: P
-) =>
-  /* @__PURE__ */ React.forwardRef<T, P>(function Effect(
+export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: EffectProps<T>) =>
+  /* @__PURE__ */ React.forwardRef<T, EffectProps<T>>(function Effect(
     { blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props },
     ref
   ) {
