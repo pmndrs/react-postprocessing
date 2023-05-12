@@ -17,10 +17,28 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           cache: 'yarn'
-      - id: main
-        run: |
+      - run: |
           yarn install --frozen-lockfile
           yarn release
+          yarn build-storybook
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./storybook-static
+
+  # See: https://github.com/actions/deploy-pages
+  deploy-job:
+    needs: release-job
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
