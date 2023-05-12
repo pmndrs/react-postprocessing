@@ -1,3 +1,4 @@
+export * from './effects/Autofocus'
 export * from './effects/Bloom'
 export * from './effects/BrightnessContrast'
 export * from './effects/ChromaticAberration'
@@ -30,6 +31,5 @@ export * from './effects/TiltShift2'
 export * from './effects/SSR'
 
 export * from './Selection'
-export * from './Autofocus'
 export * from './EffectComposer'
 export * from './util'

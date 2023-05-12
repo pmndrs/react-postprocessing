@@ -8,10 +8,11 @@ import React, {
   forwardRef,
   useImperativeHandle,
   RefObject,
+  useMemo,
 } from 'react'
 import { useThree, useFrame, createPortal } from '@react-three/fiber'
 import { CopyPass, DepthPickingPass, DepthOfFieldEffect } from 'postprocessing'
-import { DepthOfField, EffectComposerContext } from './index'
+import { DepthOfField, EffectComposerContext } from '..'
 import { easing } from 'maath'
 
 export type AutofocusProps = typeof DepthOfField & {
@@ -42,8 +43,8 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
     const { composer, camera } = useContext(EffectComposerContext)
 
     // see: https://codesandbox.io/s/depthpickingpass-x130hg
-    const [depthPickingPass] = useState(new DepthPickingPass())
-    const [copyPass] = useState(new CopyPass())
+    const [depthPickingPass] = useState(() => new DepthPickingPass())
+    const [copyPass] = useState(() => new CopyPass())
     useEffect(() => {
       composer.addPass(depthPickingPass)
       composer.addPass(copyPass)
@@ -53,9 +54,16 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
       }
     }, [composer, depthPickingPass, copyPass])
 
-    const [hitpoint] = useState(new THREE.Vector3(0, 0, 0))
+    useEffect(() => {
+      return () => {
+        depthPickingPass.dispose()
+        copyPass.dispose()
+      }
+    }, [depthPickingPass, copyPass])
 
-    const [ndc] = useState(new THREE.Vector3(0, 0, 0))
+    const [hitpoint] = useState(() => new THREE.Vector3(0, 0, 0))
+
+    const [ndc] = useState(() => new THREE.Vector3(0, 0, 0))
     const getHit = useCallback(
       async (x: number, y: number) => {
         ndc.x = x
@@ -104,8 +112,7 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
     })
 
     // Ref API
-    useImperativeHandle(
-      fref,
+    const api = useMemo<AutofocusApi>(
       () => ({
         dofRef,
         hitpoint,
@@ -113,6 +120,7 @@ export const Autofocus = forwardRef<AutofocusApi, AutofocusProps>(
       }),
       [hitpoint, update]
     )
+    useImperativeHandle(fref, () => api, [api])
 
     return (
       <>
