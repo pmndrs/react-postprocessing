@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Vector3 } from 'three'
 import { Canvas, Props as CanvasProps } from '@react-three/fiber'
 
-// import { OrbitControls } from '../src'
+import { CameraControls } from '@react-three/drei'
 
 type Props = React.PropsWithChildren<
   CanvasProps & {
@@ -30,7 +30,7 @@ export const Setup = ({
           <pointLight intensity={1} position={[0, 6, 0]} />
         </>
       )}
-      {/* {controls && <OrbitControls makeDefault />} */}
+      {controls && <CameraControls makeDefault />}
     </Canvas>
   </div>
 )
