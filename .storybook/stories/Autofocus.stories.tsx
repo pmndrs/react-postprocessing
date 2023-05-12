@@ -31,7 +31,7 @@ export const Primary: Story = {
         <sphereGeometry args={[0.5, 64, 64]} />
         <meshStandardMaterial color="#9d4b4b" />
       </mesh>
-      <mesh castShadow position={[1, 0, -5]}>
+      <mesh castShadow position={[1, 0, -3]}>
         <boxGeometry args={[1, 1, 1]} />
         <meshStandardMaterial color="#9d4b4b" />
       </mesh>
@@ -39,7 +39,7 @@ export const Primary: Story = {
       <gridHelper />
 
       <EffectComposer>
-        <Autofocus {...args} focusRange={0.001} bokehScale={18} />
+        <Autofocus {...args} />
       </EffectComposer>
     </>
   ),
@@ -47,5 +47,6 @@ export const Primary: Story = {
     mouse: true,
     debug: 0.04,
     bokehScale: 8,
+    focusRange: 0.001,
   },
 }
