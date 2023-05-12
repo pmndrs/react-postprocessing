@@ -12,8 +12,10 @@ import React, {
 } from 'react'
 import { useThree, useFrame, createPortal, Vector3 } from '@react-three/fiber'
 import { CopyPass, DepthPickingPass, DepthOfFieldEffect } from 'postprocessing'
-import { DepthOfField, EffectComposerContext } from '..'
 import { easing } from 'maath'
+
+import { DepthOfField } from './DepthOfField'
+import { EffectComposerContext } from '../EffectComposer'
 
 export type AutofocusProps = React.ComponentProps<typeof DepthOfField> & {
   target?: Vector3
