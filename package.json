@@ -55,7 +55,6 @@
   "devDependencies": {
     "@react-three/drei": "^9.68.2",
     "@react-three/fiber": "^8.13.0",
-    "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.1.0",
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@rollup/plugin-typescript": "^11.1.0",
