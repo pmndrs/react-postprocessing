@@ -44,7 +44,7 @@ export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: Ef
       <Component
         camera={camera}
         blendMode-blendFunction={blendFunction}
-        blendMode-opacity={opacity}
+        blendMode-opacity-value={opacity}
         {...props}
         ref={ref}
         args={args}
