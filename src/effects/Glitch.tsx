@@ -25,7 +25,7 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   const chromaticAberrationOffset = useVector2(props, 'chromaticAberrationOffset')
   const effect = useMemo(
     () => new GlitchEffect({ ...props, delay, duration, strength, chromaticAberrationOffset }),
-    [delay, duration, props, strength]
+    [delay, duration, props, strength, chromaticAberrationOffset]
   )
   useLayoutEffect(() => {
     effect.mode = active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
