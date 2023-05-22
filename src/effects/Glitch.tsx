@@ -22,6 +22,7 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   const delay = useVector2(props, 'delay')
   const duration = useVector2(props, 'duration')
   const strength = useVector2(props, 'strength')
+  const chromaticAberrationOffset = useVector2(props, 'chromaticAberrationOffset')
   const effect = useMemo(
     () => new GlitchEffect({ ...props, delay, duration, strength, chromaticAberrationOffset: new Vector2() }),
     [delay, duration, props, strength]
