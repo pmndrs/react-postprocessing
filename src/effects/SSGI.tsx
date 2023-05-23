@@ -28,12 +28,12 @@ export interface SSGIOptions {
   missedRays: boolean
 }
 
-class SSGIPass extends Pass {
+export class SSGIPass extends Pass {
   readonly velocityDepthNormalPass: VelocityDepthNormalPass
   readonly ssgiPass: EffectPass
   readonly traaPass: EffectPass
 
-  constructor(scene: THREE.Scene, camera: THREE.Camera, options: SSGIOptions = {} as SSGIOptions) {
+  constructor(scene: THREE.Scene, camera: THREE.Camera, options?: SSGIOptions) {
     super('SSGIPass', scene, camera)
 
     this.velocityDepthNormalPass = new VelocityDepthNormalPass(scene, camera)
