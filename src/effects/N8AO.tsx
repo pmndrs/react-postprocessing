@@ -1,3 +1,6 @@
+// From https://github.com/N8python/n8ao
+// https://twitter.com/N8Programs/status/1660996748485984261
+
 import { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
 import { N8AOPostPass } from 'n8ao'
