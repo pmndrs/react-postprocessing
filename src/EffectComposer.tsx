@@ -123,7 +123,7 @@ export const EffectComposer = React.memo(
       const group = useRef(null)
       const instance = useInstanceHandle(group)
       useLayoutEffect(() => {
-        let passes: Pass[] = []
+        const passes: Pass[] = []
 
         if (group.current && instance.current && composer) {
           const children = instance.current.objects as unknown[]
