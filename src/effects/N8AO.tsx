@@ -13,8 +13,8 @@ type N8AOProps = {
 }
 
 export const N8AO = forwardRef<N8AOPostPass, N8AOProps>((props, ref: Ref<N8AOPostPass>) => {
-  const { camera, scene, size } = useThree()
-  const effect = useMemo(() => new N8AOPostPass(scene, camera, size.width, size.height), [])
+  const { camera, scene } = useThree()
+  const effect = useMemo(() => new N8AOPostPass(scene, camera), [])
   useLayoutEffect(() => {
     Object.assign(effect.configuration, props)
   }, [props])
