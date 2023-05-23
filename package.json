@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "maath": "^0.5.3",
+    "n8ao": "^1.2.1",
     "postprocessing": "^6.30.2",
     "screen-space-reflections": "2.5.0",
     "three-stdlib": "^2.21.10"
