@@ -18,6 +18,7 @@ import {
   // @ts-ignore
   DepthDownsamplingPass,
   Effect,
+  Pass,
 } from 'postprocessing'
 import { isWebGL2Available } from 'three-stdlib'
 
@@ -122,16 +123,34 @@ export const EffectComposer = React.memo(
       const group = useRef(null)
       const instance = useInstanceHandle(group)
       useLayoutEffect(() => {
-        let effectPass: EffectPass
+        let passes: Pass[] = []
+
         if (group.current && instance.current && composer) {
-          effectPass = new EffectPass(camera, ...(instance.current.objects as unknown as Effect[]))
-          effectPass.renderToScreen = true
-          composer.addPass(effectPass)
+          const children = instance.current.objects as unknown[]
+
+          for (let i = 0; i < children.length; i++) {
+            const child = children[i]
+
+            if (child instanceof Effect) {
+              const effects: Effect[] = []
+              while (children[i] instanceof Effect) effects.push(children[i++] as Effect)
+              i--
+
+              const pass = new EffectPass(camera, ...effects)
+              passes.push(pass)
+            } else if (child instanceof Pass) {
+              passes.push(child)
+            }
+          }
+
+          for (const pass of passes) composer?.addPass(pass)
+
           if (normalPass) normalPass.enabled = true
           if (downSamplingPass) downSamplingPass.enabled = true
         }
+
         return () => {
-          if (effectPass) composer?.removePass(effectPass)
+          for (const pass of passes) composer?.removePass(pass)
           if (normalPass) normalPass.enabled = false
           if (downSamplingPass) downSamplingPass.enabled = false
         }
