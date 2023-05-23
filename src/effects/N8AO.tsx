@@ -18,7 +18,15 @@ type N8AOProps = {
 
 export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
   (
-    { quality, aoRadius, aoSamples, denoiseSamples, denoiseRadius, distanceFalloff, intensity },
+    {
+      quality,
+      aoRadius = 5,
+      aoSamples = 16,
+      denoiseSamples = 4,
+      denoiseRadius = 12,
+      distanceFalloff = 1,
+      intensity = 1,
+    },
     ref: Ref<N8AOPostPass>
   ) => {
     const { camera, scene } = useThree()
