@@ -10,13 +10,32 @@ type N8AOProps = {
   aoRadius?: number
   distanceFalloff?: number
   intensity?: number
+  quality?: 'performance' | 'low' | 'medium' | 'high' | 'ultra'
+  aoSamples?: number
+  denoiseSamples?: number
+  denoiseRadius?: number
 }
 
-export const N8AO = forwardRef<N8AOPostPass, N8AOProps>((props, ref: Ref<N8AOPostPass>) => {
-  const { camera, scene } = useThree()
-  const effect = useMemo(() => new N8AOPostPass(scene, camera), [])
-  useLayoutEffect(() => {
-    Object.assign(effect.configuration, props)
-  }, [props])
-  return <primitive ref={ref} object={effect} />
-})
+export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
+  (
+    { quality, aoRadius, aoSamples, denoiseSamples, denoiseRadius, distanceFalloff, intensity },
+    ref: Ref<N8AOPostPass>
+  ) => {
+    const { camera, scene } = useThree()
+    const effect = useMemo(() => new N8AOPostPass(scene, camera), [])
+    useLayoutEffect(() => {
+      Object.assign(effect.configuration, {
+        aoRadius,
+        distanceFalloff,
+        intensity,
+        aoSamples,
+        denoiseSamples,
+        denoiseRadius,
+      })
+    }, [aoRadius, distanceFalloff, intensity, aoSamples, denoiseSamples, denoiseRadius])
+    useLayoutEffect(() => {
+      if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
+    }, [quality])
+    return <primitive ref={ref} object={effect} />
+  }
+)
