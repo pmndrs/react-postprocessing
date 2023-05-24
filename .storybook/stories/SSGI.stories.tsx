@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { EffectComposer, SSGI as SSGIImpl, TRAA } from '../../src'
+import { EffectComposer, SSGI as SSGIImpl, TRAA, MotionBlur } from '../../src'
 import { Canvas } from '@react-three/fiber'
 import { Environment, useGLTF, OrbitControls } from '@react-three/drei'
 
@@ -28,6 +28,7 @@ export const SSGI: Story = {
       <EffectComposer disableNormalPass multisampling={0}>
         <SSGIImpl {...args} />
         <TRAA />
+        <MotionBlur />
       </EffectComposer>
       <Model />
       <directionalLight position={[217, 43, 76]} />

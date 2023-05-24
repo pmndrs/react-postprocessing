@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useMemo, useEffect, forwardRef, useContext } from 'react'
-import { Pass, EffectPass } from 'postprocessing'
+import { EffectPass } from 'postprocessing'
 // @ts-ignore
 import { SSGIEffect } from 'realism-effects'
 import { EffectComposerContext } from '../EffectComposer'
@@ -35,7 +35,7 @@ export class SSGIPass extends EffectPass {
   }
 }
 
-export interface SSGIProps extends SSGIOptions, Partial<Pass> {}
+export interface SSGIProps extends SSGIOptions, Partial<SSGIPass> {}
 
 export const SSGI = forwardRef<SSGIPass, SSGIOptions>(function SSGI(
   {

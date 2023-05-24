@@ -27,6 +27,7 @@ export * from './effects/LUT'
 export * from './effects/TiltShift'
 export * from './effects/TiltShift2'
 
+export * from './passes/MotionBlur'
 export * from './passes/N8AO'
 export * from './passes/SSGI'
 export * from './passes/SSR'

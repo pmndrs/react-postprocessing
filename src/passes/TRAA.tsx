@@ -12,7 +12,7 @@ export class TRAAPass extends EffectPass {
   }
 }
 
-export interface TRAAProps extends Partial<EffectPass> {}
+export interface TRAAProps extends Partial<TRAAPass> {}
 
 export const TRAA = forwardRef<TRAAPass, TRAAProps>(function TRAA(props, ref) {
   const { scene, camera } = useContext(EffectComposerContext)
