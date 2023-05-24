@@ -3,7 +3,7 @@ import { useMemo, useEffect, forwardRef, useContext } from 'react'
 import { Pass, EffectPass } from 'postprocessing'
 // @ts-ignore
 import { SSGIEffect } from 'realism-effects'
-import { EffectComposerContext } from '../../EffectComposer'
+import { EffectComposerContext } from '../EffectComposer'
 import { VelocityBuffer, useVelocityBuffer } from './useVelocityBuffer'
 
 export interface SSGIOptions {

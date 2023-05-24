@@ -3,7 +3,7 @@ import { useThree } from '@react-three/fiber'
 // @ts-ignore
 import { VelocityDepthNormalPass } from 'realism-effects'
 import { useMemo, useLayoutEffect, useContext } from 'react'
-import { EffectComposerContext } from '../../EffectComposer'
+import { EffectComposerContext } from '../EffectComposer'
 
 export type VelocityBuffer = VelocityDepthNormalPass
 

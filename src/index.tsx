@@ -27,13 +27,11 @@ export * from './effects/LUT'
 export * from './effects/TiltShift'
 export * from './effects/TiltShift2'
 
-export * from './effects/realism-effects/SSGI'
-export * from './effects/realism-effects/TRAA'
-export * from './effects/realism-effects/useVelocityBuffer'
-
-// This is not an effect pass
-export * from './effects/SSR'
-export * from './effects/N8AO'
+export * from './passes/N8AO'
+export * from './passes/SSGI'
+export * from './passes/SSR'
+export * from './passes/TRAA'
+export * from './passes/useVelocityBuffer'
 
 export * from './Selection'
 export * from './EffectComposer'

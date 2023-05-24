@@ -4,7 +4,7 @@ import { EffectPass } from 'postprocessing'
 // @ts-ignore
 import { TRAAEffect } from 'realism-effects'
 import { VelocityBuffer, useVelocityBuffer } from './useVelocityBuffer'
-import { EffectComposerContext } from '../../EffectComposer'
+import { EffectComposerContext } from '../EffectComposer'
 
 export class TRAAPass extends EffectPass {
   constructor(scene: THREE.Scene, camera: THREE.Camera, velocityBuffer: VelocityBuffer) {
