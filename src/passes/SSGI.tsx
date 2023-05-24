@@ -30,12 +30,17 @@ export interface SSGIOptions {
 }
 
 export class SSGIPass extends EffectPass {
-  constructor(scene: THREE.Scene, camera: THREE.Camera, velocityBuffer: VelocityBuffer, options?: SSGIOptions) {
+  constructor(
+    scene: THREE.Scene,
+    camera: THREE.Camera,
+    velocityBuffer: VelocityBuffer,
+    options?: Partial<SSGIOptions>
+  ) {
     super(camera, new SSGIEffect(scene, camera, velocityBuffer, options))
   }
 }
 
-export interface SSGIProps extends SSGIOptions, Partial<SSGIPass> {}
+export interface SSGIProps extends Partial<SSGIOptions>, Partial<SSGIPass> {}
 
 export const SSGI = forwardRef<SSGIPass, SSGIOptions>(function SSGI(
   {
