@@ -25,7 +25,7 @@ export const SSGI: Story = {
     <Canvas gl={{ antialias: false }} camera={{ fov: 35, position: [5, 3, 5] }}>
       <OrbitControls />
       <Environment preset="city" />
-      <EffectComposer>
+      <EffectComposer disableNormalPass multisampling={0}>
         <SSGIImpl {...args} />
         <TRAA />
       </EffectComposer>
