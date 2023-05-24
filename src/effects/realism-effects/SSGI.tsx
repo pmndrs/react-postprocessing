@@ -1,9 +1,10 @@
 import * as THREE from 'three'
-import { useMemo, useEffect, forwardRef } from 'react'
-import { useThree } from '@react-three/fiber'
+import { useMemo, useEffect, forwardRef, useContext } from 'react'
 import { Pass, EffectPass } from 'postprocessing'
 // @ts-ignore
-import { VelocityDepthNormalPass, SSGIEffect, TRAAEffect } from 'realism-effects'
+import { SSGIEffect } from 'realism-effects'
+import { EffectComposerContext } from '../../EffectComposer'
+import { VelocityBuffer, useVelocityBuffer } from './useVelocityBuffer'
 
 export interface SSGIOptions {
   distance: number
@@ -28,46 +29,13 @@ export interface SSGIOptions {
   missedRays: boolean
 }
 
-export class SSGIPass extends Pass {
-  readonly velocityDepthNormalPass: VelocityDepthNormalPass
-  readonly ssgiPass: EffectPass
-  readonly traaPass: EffectPass
-
-  constructor(scene: THREE.Scene, camera: THREE.Camera, options?: SSGIOptions) {
-    super('SSGIPass', scene, camera)
-
-    this.velocityDepthNormalPass = new VelocityDepthNormalPass(scene, camera)
-    this.ssgiPass = new EffectPass(camera, new SSGIEffect(scene, camera, this.velocityDepthNormalPass, options))
-    this.traaPass = new EffectPass(camera, new TRAAEffect(scene, camera, this.velocityDepthNormalPass))
-  }
-
-  initialize(renderer: THREE.WebGLRenderer, alpha: boolean, frameBufferType: number) {
-    this.velocityDepthNormalPass.initialize(renderer, alpha, frameBufferType)
-    this.ssgiPass.initialize(renderer, alpha, frameBufferType)
-    this.traaPass.initialize(renderer, alpha, frameBufferType)
-  }
-
-  setSize(width: number, height: number): void {
-    this.velocityDepthNormalPass.setSize(width, height)
-    this.ssgiPass.setSize(width, height)
-    this.traaPass.setSize(width, height)
-  }
-
-  render(
-    renderer: THREE.WebGLRenderer,
-    inputBuffer: THREE.WebGLRenderTarget | null,
-    outputBuffer: THREE.WebGLRenderTarget | null,
-    deltaTime?: number,
-    stencilTest?: boolean
-  ): void {
-    this.velocityDepthNormalPass.render(renderer, outputBuffer, inputBuffer, deltaTime, stencilTest)
-    this.ssgiPass.render(renderer, outputBuffer, inputBuffer, deltaTime, stencilTest)
-    this.traaPass.renderToScreen = this.renderToScreen
-    this.traaPass.render(renderer, inputBuffer, outputBuffer, deltaTime, stencilTest)
+export class SSGIPass extends EffectPass {
+  constructor(scene: THREE.Scene, camera: THREE.Camera, velocityBuffer: VelocityBuffer, options?: SSGIOptions) {
+    super(camera, new SSGIEffect(scene, camera, velocityBuffer, options))
   }
 }
 
-export interface SSGIProps extends SSGIOptions {}
+export interface SSGIProps extends SSGIOptions, Partial<Pass> {}
 
 export const SSGI = forwardRef<SSGIPass, SSGIOptions>(function SSGI(
   {
@@ -95,10 +63,11 @@ export const SSGI = forwardRef<SSGIPass, SSGIOptions>(function SSGI(
   },
   ref
 ) {
-  const { scene, camera } = useThree()
+  const velocityBuffer = useVelocityBuffer()
+  const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () =>
-      new SSGIPass(scene, camera, {
+      new SSGIPass(scene, camera, velocityBuffer, {
         distance,
         thickness,
         autoThickness,
@@ -123,6 +92,7 @@ export const SSGI = forwardRef<SSGIPass, SSGIOptions>(function SSGI(
     [
       scene,
       camera,
+      velocityBuffer,
       distance,
       thickness,
       autoThickness,

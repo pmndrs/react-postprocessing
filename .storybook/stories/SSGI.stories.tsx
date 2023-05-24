@@ -1,6 +1,6 @@
 import * as React from 'react'
 import type { Meta, StoryObj } from '@storybook/react'
-import { EffectComposer, SSGI as SSGIImpl } from '../../src'
+import { EffectComposer, SSGI as SSGIImpl, TRAA } from '../../src'
 import { Canvas } from '@react-three/fiber'
 import { Environment, useGLTF, OrbitControls } from '@react-three/drei'
 
@@ -27,6 +27,7 @@ export const SSGI: Story = {
       <Environment preset="city" />
       <EffectComposer>
         <SSGIImpl {...args} />
+        <TRAA />
       </EffectComposer>
       <Model />
       <directionalLight position={[217, 43, 76]} />
