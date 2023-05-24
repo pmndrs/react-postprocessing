@@ -7645,10 +7645,10 @@ mute-stream@~1.0.0:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-1.0.0.tgz#e31bd9fe62f0aed23520aa4324ea6671531e013e"
   integrity sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==
 
-n8ao@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.2.1.tgz#2c9688ffb8dc6b2364abda134d0498b33d903d97"
-  integrity sha512-Mc0JVk3ESA5keQO2hFqeiGJX0CJtEwRpGSR2cd4TZJs8by559ta+iY0A72rFzsfxRZmnMq8jVL7o1ucqNDp0bw==
+n8ao@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.3.1.tgz#03e4a06005a443fb187bf63ec241940e14a5c082"
+  integrity sha512-lwt88T/DjJbmIcZFT8y9mX4BpSR4n4+SnNaMB9+QZ0eupNlPfsD751bJn2DfDs3kkobzXrsyOP86EgUBJ2vODA==
 
 nanoid@^3.3.1, nanoid@^3.3.6:
   version "3.3.6"
@@ -8487,10 +8487,10 @@ postcss@^8.4.23:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@^6.30.2:
-  version "6.30.2"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.30.2.tgz#8cfb5561bfce63c983fae5d2cd8efa5bbd04fe6d"
-  integrity sha512-Vt77s5DkHyUOV4bmk10J46DHJLglBfIo9ARPI0o62UIAx9omANfuPJTKiLVoYlC1ApkV9y3ldBDipF3IldB7YA==
+postprocessing@^6.31.0:
+  version "6.31.0"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.31.0.tgz#0d3d0157bfe963d2a66a73ee16cfa81a99138419"
+  integrity sha512-h1g2KDVrTS6QB4AHP55opp8FYzq66jJHh4JIFCptaj283RUX1y/tPkv8FBB2oK4WYrdPgqvElnKrXZwgiLWeHQ==
 
 potpack@^1.0.1:
   version "1.0.2"

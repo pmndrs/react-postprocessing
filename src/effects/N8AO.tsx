@@ -4,7 +4,7 @@
 import { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
 import { N8AOPostPass } from 'n8ao'
-import { useThree } from '@react-three/fiber'
+import { useThree, ReactThreeFiber, applyProps } from '@react-three/fiber'
 
 type N8AOProps = {
   aoRadius?: number
@@ -14,6 +14,7 @@ type N8AOProps = {
   aoSamples?: number
   denoiseSamples?: number
   denoiseRadius?: number
+  color?: ReactThreeFiber.Color
 }
 
 export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
@@ -26,13 +27,15 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
       denoiseRadius = 12,
       distanceFalloff = 1,
       intensity = 1,
+      color,
     },
     ref: Ref<N8AOPostPass>
   ) => {
     const { camera, scene } = useThree()
     const effect = useMemo(() => new N8AOPostPass(scene, camera), [])
     useLayoutEffect(() => {
-      Object.assign(effect.configuration, {
+      applyProps(effect.configuration, {
+        color,
         aoRadius,
         distanceFalloff,
         intensity,
@@ -40,7 +43,7 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
         denoiseSamples,
         denoiseRadius,
       })
-    }, [aoRadius, distanceFalloff, intensity, aoSamples, denoiseSamples, denoiseRadius])
+    }, [color, aoRadius, distanceFalloff, intensity, aoSamples, denoiseSamples, denoiseRadius])
     useLayoutEffect(() => {
       if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
     }, [quality])
