@@ -13,7 +13,7 @@ export class MotionBlurPass extends EffectPass {
 
 export interface MotionBlurProps extends Partial<MotionBlurPass> {}
 
-export const MotionBlur = forwardRef<MotionBlurEffect, MotionBlurProps>(function MotionBlur(props, ref) {
+export const MotionBlur = forwardRef<MotionBlurPass, MotionBlurProps>(function MotionBlur(props, ref) {
   const velocityBuffer = useVelocityBuffer()
   const { camera } = useContext(EffectComposerContext)
   const effect = useMemo(() => new MotionBlurPass(camera, velocityBuffer), [camera, velocityBuffer])
