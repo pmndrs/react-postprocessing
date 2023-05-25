@@ -3,6 +3,7 @@ export * from './EffectComposer'
 export * from './util'
 
 export * from './effects/Autofocus'
+export * from './effects/LensFlare'
 export * from './effects/Bloom'
 export * from './effects/BrightnessContrast'
 export * from './effects/ChromaticAberration'
