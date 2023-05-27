@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     minify: false,
     target: 'es2018',
+    sourcemap: true,
     lib: {
       formats: ['es', 'cjs'],
       entry: 'src/index.tsx',
