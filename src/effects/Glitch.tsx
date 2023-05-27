@@ -1,3 +1,4 @@
+import { Vector2 } from 'three'
 import { GlitchEffect, GlitchMode } from 'postprocessing'
 import { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
@@ -21,9 +22,10 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   const delay = useVector2(props, 'delay')
   const duration = useVector2(props, 'duration')
   const strength = useVector2(props, 'strength')
+  const chromaticAberrationOffset = useVector2(props, 'chromaticAberrationOffset')
   const effect = useMemo(
-    () => new GlitchEffect({ ...props, delay, duration, strength }),
-    [delay, duration, props, strength]
+    () => new GlitchEffect({ ...props, delay, duration, strength, chromaticAberrationOffset }),
+    [delay, duration, props, strength, chromaticAberrationOffset]
   )
   useLayoutEffect(() => {
     effect.mode = active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
