@@ -114,6 +114,7 @@ export const EffectComposer = React.memo(
         (_, delta) => {
           if (enabled) {
             gl.autoClear = autoClear
+            if (stencilBuffer && !autoClear) gl.clearStencil()
             composer.render(delta)
           }
         },
