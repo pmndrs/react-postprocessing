@@ -113,8 +113,11 @@ export const EffectComposer = React.memo(
       useFrame(
         (_, delta) => {
           if (enabled) {
+            const currentAutoClear = gl.autoClear
             gl.autoClear = autoClear
+            if (stencilBuffer && !autoClear) gl.clearStencil()
             composer.render(delta)
+            gl.autoClear = currentAutoClear
           }
         },
         enabled ? renderPriority : 0

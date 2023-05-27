@@ -34,31 +34,27 @@
     ]
   },
   "scripts": {
-    "prebuild": "rimraf dist && yarn typegen",
-    "build": "rollup -c",
+    "prebuild": "rimraf dist",
+    "build": "vite build && tsc --emitDeclarationOnly",
     "prepare": "yarn build",
     "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
     "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
     "test": "echo no tests yet",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false --strict --jsx react",
-    "typegen": "tsc --emitDeclarationOnly || true",
+    "typecheck": "tsc --noEmit false --strict --jsx react",
     "release": "semantic-release",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
   "dependencies": {
     "maath": "^0.5.3",
-    "n8ao": "^1.2.1",
-    "postprocessing": "^6.30.2",
+    "n8ao": "^1.4.2",
+    "postprocessing": "^6.31.0",
     "screen-space-reflections": "^2.5.0",
-    "three-stdlib": "^2.21.10"
+    "three-stdlib": "^2.23.4"
   },
   "devDependencies": {
     "@react-three/drei": "^9.68.2",
     "@react-three/fiber": "^8.13.0",
-    "@rollup/plugin-commonjs": "^24.1.0",
-    "@rollup/plugin-node-resolve": "^15.0.2",
-    "@rollup/plugin-typescript": "^11.1.0",
     "@storybook/addon-essentials": "^7.0.10",
     "@storybook/addon-interactions": "^7.0.10",
     "@storybook/addon-links": "^7.0.10",
@@ -85,8 +81,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rimraf": "^5.0.0",
-    "rollup": "^3.21.0",
-    "rollup-plugin-filesize": "^10.0.0",
     "semantic-release": "^21.0.2",
     "storybook": "^7.0.10",
     "three": "^0.151.3",

@@ -61,7 +61,6 @@ export const Outline = forwardRef(function Outline(
       hiddenEdgeColor,
       kernelSize,
       patternTexture,
-      props,
       pulseSpeed,
       scene,
       visibleEdgeColor,
