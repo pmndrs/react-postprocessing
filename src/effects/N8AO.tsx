@@ -16,6 +16,7 @@ type N8AOProps = {
   denoiseRadius?: number
   color?: ReactThreeFiber.Color
   screenSpaceRadius?: boolean
+  renderMode?: 0 | 1 | 2 | 3 | 4
 }
 
 export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
@@ -30,6 +31,7 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
       distanceFalloff = 1,
       intensity = 1,
       color,
+      renderMode = 0,
     },
     ref: Ref<N8AOPostPass>
   ) => {
@@ -45,8 +47,19 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
         denoiseSamples,
         denoiseRadius,
         screenSpaceRadius,
+        renderMode,
       })
-    }, [screenSpaceRadius, color, aoRadius, distanceFalloff, intensity, aoSamples, denoiseSamples, denoiseRadius])
+    }, [
+      screenSpaceRadius,
+      color,
+      aoRadius,
+      distanceFalloff,
+      intensity,
+      aoSamples,
+      denoiseSamples,
+      denoiseRadius,
+      renderMode,
+    ])
     useLayoutEffect(() => {
       if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
     }, [quality])
