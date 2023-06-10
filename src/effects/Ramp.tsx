@@ -67,7 +67,7 @@ const RampShader = {
         vec4 inputBuff = texture2D(inputBuffer, uv);
 			  outputColor = mix(inputBuff, inputColor, rampAlpha);
       }
-		}`
+		}`,
 }
 
 export class RampEffect extends Effect {
