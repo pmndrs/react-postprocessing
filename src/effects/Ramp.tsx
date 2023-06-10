@@ -85,7 +85,7 @@ export class RampEffect extends Effect {
   } = {}) {
     super('RampEffect', RampShader.fragmentShader, {
       blendFunction,
-      uniforms: new Map([
+      uniforms: new Map<string, Uniform<number | number[]>>([
         ['rampType', new Uniform(rampType)],
         ['rampStart', new Uniform(rampStart)],
         ['rampEnd', new Uniform(rampEnd)],
@@ -94,8 +94,8 @@ export class RampEffect extends Effect {
         ['rampBias', new Uniform(rampBias)],
         ['rampGain', new Uniform(rampGain)],
         ['rampMask', new Uniform(rampMask)],
-        ['rampInvert', new Uniform(rampInvert)]
-      ])
+        ['rampInvert', new Uniform(rampInvert)],
+      ]),
     })
   }
 }
