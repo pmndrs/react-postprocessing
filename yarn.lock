@@ -7130,10 +7130,15 @@ lz-string@^1.4.4:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.5.0.tgz#c1ab50f77887b712621201ba9fd4e3a6ed099941"
   integrity sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ==
 
-maath@^0.5.2, maath@^0.5.3:
+maath@^0.5.2:
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/maath/-/maath-0.5.3.tgz#777a1f9b8463c6ffb199ea43406874a357c0cd58"
   integrity sha512-ut63A4zTd9abtpi+sOHW1fPWPtAFrjK0E17eAthx1k93W/T2cWLKV5oaswyotJVDvvW1EXSdokAqhK5KOu0Qdw==
+
+maath@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/maath/-/maath-0.6.0.tgz#7841d0fb95bbb37d19b08b7c5458ef70190950d2"
+  integrity sha512-dSb2xQuP7vDnaYqfoKzlApeRcR2xtN8/f7WV/TMAkBC8552TwTLtOO0JTcSygkYMjNDPoo6V01jTw/aPi4JrMw==
 
 magic-string@^0.27.0:
   version "0.27.0"
@@ -7547,10 +7552,10 @@ mute-stream@~1.0.0:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-1.0.0.tgz#e31bd9fe62f0aed23520aa4324ea6671531e013e"
   integrity sha512-avsJQhyd+680gKXyG/sQc0nXaC6rBkPOfyHYcFb9+hdkqQkR9bdnkJ0AMZhke0oesPqIO+mFFJ+IdBc7mst4IA==
 
-n8ao@^1.6.2:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.6.2.tgz#d2e309c2cf056044ec2898d58580a97b72472ba2"
-  integrity sha512-nmdN9jo1z97XDOts2j1sdziOSvyjdTY6jcH6Z6JTcD3Tdsl3NB5VzJiGAXyljzywm9orHvOiKlWUTRSP4HqNDg==
+n8ao@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/n8ao/-/n8ao-1.6.6.tgz#d444b3778ca05f48a3cc9b1d43d8847d86f98c2b"
+  integrity sha512-sOu+wsJzrxd3ZMDQBVbzTt8Z3d8sQvdkZgt5top9ysVbvs1a0lpFGYxGPCxUW+rJfD9Y/QrTYn9IfW7AOqGqvw==
 
 nanoid@^3.3.1, nanoid@^3.3.6:
   version "3.3.6"
@@ -8389,10 +8394,10 @@ postcss@^8.4.23:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@^6.31.0:
-  version "6.31.0"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.31.0.tgz#0d3d0157bfe963d2a66a73ee16cfa81a99138419"
-  integrity sha512-h1g2KDVrTS6QB4AHP55opp8FYzq66jJHh4JIFCptaj283RUX1y/tPkv8FBB2oK4WYrdPgqvElnKrXZwgiLWeHQ==
+postprocessing@^6.32.1:
+  version "6.32.1"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.32.1.tgz#a91fa4101246620e12113cded7028d9e4b504845"
+  integrity sha512-GiUv5vN/QCWnPJ3DdYPYn/4V1amps94T/0jFPSUL40KfaLCkfE9yPudzTtJJQjs168QNpwkmnvYF9RcP3HiAWA==
 
 potpack@^1.0.1:
   version "1.0.2"
