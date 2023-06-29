@@ -49,6 +49,7 @@
     "maath": "^0.6.0",
     "n8ao": "^1.6.6",
     "postprocessing": "^6.32.1",
+    "realism-effects": "^1.1.2",
     "screen-space-reflections": "^2.5.0",
     "three-stdlib": "^2.23.4"
   },

@@ -8854,6 +8854,11 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
+realism-effects@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/realism-effects/-/realism-effects-1.1.2.tgz#14b844b45267b1afe661ad9b31251a63b0429fdd"
+  integrity sha512-dHI++mxZNYJ/k8UO+TUE/PHiNiZcUSkrNlSEwVT48c4d4PHjSz9sjdkH2QlzbmOaI4wYJEmcc9VzI6BZNgpx1A==
+
 recast@^0.21.0:
   version "0.21.5"
   resolved "https://registry.yarnpkg.com/recast/-/recast-0.21.5.tgz#e8cd22bb51bcd6130e54f87955d33a2b2e57b495"

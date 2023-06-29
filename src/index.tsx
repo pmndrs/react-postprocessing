@@ -1,7 +1,3 @@
-export * from './Selection'
-export * from './EffectComposer'
-export * from './util'
-
 export * from './effects/Autofocus'
 export * from './effects/Bloom'
 export * from './effects/BrightnessContrast'
@@ -33,6 +29,14 @@ export * from './effects/TiltShift'
 export * from './effects/TiltShift2'
 export * from './effects/ASCII'
 
-// These are not effect passes
-export * from './effects/SSR'
-export * from './effects/N8AO'
+export * from './passes/HBAO'
+export * from './passes/MotionBlur'
+export * from './passes/N8AO'
+export * from './passes/SSGI'
+export * from './passes/SSR'
+export * from './passes/TRAA'
+export * from './passes/useVelocityBuffer'
+
+export * from './Selection'
+export * from './EffectComposer'
+export * from './util'
