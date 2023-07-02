@@ -1,8 +1,8 @@
 import React, { Ref, forwardRef, useLayoutEffect, useEffect, useContext, useMemo } from 'react'
 /* @ts-ignore */
-import { SSREffect } from 'screen-space-reflections'
-import { EffectComposerContext } from '../EffectComposer'
-import { selectionContext } from '../Selection'
+import { SSREffect } from './screen-space-reflections'
+import { EffectComposerContext } from '../../EffectComposer'
+import { selectionContext } from '../../Selection'
 import { useThree } from '@react-three/fiber'
 
 // first two args are camera and texture
