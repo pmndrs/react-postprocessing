@@ -26,14 +26,18 @@ export const DepthOfField = forwardRef(function DepthOfField(
     const maskMaterial = (effect as any).maskPass.getFullscreenMaterial()
     maskMaterial.maskFunction = MaskFunction.MULTIPLY_RGB_SET_ALPHA
     return effect
+  }, [])
+  const depthTarget = useMemo(() => new Vector3(), [])
+  useLayoutEffect(() => {
+    invalidate()
   }, [camera, props])
   useLayoutEffect(() => {
-    if (target && typeof target !== 'number') {
-      const vec: Vector3 =
-        target instanceof Vector3
-          ? new Vector3().set(target.x, target.y, target.z)
-          : new Vector3().set(target[0], target[1], target[2])
-      effect.target = vec
+    if (target) {
+      if (typeof target === 'number') depthTarget.set(target, target, target)
+      else if (target.isVector3) depthTarget.copy(target)
+      else depthTarget.set(target[0], target[1], target[2])
+
+      effect.target = depthTarget
     }
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing as DepthPackingStrategies)
     invalidate()
