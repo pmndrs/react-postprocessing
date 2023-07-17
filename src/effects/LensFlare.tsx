@@ -1,14 +1,14 @@
 // Created by Anderson Mancini 2023
 // React Three Fiber Ultimate LensFlare
 // To be used Effect together with react-three/postprocessing
-import { useFrame, useThree } from '@react-three/fiber'
-import { useTexture } from '@react-three/drei'
-import { easing } from 'maath'
-import { BlendFunction, Effect } from 'postprocessing'
-import { useRef, useMemo, useEffect, forwardRef, useLayoutEffect } from 'react'
-import { Uniform, Color, Vector3 } from 'three'
 
-import { wrapEffect } from '../util'
+import * as THREE from 'three'
+import { useMemo, useEffect, forwardRef, useState, useContext } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
+import { BlendFunction, Effect } from 'postprocessing'
+import { easing } from 'maath'
+
+import { EffectComposerContext } from '../EffectComposer'
 
 const LensFlareShader = {
   fragmentShader: /* glsl */ `
@@ -71,7 +71,7 @@ export class LensFlareEffect extends Effect {
     flareShape = 0.01,
     animated = true,
     anamorphic = false,
-    colorGain = new Color(70, 70, 70),
+    colorGain = new THREE.Color(70, 70, 70),
     lensDirtTexture = null,
     haloScale = 0.5,
     secondaryGhosts = true,
@@ -82,31 +82,31 @@ export class LensFlareEffect extends Effect {
   } = {}) {
     super('LensFlareEffect', LensFlareShader.fragmentShader, {
       blendFunction,
-      uniforms: new Map<string, Uniform>([
-        ['enabled', new Uniform(enabled)],
-        ['glareSize', new Uniform(glareSize)],
-        ['lensPosition', new Uniform(lensPosition)],
-        ['iTime', new Uniform(0)],
-        ['iResolution', new Uniform(iResolution)],
-        ['starPoints', new Uniform(starPoints)],
-        ['flareSize', new Uniform(flareSize)],
-        ['flareSpeed', new Uniform(flareSpeed)],
-        ['flareShape', new Uniform(flareShape)],
-        ['animated', new Uniform(animated)],
-        ['anamorphic', new Uniform(anamorphic)],
-        ['colorGain', new Uniform(colorGain)],
-        ['lensDirtTexture', new Uniform(lensDirtTexture)],
-        ['haloScale', new Uniform(haloScale)],
-        ['secondaryGhosts', new Uniform(secondaryGhosts)],
-        ['aditionalStreaks', new Uniform(aditionalStreaks)],
-        ['ghostScale', new Uniform(ghostScale)],
-        ['starBurst', new Uniform(starBurst)],
-        ['opacity', new Uniform(opacity)],
+      uniforms: new Map<string, THREE.Uniform>([
+        ['enabled', new THREE.Uniform(enabled)],
+        ['glareSize', new THREE.Uniform(glareSize)],
+        ['lensPosition', new THREE.Uniform(lensPosition)],
+        ['iTime', new THREE.Uniform(0)],
+        ['iResolution', new THREE.Uniform(iResolution)],
+        ['starPoints', new THREE.Uniform(starPoints)],
+        ['flareSize', new THREE.Uniform(flareSize)],
+        ['flareSpeed', new THREE.Uniform(flareSpeed)],
+        ['flareShape', new THREE.Uniform(flareShape)],
+        ['animated', new THREE.Uniform(animated)],
+        ['anamorphic', new THREE.Uniform(anamorphic)],
+        ['colorGain', new THREE.Uniform(colorGain)],
+        ['lensDirtTexture', new THREE.Uniform(lensDirtTexture)],
+        ['haloScale', new THREE.Uniform(haloScale)],
+        ['secondaryGhosts', new THREE.Uniform(secondaryGhosts)],
+        ['aditionalStreaks', new THREE.Uniform(aditionalStreaks)],
+        ['ghostScale', new THREE.Uniform(ghostScale)],
+        ['starBurst', new THREE.Uniform(starBurst)],
+        ['opacity', new THREE.Uniform(opacity)],
       ]),
     })
   }
 
-  override update(_renderer: any, _inputBuffer: any, deltaTime: number) {
+  update(_renderer: any, _inputBuffer: any, deltaTime: number) {
     const iTime = this.uniforms.get('iTime')
     if (iTime) {
       iTime.value += deltaTime
@@ -114,149 +114,74 @@ export class LensFlareEffect extends Effect {
   }
 }
 
-export function LensFlare({
-  position = { x: -25, y: 6, z: -60 },
-  blendFunction = BlendFunction.NORMAL,
-  glareSize = 0.35,
-  followMouse = false,
-  starPoints = 6.0,
-  flareSize = 0.005,
-  flareSpeed = 0.3,
-  flareShape = 0.02,
-  animated = true,
-  anamorphic = false,
-  colorGain = new Color(56, 22, 11),
-  dirtTextureFile = 'https://i.ibb.co/c3x4dBy/lens-Dirt-Texture.jpg',
-  haloScale = 0.5,
-  secondaryGhosts = true,
-  aditionalStreaks = true,
-  ghostScale = 0.5,
-  starBurst = true,
-  enabled = true,
-  opacity = 1.0,
-}) {
-  const LensFlare = wrapEffect(LensFlareEffect)
-  const lensRef = useRef<typeof LensFlare>()
+type LensFlareProps = ConstructorParameters<typeof LensFlareEffect>[0] & {
+  position?: THREE.Vector3
+  followMouse?: boolean
+}
 
-  const screenPosition = new Vector3(position.x, position.y, position.z)
-  let flarePosition = new Vector3()
+export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
+  ({ position = new THREE.Vector3(-25, 6, -60), followMouse = false, ...props }, ref) => {
+    const viewport = useThree(({ viewport }) => viewport)
+    const raycaster = useThree(({ raycaster }) => raycaster)
+    const pointer = useThree(({ pointer }) => pointer)
+    const { scene, camera } = useContext(EffectComposerContext)
 
-  const { viewport, raycaster } = useThree()
-  const lensDirtTexture = useTexture(dirtTextureFile)
+    const [projectedPosition] = useState(() => new THREE.Vector3())
+    const [mouse2d] = useState(() => new THREE.Vector2())
 
-  let projectedPosition
+    const effect = useMemo(() => new LensFlareEffect(props), [props])
 
-  useFrame(({ scene, mouse, camera }, delta) => {
-    if (lensRef.current) {
+    useFrame((_, delta) => {
+      const uLensPosition = effect.uniforms.get('lensPosition')
+      const uOpacity = effect.uniforms.get('opacity')
+      if (!uLensPosition || !uOpacity) return
+
+      let target = 1
+
       if (followMouse) {
-        lensRef.current.uniforms.get('lensPosition').value.x = mouse.x
-        lensRef.current.uniforms.get('lensPosition').value.y = mouse.y
-        easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 0.0, 0.07, delta)
+        uLensPosition.value.x = pointer.x
+        uLensPosition.value.y = pointer.y
+        target = 0
       } else {
-        projectedPosition = screenPosition.clone()
-        projectedPosition.project(camera)
+        projectedPosition.copy(position).project(camera)
+        if (projectedPosition.z > 1) return
 
-        flarePosition.set(projectedPosition.x, projectedPosition.y, projectedPosition.z)
+        uLensPosition.value.x = projectedPosition.x
+        uLensPosition.value.y = projectedPosition.y
 
-        if (flarePosition.z > 1) return
-
-        raycaster.setFromCamera(projectedPosition, camera)
+        mouse2d.set(projectedPosition.x, projectedPosition.y)
+        raycaster.setFromCamera(mouse2d, camera)
         const intersects = raycaster.intersectObjects(scene.children, true)
-
-        if (intersects[0]) {
-          if (intersects[0].object.userData && intersects[0].object.userData.lensflare === 'no-occlusion') {
-            easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 0.0, 0.07, delta)
-          } else {
-            //Check for MeshTransmissionMaterial
-            if (intersects[0].object.material.uniforms) {
-              if (intersects[0].object.material.uniforms._transmission) {
-                if (intersects[0].object.material.uniforms._transmission.value > 0.2) {
-                  easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 0.2, 0.07, delta)
-                }
-              }
-            } else {
-              easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 1.0, 0.07, delta)
-            }
-
-            //Check for MeshPhysicalMaterial with transmission setting
-            if (intersects[0].object.material._transmission && intersects[0].object.material._transmission > 0.2) {
-              easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 0.2, 0.07, delta)
-            } else {
-              easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 1.0, 0.07, delta)
-            }
-
-            //Check for OtherMaterials with transparent parameter
-            if (intersects[0].object.material.transparent) {
-              easing.damp(
-                lensRef.current.uniforms.get('opacity'),
-                'value',
-                intersects[0].object.material.opacity,
-                0.07,
-                delta
-              )
-            } else {
-              easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 1.0, 0.07, delta)
+        const object = intersects[0].object
+        if (object) {
+          if (object.userData?.lensflare === 'no-occlusion') {
+            target = 0
+          } else if (object instanceof THREE.Mesh) {
+            if (object.material.uniforms?._transmission?.value > 0.2) {
+              //Check for MeshTransmissionMaterial
+              target = 0.2
+            } else if (object.material._transmission && object.material._transmission > 0.2) {
+              //Check for MeshPhysicalMaterial with transmission setting
+              target = 0.2
+            } else if (object.material.transparent) {
+              // Check for OtherMaterials with transparent parameter
+              target = object.material.opacity
             }
           }
-        } else {
-          easing.damp(lensRef.current.uniforms.get('opacity'), 'value', 0.0, 0.07, delta)
         }
-
-        lensRef.current.uniforms.get('lensPosition').value.x = flarePosition.x
-        lensRef.current.uniforms.get('lensPosition').value.y = flarePosition.y
       }
-    }
-  })
 
-  useEffect(() => {
-    if (lensRef.current) {
-      lensRef.current.uniforms.get('iResolution').value.x = viewport.width
-      lensRef.current.uniforms.get('iResolution').value.y = viewport.height
-    }
-  }, [viewport])
+      easing.damp(uOpacity, 'value', target, 0.07, delta)
+    })
 
-  return useMemo(
-    () => (
-      <LensFlare
-        ref={lensRef}
-        iResolution={{ x: viewport.width, y: viewport.height }}
-        blendFunction={blendFunction}
-        lensDirtTexture={lensDirtTexture}
-        glareSize={glareSize}
-        starPoints={starPoints}
-        flareSize={flareSize}
-        flareSpeed={flareSpeed}
-        flareShape={flareShape}
-        animated={animated}
-        anamorphic={anamorphic}
-        colorGain={colorGain}
-        haloScale={haloScale}
-        secondaryGhosts={secondaryGhosts}
-        aditionalStreaks={aditionalStreaks}
-        ghostScale={ghostScale}
-        starBurst={starBurst}
-        enabled={enabled}
-        opacity={opacity}
-      />
-    ),
+    useEffect(() => {
+      const iResolution = effect.uniforms.get('iResolution')
+      if (iResolution) {
+        iResolution.value.x = viewport.width
+        iResolution.value.y = viewport.height
+      }
+    }, [effect, viewport])
 
-    [
-      glareSize,
-      blendFunction,
-      starPoints,
-      flareSize,
-      flareSpeed,
-      flareShape,
-      animated,
-      anamorphic,
-      colorGain,
-      haloScale,
-      secondaryGhosts,
-      aditionalStreaks,
-      ghostScale,
-      starBurst,
-      enabled,
-      opacity,
-    ]
-  )
-}
+    return <primitive ref={ref} object={effect} dispose={null} />
+  }
+)

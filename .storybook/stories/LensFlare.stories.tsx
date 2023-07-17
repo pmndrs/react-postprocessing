@@ -2,17 +2,7 @@ import React, { memo } from 'react'
 import * as THREE from 'three'
 import type { Meta, StoryObj } from '@storybook/react'
 import { BackSide } from 'three'
-import {
-  useGLTF,
-  Center,
-  Resize,
-  AccumulativeShadows,
-  RandomizedLight,
-  Environment,
-  Stats,
-  Box,
-  useTexture,
-} from '@react-three/drei'
+import { Box, useTexture } from '@react-three/drei'
 
 import { Setup } from '../Setup'
 import { EffectComposer, LensFlare, Vignette, Bloom } from '../../src'
@@ -63,9 +53,7 @@ export const Primary: Story = {
       <SkyBox />
 
       <EffectComposer multisampling={0} disableNormalPass>
-        <Vignette />
-        <Bloom mipmapBlur radius={0.9} luminanceThreshold={0.966} intensity={2} levels={4} />
-        <LensFlare {...args} dirtTextureFile={'/lensDirtTexture.png'} />
+        <LensFlare {...args} />
       </EffectComposer>
     </>
   ),
