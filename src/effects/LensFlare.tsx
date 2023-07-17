@@ -72,7 +72,7 @@ export class LensFlareEffect extends Effect {
     animated = true,
     anamorphic = false,
     colorGain = new THREE.Color(70, 70, 70),
-    lensDirtTexture = null,
+    lensDirtTexture = null as THREE.Texture | null,
     haloScale = 0.5,
     secondaryGhosts = true,
     aditionalStreaks = true,
@@ -152,7 +152,7 @@ export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
         mouse2d.set(projectedPosition.x, projectedPosition.y)
         raycaster.setFromCamera(mouse2d, camera)
         const intersects = raycaster.intersectObjects(scene.children, true)
-        const object = intersects[0].object
+        const { object } = intersects[0]
         if (object) {
           if (object.userData?.lensflare === 'no-occlusion') {
             target = 0

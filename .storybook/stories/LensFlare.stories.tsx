@@ -59,3 +59,28 @@ export const Primary: Story = {
   ),
   args: {},
 }
+
+function DirtLensFlare(props) {
+  const texture = useTexture('/lensDirtTexture.png')
+
+  return <LensFlare {...props} lensDirtTexture={texture} />
+}
+
+export const Secondary: Story = {
+  render: (args) => (
+    <>
+      <color attach="background" args={['#303035']} />
+
+      <directionalLight intensity={3} position={[-25, 60, -60]} />
+
+      <Box />
+
+      <SkyBox />
+
+      <EffectComposer multisampling={0} disableNormalPass>
+        <DirtLensFlare {...args} />
+      </EffectComposer>
+    </>
+  ),
+  args: {},
+}
