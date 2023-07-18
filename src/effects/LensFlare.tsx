@@ -71,14 +71,14 @@ export class LensFlareEffect extends Effect {
     flareShape = 0.01,
     animated = true,
     anamorphic = false,
-    colorGain = new THREE.Color(70, 70, 70),
+    colorGain = new THREE.Color(20, 20, 20),
     lensDirtTexture = null as THREE.Texture | null,
     haloScale = 0.5,
     secondaryGhosts = true,
     aditionalStreaks = true,
     ghostScale = 0.0,
     opacity = 1.0,
-    starBurst = true,
+    starBurst = false,
   } = {}) {
     super('LensFlareEffect', LensFlareShader.fragmentShader, {
       blendFunction,
@@ -117,10 +117,11 @@ export class LensFlareEffect extends Effect {
 type LensFlareProps = ConstructorParameters<typeof LensFlareEffect>[0] & {
   position?: THREE.Vector3
   followMouse?: boolean
+  smoothTime?: number
 }
 
 export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
-  ({ position = new THREE.Vector3(-25, 6, -60), followMouse = false, ...props }, ref) => {
+  ({ position = new THREE.Vector3(-25, 6, -60), followMouse = false, smoothTime = 0.07, ...props }, ref) => {
     const viewport = useThree(({ viewport }) => viewport)
     const raycaster = useThree(({ raycaster }) => raycaster)
     const pointer = useThree(({ pointer }) => pointer)
@@ -171,7 +172,7 @@ export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
         }
       }
 
-      easing.damp(uOpacity, 'value', target, 0.07, delta)
+      easing.damp(uOpacity, 'value', target, smoothTime, delta)
     })
 
     useEffect(() => {

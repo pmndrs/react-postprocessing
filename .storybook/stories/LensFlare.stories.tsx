@@ -82,5 +82,5 @@ export const Secondary: Story = {
       </EffectComposer>
     </>
   ),
-  args: {},
+  args: { starBurst: true },
 }
