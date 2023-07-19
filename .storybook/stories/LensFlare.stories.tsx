@@ -8,7 +8,7 @@ import { Setup } from '../Setup'
 import { EffectComposer, LensFlare, Vignette, Bloom } from '../../src'
 
 function SkyBox() {
-  const texture = useTexture('/digital_painting_golden_hour_sunset.jpg')
+  const texture = useTexture('digital_painting_golden_hour_sunset.jpg')
 
   return (
     <mesh userData={{ lensflare: 'no-occlusion' }} scale={[-1, 1, 1]} castShadow={false} receiveShadow={false}>
@@ -61,7 +61,7 @@ export const Primary: Story = {
 }
 
 function DirtLensFlare(props) {
-  const texture = useTexture('/lensDirtTexture.png')
+  const texture = useTexture('lensDirtTexture.png')
 
   return <LensFlare {...props} lensDirtTexture={texture} />
 }
