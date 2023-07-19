@@ -5,7 +5,7 @@ import { BackSide } from 'three'
 import { Box, useTexture } from '@react-three/drei'
 
 import { Setup } from '../Setup'
-import { EffectComposer, LensFlare, Vignette, Bloom } from '../../src'
+import { EffectComposer, LensFlare, Vignette, Bloom, BrightnessContrast } from '../../src'
 
 function SkyBox() {
   const texture = useTexture('/digital_painting_golden_hour_sunset.jpg')
@@ -54,10 +54,12 @@ export const Primary: Story = {
 
       <EffectComposer multisampling={0} disableNormalPass>
         <LensFlare {...args} />
+        <BrightnessContrast contrast={0.2} />
+        <Vignette />
       </EffectComposer>
     </>
   ),
-  args: {},
+  args: { colorGain: new THREE.Color(56, 21, 9) },
 }
 
 function DirtLensFlare(props) {
