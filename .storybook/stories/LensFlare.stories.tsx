@@ -81,8 +81,10 @@ export const Secondary: Story = {
 
       <EffectComposer multisampling={0} disableNormalPass>
         <DirtLensFlare {...args} />
+        <BrightnessContrast contrast={0.2} />
+        <Vignette />
       </EffectComposer>
     </>
   ),
-  args: { starBurst: true },
+  args: { starBurst: true, colorGain: new THREE.Color(56, 21, 9) },
 }
