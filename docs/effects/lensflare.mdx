@@ -13,22 +13,26 @@ import { LensFlare } from '@react-three/postprocessing'
 return <LensFlare />
 ```
 
-#### Ignoring occlusion on some objects
+## Ignoring occlusion on some objects
 
 To disable the occlusion effect, simply add `userData={{ lensflare: 'no-occlusion' }}` to your object/mesh props.
 
-#### Improving performance
+## Improving performance
 
 Use bvh `<bvh><Scene></bvh>` to enhance the internal raycaster performance.
 
-#### Limitations
+## Limitations
 
 The Ultimate Lens Flare leverages the raycaster to examine the material type of objects and determine if they are `MeshTransmissionMaterial` or `MeshPhysicalMaterial`. It checks for the transmission parameter to identify glass-like materials. Therefore, for an object to behave like glass, its material should have either `transmission = 1` or `transparent = true` and `opacity = NUMBER`. The effect automatically interprets the opacity `NUMBER` value to determine the brightness of the flare.
 
-#### Credits
+## Credits
 
 - https://www.shadertoy.com/view/4sK3W3
 - https://www.shadertoy.com/view/4sX3Rs
 - https://www.shadertoy.com/view/dllSRX
 - https://www.shadertoy.com/view/Xlc3D2
 - https://www.shadertoy.com/view/XtKfRV
+
+## Example
+
+<Codesandbox id="5ydkm4" />
