@@ -398,28 +398,69 @@ const LensFlareShader = {
 `,
 }
 
+type LensFlareEffectOptions = {
+  /** The blend function of this effect */
+  blendFunction: BlendFunction
+  /** Boolean to enable/disable the effect */
+  enabled: boolean
+  /** The glare size */
+  glareSize: number
+  /** The position of the lens flare in 3d space */
+  lensPosition: THREE.Vector2
+  /** Effect resolution */
+  screenRes: THREE.Vector2
+  /** The number of points for the star */
+  starPoints: number
+  /** The flare side */
+  flareSize: number
+  /** The flare animation speed */
+  flareSpeed: number
+  /** Changes the appearance to anamorphic */
+  flareShape: number
+  /** Animated flare */
+  animated: boolean
+  /** Set the appearance to full anamorphic */
+  anamorphic: boolean
+  /** Set the color gain for the lens flare. Must be a THREE.Color in RBG format */
+  colorGain: THREE.Color
+  /** Texture to be used as color dirt for starburst effect */
+  lensDirtTexture: THREE.Texture | null
+  /** The halo scale */
+  haloScale: number
+  /** Option to enable/disable secondary ghosts */
+  secondaryGhosts: boolean
+  /** Option to enable/disable aditional streaks */
+  aditionalStreaks: boolean
+  /** Option to enable/disable secondary ghosts */
+  ghostScale: number
+  /** TODO The opacity for this effect */
+  opacity: number
+  /** Boolean to enable/disable the start burst effect. Can be disabled to improve performance */
+  starBurst: boolean
+}
+
 export class LensFlareEffect extends Effect {
   constructor({
-    blendFunction = BlendFunction.NORMAL,
-    enabled = true,
-    glareSize = 0.2,
-    lensPosition = [0.01, 0.01],
-    screenRes = [0, 0],
-    starPoints = 6,
-    flareSize = 0.01,
-    flareSpeed = 0.01,
-    flareShape = 0.01,
-    animated = true,
-    anamorphic = false,
-    colorGain = new THREE.Color(20, 20, 20),
-    lensDirtTexture = null as THREE.Texture | null,
-    haloScale = 0.5,
-    secondaryGhosts = true,
-    aditionalStreaks = true,
-    ghostScale = 0.0,
-    opacity = 1.0,
-    starBurst = false,
-  } = {}) {
+    blendFunction,
+    enabled,
+    glareSize,
+    lensPosition,
+    screenRes,
+    starPoints,
+    flareSize,
+    flareSpeed,
+    flareShape,
+    animated,
+    anamorphic,
+    colorGain,
+    lensDirtTexture,
+    haloScale,
+    secondaryGhosts,
+    aditionalStreaks,
+    ghostScale,
+    opacity,
+    starBurst,
+  }: LensFlareEffectOptions) {
     super('LensFlareEffect', LensFlareShader.fragmentShader, {
       blendFunction,
       uniforms: new Map<string, THREE.Uniform>([
@@ -454,14 +495,46 @@ export class LensFlareEffect extends Effect {
   }
 }
 
-type LensFlareProps = ConstructorParameters<typeof LensFlareEffect>[0] & {
-  position?: THREE.Vector3
-  followMouse?: boolean
-  smoothTime?: number
-}
+type LensFlareApi = LensFlareEffect
 
-export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
-  ({ position = new THREE.Vector3(-25, 6, -60), followMouse = false, smoothTime = 0.07, ...props }, ref) => {
+type LensFlareProps = {
+  /** Position of the effect */
+  position?: THREE.Vector3
+  /** Set it to follow the mouse, ignoring the lens position */
+  followMouse?: boolean
+  /** The time that it takes to fade the occlusion */
+  smoothTime?: number
+} & Partial<LensFlareEffectOptions>
+
+export const LensFlare = forwardRef<LensFlareApi, LensFlareProps>(
+  (
+    {
+      position = new THREE.Vector3(-25, 6, -60),
+      followMouse = false,
+      smoothTime = 0.07,
+      //
+      blendFunction = BlendFunction.NORMAL,
+      enabled = true,
+      glareSize = 0.2,
+      lensPosition = new THREE.Vector2(0.01, 0.01),
+      screenRes = new THREE.Vector2(0, 0),
+      starPoints = 6,
+      flareSize = 0.01,
+      flareSpeed = 0.01,
+      flareShape = 0.01,
+      animated = true,
+      anamorphic = false,
+      colorGain = new THREE.Color(20, 20, 20),
+      lensDirtTexture = null,
+      haloScale = 0.5,
+      secondaryGhosts = true,
+      aditionalStreaks = true,
+      ghostScale = 0.0,
+      opacity = 1.0,
+      starBurst = false,
+    },
+    ref
+  ) => {
     const viewport = useThree(({ viewport }) => viewport)
     const raycaster = useThree(({ raycaster }) => raycaster)
     const pointer = useThree(({ pointer }) => pointer)
@@ -470,7 +543,29 @@ export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
     const [projectedPosition] = useState(() => new THREE.Vector3())
     const [mouse2d] = useState(() => new THREE.Vector2())
 
-    const effect = useMemo(() => new LensFlareEffect(props), [props])
+    const opts = {
+      blendFunction,
+      enabled,
+      glareSize,
+      lensPosition,
+      screenRes,
+      starPoints,
+      flareSize,
+      flareSpeed,
+      flareShape,
+      animated,
+      anamorphic,
+      colorGain,
+      lensDirtTexture,
+      haloScale,
+      secondaryGhosts,
+      aditionalStreaks,
+      ghostScale,
+      opacity,
+      starBurst,
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const effect = useMemo(() => new LensFlareEffect(opts), [JSON.stringify(opts)])
 
     useFrame((_, delta) => {
       const uLensPosition = effect.uniforms.get('lensPosition')
