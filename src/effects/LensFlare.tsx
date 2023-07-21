@@ -2,12 +2,13 @@
 // From https://github.com/ektogamat/R3F-Ultimate-Lens-Flare
 
 import * as THREE from 'three'
-import { useMemo, useEffect, forwardRef, useState, useContext } from 'react'
+import { useEffect, useState, useContext, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { BlendFunction, Effect } from 'postprocessing'
 import { easing } from 'maath'
 
 import { EffectComposerContext } from '../EffectComposer'
+import { wrapEffect } from '../util'
 
 const LensFlareShader = {
   fragmentShader: `
@@ -495,8 +496,6 @@ export class LensFlareEffect extends Effect {
   }
 }
 
-type LensFlareApi = LensFlareEffect
-
 type LensFlareProps = {
   /** Position of the effect */
   position?: THREE.Vector3
@@ -506,118 +505,117 @@ type LensFlareProps = {
   smoothTime?: number
 } & Partial<LensFlareEffectOptions>
 
-export const LensFlare = forwardRef<LensFlareApi, LensFlareProps>(
-  (
-    {
-      position = new THREE.Vector3(-25, 6, -60),
-      followMouse = false,
-      smoothTime = 0.07,
-      //
-      blendFunction = BlendFunction.NORMAL,
-      enabled = true,
-      glareSize = 0.2,
-      lensPosition = new THREE.Vector2(0.01, 0.01),
-      screenRes = new THREE.Vector2(0, 0),
-      starPoints = 6,
-      flareSize = 0.01,
-      flareSpeed = 0.01,
-      flareShape = 0.01,
-      animated = true,
-      anamorphic = false,
-      colorGain = new THREE.Color(20, 20, 20),
-      lensDirtTexture = null,
-      haloScale = 0.5,
-      secondaryGhosts = true,
-      aditionalStreaks = true,
-      ghostScale = 0.0,
-      opacity = 1.0,
-      starBurst = false,
-    },
-    ref
-  ) => {
-    const viewport = useThree(({ viewport }) => viewport)
-    const raycaster = useThree(({ raycaster }) => raycaster)
-    const pointer = useThree(({ pointer }) => pointer)
-    const { scene, camera } = useContext(EffectComposerContext)
+const LensFlareWrapped = wrapEffect(LensFlareEffect)
 
-    const [projectedPosition] = useState(() => new THREE.Vector3())
-    const [mouse2d] = useState(() => new THREE.Vector2())
+export const LensFlare = ({
+  position = new THREE.Vector3(-25, 6, -60),
+  followMouse = false,
+  smoothTime = 0.07,
+  //
+  blendFunction = BlendFunction.NORMAL,
+  enabled = true,
+  glareSize = 0.2,
+  lensPosition = new THREE.Vector2(0.01, 0.01),
+  screenRes = new THREE.Vector2(0, 0),
+  starPoints = 6,
+  flareSize = 0.01,
+  flareSpeed = 0.01,
+  flareShape = 0.01,
+  animated = true,
+  anamorphic = false,
+  colorGain = new THREE.Color(20, 20, 20),
+  lensDirtTexture = null,
+  haloScale = 0.5,
+  secondaryGhosts = true,
+  aditionalStreaks = true,
+  ghostScale = 0.0,
+  opacity = 1.0,
+  starBurst = false,
+}: LensFlareProps) => {
+  const viewport = useThree(({ viewport }) => viewport)
+  const raycaster = useThree(({ raycaster }) => raycaster)
+  const pointer = useThree(({ pointer }) => pointer)
+  const { scene, camera } = useContext(EffectComposerContext)
 
-    const opts = {
-      blendFunction,
-      enabled,
-      glareSize,
-      lensPosition,
-      screenRes,
-      starPoints,
-      flareSize,
-      flareSpeed,
-      flareShape,
-      animated,
-      anamorphic,
-      colorGain,
-      lensDirtTexture,
-      haloScale,
-      secondaryGhosts,
-      aditionalStreaks,
-      ghostScale,
-      opacity,
-      starBurst,
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const effect = useMemo(() => new LensFlareEffect(opts), [JSON.stringify(opts)])
+  const [projectedPosition] = useState(() => new THREE.Vector3())
+  const [mouse2d] = useState(() => new THREE.Vector2())
 
-    useFrame((_, delta) => {
-      const uLensPosition = effect.uniforms.get('lensPosition')
-      const uOpacity = effect.uniforms.get('opacity')
-      if (!uLensPosition || !uOpacity) return
+  const ref = useRef<LensFlareEffect>(null)
 
-      let target = 1
+  useFrame((_, delta) => {
+    if (!ref?.current) return
+    const uLensPosition = ref.current.uniforms.get('lensPosition')
+    const uOpacity = ref.current.uniforms.get('opacity')
+    if (!uLensPosition || !uOpacity) return
 
-      if (followMouse) {
-        uLensPosition.value.x = pointer.x
-        uLensPosition.value.y = pointer.y
-        target = 0
-      } else {
-        projectedPosition.copy(position).project(camera)
-        if (projectedPosition.z > 1) return
+    let target = 1
 
-        uLensPosition.value.x = projectedPosition.x
-        uLensPosition.value.y = projectedPosition.y
+    if (followMouse) {
+      uLensPosition.value.x = pointer.x
+      uLensPosition.value.y = pointer.y
+      target = 0
+    } else {
+      projectedPosition.copy(position).project(camera)
+      if (projectedPosition.z > 1) return
 
-        mouse2d.set(projectedPosition.x, projectedPosition.y)
-        raycaster.setFromCamera(mouse2d, camera)
-        const intersects = raycaster.intersectObjects(scene.children, true)
-        const { object } = intersects[0]
-        if (object) {
-          if (object.userData?.lensflare === 'no-occlusion') {
-            target = 0
-          } else if (object instanceof THREE.Mesh) {
-            if (object.material.uniforms?._transmission?.value > 0.2) {
-              //Check for MeshTransmissionMaterial
-              target = 0.2
-            } else if (object.material._transmission && object.material._transmission > 0.2) {
-              //Check for MeshPhysicalMaterial with transmission setting
-              target = 0.2
-            } else if (object.material.transparent) {
-              // Check for OtherMaterials with transparent parameter
-              target = object.material.opacity
-            }
+      uLensPosition.value.x = projectedPosition.x
+      uLensPosition.value.y = projectedPosition.y
+
+      mouse2d.set(projectedPosition.x, projectedPosition.y)
+      raycaster.setFromCamera(mouse2d, camera)
+      const intersects = raycaster.intersectObjects(scene.children, true)
+      const { object } = intersects[0]
+      if (object) {
+        if (object.userData?.lensflare === 'no-occlusion') {
+          target = 0
+        } else if (object instanceof THREE.Mesh) {
+          if (object.material.uniforms?._transmission?.value > 0.2) {
+            //Check for MeshTransmissionMaterial
+            target = 0.2
+          } else if (object.material._transmission && object.material._transmission > 0.2) {
+            //Check for MeshPhysicalMaterial with transmission setting
+            target = 0.2
+          } else if (object.material.transparent) {
+            // Check for OtherMaterials with transparent parameter
+            target = object.material.opacity
           }
         }
       }
+    }
 
-      easing.damp(uOpacity, 'value', target, smoothTime, delta)
-    })
+    easing.damp(uOpacity, 'value', target, smoothTime, delta)
+  })
 
-    useEffect(() => {
-      const screenRes = effect.uniforms.get('screenRes')
-      if (screenRes) {
-        screenRes.value.x = viewport.width
-        screenRes.value.y = viewport.height
-      }
-    }, [effect, viewport])
+  useEffect(() => {
+    if (!ref?.current) return
 
-    return <primitive ref={ref} object={effect} dispose={null} />
+    const screenRes = ref.current.uniforms.get('screenRes')
+    if (screenRes) {
+      screenRes.value.x = viewport.width
+      screenRes.value.y = viewport.height
+    }
+  }, [viewport])
+
+  const opts = {
+    blendFunction,
+    enabled,
+    glareSize,
+    lensPosition,
+    screenRes,
+    starPoints,
+    flareSize,
+    flareSpeed,
+    flareShape,
+    animated,
+    anamorphic,
+    colorGain,
+    lensDirtTexture,
+    haloScale,
+    secondaryGhosts,
+    aditionalStreaks,
+    ghostScale,
+    opacity,
+    starBurst,
   }
-)
+  return <LensFlareWrapped ref={ref} {...opts} />
+}
