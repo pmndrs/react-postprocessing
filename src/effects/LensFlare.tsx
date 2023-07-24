@@ -540,7 +540,7 @@ export const LensFlare = ({
   const [projectedPosition] = useState(() => new THREE.Vector3())
   const [mouse2d] = useState(() => new THREE.Vector2())
 
-  const ref = useRef<LensFlareEffect>(null!)
+  const ref = useRef<LensFlareEffect>(null)
 
   useFrame((_, delta) => {
     if (!ref?.current) return

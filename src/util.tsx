@@ -7,13 +7,14 @@ import type { Effect, BlendFunction } from 'postprocessing'
 export const resolveRef = <T,>(ref: T | React.MutableRefObject<T>) =>
   typeof ref === 'object' && ref != null && 'current' in ref ? ref.current : ref
 
-export type EffectConstructor = new (...args: any[]) => Effect
+export type Constructor<T = {}> = new (...args: any[]) => T
 
-export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
-  T extends Function ? T['prototype'] : InstanceType<T>,
+export type EffectConstructor = Constructor<Effect>
+export type EffectProps<T extends Effect> = ReactThreeFiber.Node<
+  T extends Function ? T['prototype'] : InstanceType<Constructor<T>>,
   T
 > &
-  ConstructorParameters<T>[0] & {
+  ConstructorParameters<Constructor<T>>[0] & {
     blendFunction?: BlendFunction
     opacity?: number
   }
@@ -21,7 +22,7 @@ export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
 let i = 0
 const components = new WeakMap<EffectConstructor, React.ExoticComponent<any> | string>()
 
-export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: EffectProps<T>) =>
+export const wrapEffect = <T extends Effect>(effect: Constructor<T>, defaults?: EffectProps<T>) =>
   /* @__PURE__ */ React.forwardRef<T, EffectProps<T>>(function Effect(
     { blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props },
     ref
