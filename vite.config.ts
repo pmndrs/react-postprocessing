@@ -15,6 +15,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: (id: string) => !id.startsWith('.') && !path.isAbsolute(id) && !inline.includes(id),
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+      },
     },
   },
   plugins: [
