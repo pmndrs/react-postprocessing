@@ -24,11 +24,14 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
   useEffect(() => {
     if (!api) return
     const current: THREE.Object3D<THREE.Event>[] = []
-    if (enabled) group.current.traverse((o) => {
+    group.current.traverse((o) => {
       if (o.type === 'Mesh') current.push(o)
     })
-    const changed = (current.length !== api.selected.length) ? true : !current.every(o => api.selected.includes(o))
-    if (changed) api.select(current)
+    if (enabled && current.some(o => !api.selected.includes(o))) {
+      api.select(state => [...new Set([...state, ...current])])
+    } else if (!enabled && current.some(o => api.selected.includes(o))) {
+      api.select(state => state.filter(o => !current.includes(o)))
+    }
   }, [enabled, children, api])
   return (
     <group ref={group} {...props}>
