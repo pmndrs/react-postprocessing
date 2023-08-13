@@ -28,7 +28,7 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
       if (o.type === 'Mesh') current.push(o)
     })
     if (enabled && current.some(o => !api.selected.includes(o))) {
-      api.select(state => [...new Set([...state, ...current])])
+      api.select(state => [...state, ...current])
     } else if (!enabled && current.some(o => api.selected.includes(o))) {
       api.select(state => state.filter(o => !current.includes(o)))
     }
