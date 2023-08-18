@@ -407,7 +407,7 @@ type LensFlareEffectOptions = {
   /** The glare size */
   glareSize: number
   /** The position of the lens flare in 3d space */
-  lensPosition: THREE.Vector2
+  lensPosition: THREE.Vector3
   /** Effect resolution */
   screenRes: THREE.Vector2
   /** The number of points for the star */
@@ -498,9 +498,7 @@ export class LensFlareEffect extends Effect {
 
 type LensFlareProps = {
   /** Position of the effect */
-  position?: THREE.Vector3
-  /** Set it to follow the mouse, ignoring the lens position */
-  followMouse?: boolean
+  lensPosition?: THREE.Vector3
   /** The time that it takes to fade the occlusion */
   smoothTime?: number
 } & Partial<LensFlareEffectOptions>
@@ -508,14 +506,12 @@ type LensFlareProps = {
 const LensFlareWrapped = wrapEffect(LensFlareEffect)
 
 export const LensFlare = ({
-  position = new THREE.Vector3(-25, 6, -60),
-  followMouse = false,
   smoothTime = 0.07,
   //
   blendFunction = BlendFunction.NORMAL,
   enabled = true,
   glareSize = 0.2,
-  lensPosition = new THREE.Vector2(0.01, 0.01),
+  lensPosition = new THREE.Vector3(-25, 6, -60),
   screenRes = new THREE.Vector2(0, 0),
   starPoints = 6,
   flareSize = 0.01,
@@ -534,11 +530,9 @@ export const LensFlare = ({
 }: LensFlareProps) => {
   const viewport = useThree(({ viewport }) => viewport)
   const raycaster = useThree(({ raycaster }) => raycaster)
-  const pointer = useThree(({ pointer }) => pointer)
   const { scene, camera } = useContext(EffectComposerContext)
-
+  let raycasterPos = new THREE.Vector2()
   const [projectedPosition] = useState(() => new THREE.Vector3())
-  const [mouse2d] = useState(() => new THREE.Vector2())
 
   const ref = useRef<LensFlareEffect>(null)
 
@@ -550,35 +544,30 @@ export const LensFlare = ({
 
     let target = 1
 
-    if (followMouse) {
-      uLensPosition.value.x = pointer.x
-      uLensPosition.value.y = pointer.y
-      target = 0
-    } else {
-      projectedPosition.copy(position).project(camera)
-      if (projectedPosition.z > 1) return
+    projectedPosition.copy(lensPosition).project(camera)
+    if (projectedPosition.z > 1) return
 
-      uLensPosition.value.x = projectedPosition.x
-      uLensPosition.value.y = projectedPosition.y
+    uLensPosition.value.x = projectedPosition.x
+    uLensPosition.value.y = projectedPosition.y
+    raycasterPos.x = projectedPosition.x
+    raycasterPos.y = projectedPosition.y
+    raycaster.setFromCamera(raycasterPos, camera)
 
-      mouse2d.set(projectedPosition.x, projectedPosition.y)
-      raycaster.setFromCamera(mouse2d, camera)
-      const intersects = raycaster.intersectObjects(scene.children, true)
-      const { object } = intersects[0] || {}
-      if (object) {
-        if (object.userData?.lensflare === 'no-occlusion') {
-          target = 0
-        } else if (object instanceof THREE.Mesh) {
-          if (object.material.uniforms?._transmission?.value > 0.2) {
-            //Check for MeshTransmissionMaterial
-            target = 0.2
-          } else if (object.material._transmission && object.material._transmission > 0.2) {
-            //Check for MeshPhysicalMaterial with transmission setting
-            target = 0.2
-          } else if (object.material.transparent) {
-            // Check for OtherMaterials with transparent parameter
-            target = object.material.opacity
-          }
+    const intersects = raycaster.intersectObjects(scene.children, true)
+    const { object } = intersects[0] || {}
+    if (object) {
+      if (object.userData?.lensflare === 'no-occlusion') {
+        target = 0
+      } else if (object instanceof THREE.Mesh) {
+        if (object.material.uniforms?._transmission?.value > 0.2) {
+          //Check for MeshTransmissionMaterial
+          target = 0.2
+        } else if (object.material._transmission && object.material._transmission > 0.2) {
+          //Check for MeshPhysicalMaterial with transmission setting
+          target = 0.2
+        } else if (object.material.transparent) {
+          // Check for OtherMaterials with transparent parameter
+          target = object.material.opacity
         }
       }
     }
