@@ -564,7 +564,7 @@ export const LensFlare = ({
       mouse2d.set(projectedPosition.x, projectedPosition.y)
       raycaster.setFromCamera(mouse2d, camera)
       const intersects = raycaster.intersectObjects(scene.children, true)
-      const { object } = intersects[0]
+      const { object } = intersects[0] || {}
       if (object) {
         if (object.userData?.lensflare === 'no-occlusion') {
           target = 0
