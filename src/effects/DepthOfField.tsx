@@ -52,7 +52,9 @@ export const DepthOfField = forwardRef(function DepthOfField(
       width,
       height,
     })
-    if (target) effect.target = new Vector3(...(target as number[]))
+    // Creating a target enables autofocus, R3F will set via props
+    if (target) effect.target = new Vector3()
+    // Depth texture for depth picking with optional packing strategy
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing as DepthPackingStrategies)
     // Temporary fix that restores DOF 6.21.3 behavior, everything since then lets shapes leak through the blur
     const maskMaterial = (effect as any).maskPass.getFullscreenMaterial()
@@ -82,5 +84,5 @@ export const DepthOfField = forwardRef(function DepthOfField(
     }
   }, [effect])
 
-  return <primitive {...props} ref={ref} object={effect} />
+  return <primitive {...props} ref={ref} object={effect} target={target} />
 })
