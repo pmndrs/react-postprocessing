@@ -37,6 +37,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
   ref: Ref<DepthOfFieldEffect>
 ) {
   const { camera } = useContext(EffectComposerContext)
+  const autoFocus = target != null
   const effect = useMemo(() => {
     const effect = new DepthOfFieldEffect(camera, {
       blendFunction,
@@ -53,7 +54,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
       height,
     })
     // Creating a target enables autofocus, R3F will set via props
-    if (target) effect.target = new Vector3()
+    if (autoFocus) effect.target = new Vector3()
     // Depth texture for depth picking with optional packing strategy
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing as DepthPackingStrategies)
     // Temporary fix that restores DOF 6.21.3 behavior, everything since then lets shapes leak through the blur
@@ -74,7 +75,7 @@ export const DepthOfField = forwardRef(function DepthOfField(
     resolutionY,
     width,
     height,
-    target,
+    autoFocus,
     depthTexture,
   ])
 
