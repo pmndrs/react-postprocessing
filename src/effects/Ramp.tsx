@@ -1,10 +1,9 @@
 import { Uniform } from 'three'
-import { BlendFunction, Effect } from 'postprocessing'
+import { Effect } from 'postprocessing'
 import { wrapEffect } from '../util'
 
 const RampShader = {
-  fragmentShader: `
-  
+  fragmentShader: /* glsl */ `
     uniform int rampType;
 
     uniform vec2 rampStart;
@@ -20,72 +19,117 @@ const RampShader = {
     uniform bool rampInvert;
 
     float getBias(float time, float bias) {
-      return (time / ((((1.0 / bias) - 2.0) * (1.0 - time)) + 1.0));
+      return time / (((1.0 / bias) - 2.0) * (1.0 - time) + 1.0);
     }
 
     float getGain(float time, float gain) {
-      if(time < 0.5)
+      if (time < 0.5)
         return getBias(time * 2.0, gain) / 2.0;
       else
         return getBias(time * 2.0 - 1.0, 1.0 - gain) / 2.0 + 0.5;
     }
 
-		void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+    void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+      vec2 centerPixel = uv * resolution;
+      vec2 startPixel = rampStart * resolution;
+      vec2 endPixel = rampEnd * resolution;
 
-      vec2 startPixel = rampStart * resolution.xy;
-      vec2 endPixel = rampEnd * resolution.xy;
-
-      float rampAlpha, radius;
+      float rampAlpha;
 
       if (rampType == 1) {
-        vec2 fuv = uv * resolution.xy / resolution.y;
+        vec2 fuv = centerPixel / resolution.y;
         vec2 suv = startPixel / resolution.y;
         vec2 euv = endPixel / resolution.y;
 
-        radius = length(suv - euv);
+        float radius = length(suv - euv);
         float falloff = length(fuv - suv);
-        rampAlpha = smoothstep(0., radius, falloff);
-      }
-
-      else {
-        radius = length(startPixel - endPixel);
+        rampAlpha = smoothstep(0.0, radius, falloff);
+      } else {
+        float radius = length(startPixel - endPixel);
         vec2 direction = normalize(vec2(endPixel.x - startPixel.x, -(startPixel.y - endPixel.y)));
 
-        float fade = dot(uv * resolution - startPixel, direction);
-        if (rampType == 2) { fade = abs(fade); }
+        float fade = dot(centerPixel - startPixel, direction);
+        if (rampType == 2) fade = abs(fade);
 
         rampAlpha = smoothstep(0.0, 1.0, fade / radius);
       }
-      
+
       rampAlpha = abs((rampInvert ? 1.0 : 0.0) - getBias(rampAlpha, rampBias) * getGain(rampAlpha, rampGain));
 
-      if (!rampMask) {
+      if (rampMask) {
+        vec4 inputBuff = texture2D(inputBuffer, uv);
+        outputColor = mix(inputBuff, inputColor, rampAlpha);
+      } else {
         outputColor = mix(startColor, endColor, rampAlpha);
       }
-
-      else {
-        vec4 inputBuff = texture2D(inputBuffer, uv);
-			  outputColor = mix(inputBuff, inputColor, rampAlpha);
-      }
-		}`,
+    }
+  `,
 }
 
 export class RampEffect extends Effect {
   constructor({
-    blendFunction = BlendFunction.NORMAL, // Multiply default, but blend modes are great for ramp
-    rampType = 0, // {0 : linear, 1 : radial, 2 : linear (mirrored)}
-    rampStart = [0.5, 0.5], // [0, 1) as normalized x,y
-    rampEnd = [1, 1], // [0, 1) as normalized x,y
-    startColor = [0, 0, 0, 1], // black default
-    endColor = [1, 1, 1, 1], // white default
-    rampBias = 0.5, // [0, 1] - linear interpolation curve when both bias and gain are 0.5
-    rampGain = 0.5, // [0, 1] - linear interpolation curve when both bias and gain are 0.5
-    rampMask = false, // bool - uses ramp as effect mask, ignores colors when true
-    rampInvert = false // when false, rampStart is transparent and rampEnd is opaque
+    /**
+     * Type of ramp gradient.
+     * * `0`: Linear
+     * * `1`: Radial
+     * * `2`: Mirrored Linear
+     */
+    rampType = 0,
+    /**
+     * Starting point of the ramp gradient in normalized coordinates.
+     *
+     * Ranges from `[0 - 1]` as `[x, y]`. Default is `[1, 1]`.
+     */
+    rampStart = [0.5, 0.5],
+    /**
+     * Ending point of the ramp gradient in normalized coordinates.
+     *
+     * Ranges from `[0 - 1]` as `[x, y]`. Default is `[1, 1]`
+     */
+    rampEnd = [1, 1],
+    /**
+     * Color at the starting point of the gradient.
+     *
+     * Default is black: `[0, 0, 0, 1]`
+     */
+    startColor = [0, 0, 0, 1],
+    /**
+     * Color at the ending point of the gradient.
+     *
+     * Default is white: `[1, 1, 1, 1]`
+     */
+    endColor = [1, 1, 1, 1],
+    /**
+     * Bias for the interpolation curve when both bias and gain are 0.5.
+     *
+     * Ranges from `[0 - 1]`. Default is `0.5`.
+     */
+    rampBias = 0.5,
+    /**
+     * Gain for the interpolation curve when both bias and gain are 0.5.
+     *
+     * Ranges from `[0 - 1]`. Default is `0.5`.
+     */
+    rampGain = 0.5,
+    /**
+     * When enabled, the ramp gradient is used as an effect mask, and colors are ignored.
+     *
+     * Default is `false`.
+     */
+    rampMask = false,
+    /**
+     * Controls whether the ramp gradient is inverted.
+     *
+     * When disabled, rampStart is transparent and rampEnd is opaque.
+     *
+     * Default is `false`.
+     */
+    rampInvert = false,
+    ...params
   } = {}) {
     super('RampEffect', RampShader.fragmentShader, {
-      blendFunction,
-      uniforms: new Map<string, Uniform<number | number[]>>([
+      ...params,
+      uniforms: new Map<string, Uniform<number | number[] | boolean>>([
         ['rampType', new Uniform(rampType)],
         ['rampStart', new Uniform(rampStart)],
         ['rampEnd', new Uniform(rampEnd)],
@@ -100,6 +144,4 @@ export class RampEffect extends Effect {
   }
 }
 
-const Ramp = wrapEffect(RampEffect)
-
-export default Ramp
+export const Ramp = wrapEffect(RampEffect)
