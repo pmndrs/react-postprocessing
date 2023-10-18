@@ -47,6 +47,9 @@ export type EffectComposerProps = {
   scene?: THREE.Scene
 }
 
+const isConvolution = (effect: Effect): boolean =>
+  (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
+
 export const EffectComposer = React.memo(
   forwardRef(
     (
@@ -136,15 +139,10 @@ export const EffectComposer = React.memo(
             const child = children[i]
 
             if (child instanceof Effect) {
-              const effects: Effect[] = []
-              while (
-                // Filter to effects
-                children[i] instanceof Effect &&
-                // Don't merge convolution effects
-                ((children[i] as Effect).getAttributes() & EffectAttribute.CONVOLUTION) !== 0
-              )
+              const effects: Effect[] = [child]
+              while (children[i] instanceof Effect && !isConvolution(children[i] as Effect)) {
                 effects.push(children[i++] as Effect)
-              i--
+              }
 
               const pass = new EffectPass(camera, ...effects)
               passes.push(pass)
