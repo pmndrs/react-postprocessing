@@ -15,6 +15,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: (id: string) => !id.startsWith('.') && !path.isAbsolute(id) && !inline.includes(id),
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+      },
     },
   },
   plugins: [
@@ -24,7 +28,7 @@ export default defineConfig({
         for (const id in bundle) {
           const asset = bundle[id]
           if ('code' in asset) {
-            asset.code = asset.code.replace(/three\/(addons|examples)[^'"`]+/g, 'three-stdlib')
+            asset.code = asset.code.replace(/three\/(addons|examples)[^'"`]*/g, 'three-stdlib')
           }
         }
       },
