@@ -19,6 +19,7 @@ import {
   DepthDownsamplingPass,
   Effect,
   Pass,
+  EffectAttribute,
 } from 'postprocessing'
 import { isWebGL2Available } from 'three-stdlib'
 
@@ -136,7 +137,13 @@ export const EffectComposer = React.memo(
 
             if (child instanceof Effect) {
               const effects: Effect[] = []
-              while (children[i] instanceof Effect) effects.push(children[i++] as Effect)
+              while (
+                // Filter to effects
+                children[i] instanceof Effect &&
+                // Don't merge convolution effects
+                ((children[i] as Effect).getAttributes() & EffectAttribute.CONVOLUTION) !== 0
+              )
+                effects.push(children[i++] as Effect)
               i--
 
               const pass = new EffectPass(camera, ...effects)
