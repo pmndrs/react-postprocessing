@@ -28,17 +28,164 @@ import {
   Texture,
 } from 'three'
 
-var boxBlur =
-  '#define GLSLIFY 1\nuniform float blur;uniform float blurSharpness;uniform int blurKernel;vec3 denoise(vec3 center,sampler2D tex,vec2 uv,vec2 invTexSize,float blur,float blurSharpness,int blurKernel){vec3 color;float total;vec3 col;float weight;for(int x=-blurKernel;x<=blurKernel;x++){for(int y=-blurKernel;y<=blurKernel;y++){col=textureLod(tex,uv+vec2(x,y)*invTexSize,0.).rgb;weight=1.0-abs(dot(col-center,vec3(0.25)));weight=pow(weight,blurSharpness);color+=col*weight;total+=weight;}}return color/total;}'
+const boxBlur = /* glsl */ `
+  uniform float blur;
+  uniform float blurSharpness;
+  uniform int blurKernel;
 
-var finalSSRShader =
-  '#define GLSLIFY 1\n#define MODE_DEFAULT 0\n#define MODE_REFLECTIONS 1\n#define MODE_RAW_REFLECTION 2\n#define MODE_BLURRED_REFLECTIONS 3\n#define MODE_INPUT 4\n#define MODE_BLUR_MIX 5\n#define FLOAT_EPSILON 0.00001\nuniform sampler2D inputTexture;uniform sampler2D reflectionsTexture;uniform float samples;\n#include <boxBlur>\nvoid mainImage(const in vec4 inputColor,const in vec2 uv,out vec4 outputColor){vec4 reflectionsTexel=texture2D(reflectionsTexture,vUv);ivec2 size=textureSize(reflectionsTexture,0);vec2 invTexSize=1./vec2(size.x,size.y);vec3 reflectionClr=reflectionsTexel.xyz;if(blur>FLOAT_EPSILON){vec3 blurredReflectionsColor=denoise(reflectionsTexel.rgb,reflectionsTexture,vUv,invTexSize,blur,blurSharpness,blurKernel);reflectionClr=mix(reflectionClr,blurredReflectionsColor.rgb,blur);}\n#if RENDER_MODE == MODE_DEFAULT\noutputColor=vec4(inputColor.rgb+reflectionClr,1.0);\n#endif\n#if RENDER_MODE == MODE_REFLECTIONS\noutputColor=vec4(reflectionClr,1.0);\n#endif\n#if RENDER_MODE == MODE_RAW_REFLECTION\noutputColor=vec4(reflectionsTexel.xyz,1.0);\n#endif\n#if RENDER_MODE == MODE_BLURRED_REFLECTIONS\noutputColor=vec4(blurredReflectionsTexel.xyz,1.0);\n#endif\n#if RENDER_MODE == MODE_INPUT\noutputColor=vec4(inputColor.xyz,1.0);\n#endif\n#if RENDER_MODE == MODE_BLUR_MIX\noutputColor=vec4(vec3(blur),1.0);\n#endif\n}'
+  vec3 denoise(
+    vec3 center,
+    sampler2D tex,
+    vec2 uv,
+    vec2 invTexSize,
+    float blur,
+    float blurSharpness,
+    int blurKernel
+  ) {
+    vec3 color, col;
+    float total, weight;
 
-var helperFunctions =
-  '#define GLSLIFY 1\nvec3 getViewPosition(const float depth){float clipW=_projectionMatrix[2][3]*depth+_projectionMatrix[3][3];vec4 clipPosition=vec4((vec3(vUv,depth)-0.5)*2.0,1.0);clipPosition*=clipW;return(_inverseProjectionMatrix*clipPosition).xyz;}float getViewZ(const in float depth){\n#ifdef PERSPECTIVE_CAMERA\nreturn perspectiveDepthToViewZ(depth,cameraNear,cameraFar);\n#else\nreturn orthographicDepthToViewZ(depth,cameraNear,cameraFar);\n#endif\n}vec3 screenSpaceToWorldSpace(const vec2 uv,const float depth){vec4 ndc=vec4((uv.x-0.5)*2.0,(uv.y-0.5)*2.0,(depth-0.5)*2.0,1.0);vec4 clip=_inverseProjectionMatrix*ndc;vec4 view=cameraMatrixWorld*(clip/clip.w);return view.xyz;}\n#define Scale (vec3(0.8, 0.8, 0.8))\n#define K (19.19)\nvec3 hash(vec3 a){a=fract(a*Scale);a+=dot(a,a.yxz+K);return fract((a.xxy+a.yxx)*a.zyx);}float fresnel_dielectric_cos(float cosi,float eta){float c=abs(cosi);float g=eta*eta-1.0+c*c;float result;if(g>0.0){g=sqrt(g);float A=(g-c)/(g+c);float B=(c*(g+c)-1.0)/(c*(g-c)+1.0);result=0.5*A*A*(1.0+B*B);}else{result=1.0;}return result;}float fresnel_dielectric(vec3 Incoming,vec3 Normal,float eta){float cosine=dot(Incoming,Normal);return min(1.0,5.0*fresnel_dielectric_cos(cosine,eta));}'
+    for (int x = -blurKernel; x <= blurKernel; x++) {
+      for (int y=-blurKernel; y<=blurKernel; y++) {
+        col = textureLod(tex, uv + vec2(x,y) * invTexSize, 0.0).rgb;
+        weight = 1.0-abs(dot(col - center, vec3(0.25)));
+        weight = pow(weight, blurSharpness);
+        color += col * weight;
+        total += weight;
+      }
+    }
 
-var trCompose =
-  '#define GLSLIFY 1\n#define INV_EULER 0.36787944117144233\nalpha=velocityDisocclusion<FLOAT_EPSILON ?(alpha+0.0075): 0.0;alpha=clamp(alpha,0.0,1.0);bool needsBlur=!didReproject||velocityDisocclusion>0.5;\n#ifdef boxBlur\nif(needsBlur)inputColor=boxBlurredColor;\n#endif\nif(alpha==1.0){outputColor=accumulatedColor;}else{float m=mix(alpha,1.0,blend);if(needsBlur)m=0.0;outputColor=accumulatedColor*m+inputColor*(1.0-m);}'
+    return color / total;
+  }
+`
+
+const finalSSRShader = /* glsl */ `
+  #define MODE_DEFAULT 0
+  #define MODE_REFLECTIONS 1
+  #define MODE_RAW_REFLECTION 2
+  #define MODE_BLURRED_REFLECTIONS 3
+  #define MODE_INPUT 4
+  #define MODE_BLUR_MIX 5
+  #define FLOAT_EPSILON 0.00001
+  // uniform sampler2D inputTexture;
+  uniform sampler2D reflectionsTexture;
+  // uniform float samples;
+
+  ${boxBlur}
+
+  void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+    vec4 reflectionsTexel=texture2D(reflectionsTexture, vUv);
+    ivec2 size = textureSize(reflectionsTexture, 0);
+    vec2 invTexSize= 1.0 / vec2(size.x, size.y);
+    vec3 reflectionClr = reflectionsTexel.xyz;
+    if (blur > FLOAT_EPSILON) {
+      vec3 blurredReflectionsColor = denoise(
+        reflectionsTexel.rgb,
+        reflectionsTexture,
+        vUv,
+        invTexSize,
+        blur,
+        blurSharpness,
+        blurKernel
+      );
+      reflectionClr = mix(reflectionClr, blurredReflectionsColor.rgb, blur);
+    }
+
+    #if RENDER_MODE == MODE_DEFAULT
+      outputColor = vec4(inputColor.rgb+reflectionClr, 1.0);
+    #endif
+    #if RENDER_MODE == MODE_REFLECTIONS
+      outputColor = vec4(reflectionClr, 1.0);
+    #endif
+    #if RENDER_MODE == MODE_RAW_REFLECTION
+      outputColor = vec4(reflectionsTexel.xyz, 1.0);
+    #endif
+    #if RENDER_MODE == MODE_BLURRED_REFLECTIONS
+      outputColor = vec4(blurredReflectionsTexel.xyz, 1.0);
+    #endif
+    #if RENDER_MODE == MODE_INPUT
+      outputColor = vec4(inputColor.xyz, 1.0);
+    #endif
+    #if RENDER_MODE == MODE_BLUR_MIX
+      outputColor = vec4(vec3(blur), 1.0);
+    #endif
+  }
+`
+
+const helperFunctions = /* glsl */ `
+  vec3 getViewPosition(const float depth) {
+    float clipW= _projectionMatrix[2][3] * depth + _projectionMatrix[3][3];
+    vec4 clipPosition = vec4((vec3(vUv, depth) - 0.5) * 2.0, 1.0);
+    clipPosition *= clipW;
+    return(_inverseProjectionMatrix * clipPosition).xyz;
+  }
+
+  float getViewZ(const in float depth) {
+    #ifdef PERSPECTIVE_CAMERA
+      return perspectiveDepthToViewZ(depth, cameraNear, cameraFar);
+    #else
+      return orthographicDepthToViewZ(depth, cameraNear, cameraFar);
+    #endif
+  }
+
+  vec3 screenSpaceToWorldSpace(const vec2 uv,const float depth){
+    vec4 ndc = vec4((uv.x - 0.5) * 2.0,(uv.y - 0.5)* 2.0, (depth - 0.5) * 2.0, 1.0);
+    vec4 clip= _inverseProjectionMatrix*ndc;
+    vec4 view = cameraMatrixWorld * (clip / clip.w);
+    return view.xyz;
+  }
+
+  #define Scale (vec3(0.8, 0.8, 0.8))
+  #define K (19.19)
+
+  vec3 hash(vec3 a) {
+    a = fract(a * Scale);
+    a += dot(a, a.yxz + K);
+    return fract((a.xxy + a.yxx) * a.zyx);
+  }
+
+  float fresnel_dielectric_cos(float cosi, float eta){
+    float c = abs(cosi);
+    float g = eta * eta - 1.0 +  c* c;
+    float result;
+
+    if (g > 0.0){
+      g = sqrt(g);
+      float A = (g - c) / (g + c);
+      float B = (c* (g + c) - 1.0) / (c * (g - c) + 1.0);
+      result = 0.5 * A * A * (1.0 + B * B);
+    } else {
+      result = 1.0;
+    }
+    
+    return result;
+  }
+
+  float fresnel_dielectric(vec3 Incoming, vec3 Normal, float eta){
+    float cosine = dot(Incoming, Normal);
+    return min(1.0, 5.0 * fresnel_dielectric_cos(cosine, eta));
+  }
+`
+
+const trCompose = /* glsl */ `
+  #define INV_EULER 0.36787944117144233
+
+  alpha = velocityDisocclusion < FLOAT_EPSILON ? (alpha + 0.0075) : 0.0;
+  alpha = clamp(alpha, 0.0, 1.0);
+  bool needsBlur = !didReproject || velocityDisocclusion > 0.5;
+
+  #ifdef boxBlur
+    if (needsBlur) inputColor = boxBlurredColor;
+  #endif
+
+  if (alpha == 1.0) {
+    outputColor = accumulatedColor;
+  } else {
+    float m = mix(alpha, 1.0, blend);
+    if (needsBlur) m = 0.0;
+    outputColor = accumulatedColor * m + inputColor * (1.0 - m);
+  }
+`
 
 // WebGL2: will render normals to RGB channel of "gNormal" buffer, roughness to A channel of "gNormal" buffer, depth to RGBA channel of "gDepth" buffer
 // and velocity to "gVelocity" buffer
@@ -59,105 +206,100 @@ class MRTMaterial extends ShaderMaterial {
         roughness: new Uniform(1),
         roughnessMap: new Uniform(null),
       },
-      vertexShader:
-        /* glsl */
-        `
-                #ifdef USE_MRT
-                 varying vec2 vHighPrecisionZW;
-                #endif
-                #define NORMAL
-                #if defined( FLAT_SHADED ) || defined( USE_BUMPMAP ) || defined( TANGENTSPACE_NORMALMAP )
-                    varying vec3 vViewPosition;
-                #endif
-                #include <common>
-                #include <uv_pars_vertex>
-                #include <displacementmap_pars_vertex>
-                #include <normal_pars_vertex>
-                #include <morphtarget_pars_vertex>
-                #include <skinning_pars_vertex>
-                #include <logdepthbuf_pars_vertex>
-                #include <clipping_planes_pars_vertex>
-                #ifdef USE_UV
-                  ${REVISION.replace(/\D+/g, '') >= 151 ? 'uniform mat3 uvTransform;' : ''}
-                #endif
-                void main() {
-                    #include <uv_vertex>
-                    #include <beginnormal_vertex>
-                    #include <morphnormal_vertex>
-                    #include <skinbase_vertex>
-                    #include <skinnormal_vertex>
-                    #include <defaultnormal_vertex>
-                    #include <normal_vertex>
-                    #include <begin_vertex>
-                    #include <morphtarget_vertex>
-                    #include <skinning_vertex>
-                    #include <displacementmap_vertex>
-                    #include <project_vertex>
-                    #include <logdepthbuf_vertex>
-                    #include <clipping_planes_vertex>
-                    #if defined( FLAT_SHADED ) || defined( USE_BUMPMAP ) || defined( TANGENTSPACE_NORMALMAP )
-                        vViewPosition = - mvPosition.xyz;
-                    #endif
-                    #ifdef USE_MRT
-                        vHighPrecisionZW = gl_Position.zw;
-                    #endif
-                    #ifdef USE_UV
-                        vUv = ( uvTransform * vec3( uv, 1 ) ).xy;
-                    #endif
-                }
-            `,
-      fragmentShader:
-        /* glsl */
-        `
-                 #define NORMAL
-                #if defined( FLAT_SHADED ) || defined( USE_BUMPMAP ) || defined( TANGENTSPACE_NORMALMAP )
-                    varying vec3 vViewPosition;
-                #endif
-                #include <packing>
-                #include <uv_pars_fragment>
-                #include <normal_pars_fragment>
-                #include <bumpmap_pars_fragment>
-                #include <normalmap_pars_fragment>
-                #include <logdepthbuf_pars_fragment>
-                #include <clipping_planes_pars_fragment>
-                #include <roughnessmap_pars_fragment>
+      vertexShader: /* glsl */ `
+        #ifdef USE_MRT
+          varying vec2 vHighPrecisionZW;
+        #endif
+        #define NORMAL
+        #if defined(FLAT_SHADED) || defined(USE_BUMPMAP) || defined(TANGENTSPACE_NORMALMAP)
+          varying vec3 vViewPosition;
+        #endif
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <normal_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+        #ifdef USE_UV
+          ${REVISION.replace(/\D+/g, '') >= 151 ? 'uniform mat3 uvTransform;' : ''}
+        #endif
+        void main() {
+          #include <uv_vertex>
+          #include <beginnormal_vertex>
+          #include <morphnormal_vertex>
+          #include <skinbase_vertex>
+          #include <skinnormal_vertex>
+          #include <defaultnormal_vertex>
+          #include <normal_vertex>
+          #include <begin_vertex>
+          #include <morphtarget_vertex>
+          #include <skinning_vertex>
+          #include <displacementmap_vertex>
+          #include <project_vertex>
+          #include <logdepthbuf_vertex>
+          #include <clipping_planes_vertex>
+          #if defined(FLAT_SHADED) || defined(USE_BUMPMAP) || defined(TANGENTSPACE_NORMALMAP)
+            vViewPosition = -mvPosition.xyz;
+          #endif
+          #ifdef USE_MRT
+            vHighPrecisionZW = gl_Position.zw;
+          #endif
+          #ifdef USE_UV
+            vUv = (uvTransform * vec3(uv, 1)).xy;
+          #endif
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        #define NORMAL
+        #if defined(FLAT_SHADED) || defined(USE_BUMPMAP) || defined(TANGENTSPACE_NORMALMAP)
+          varying vec3 vViewPosition;
+        #endif
+        #include <packing>
+        #include <uv_pars_fragment>
+        #include <normal_pars_fragment>
+        #include <bumpmap_pars_fragment>
+        #include <normalmap_pars_fragment>
+        #include <logdepthbuf_pars_fragment>
+        #include <clipping_planes_pars_fragment>
+        #include <roughnessmap_pars_fragment>
 
-                #ifdef USE_MRT
-                layout(location = 0) out vec4 gNormal;
-                layout(location = 1) out vec4 gDepth;
+        #ifdef USE_MRT
+          layout(location = 0) out vec4 gNormal;
+          layout(location = 1) out vec4 gDepth;
+          varying vec2 vHighPrecisionZW;
+        #endif
+        uniform float roughness;
+        void main() {
+          #include <clipping_planes_fragment>
+          #include <logdepthbuf_fragment>
+          #include <normal_fragment_begin>
+          #include <normal_fragment_maps>
 
-                varying vec2 vHighPrecisionZW;
-                #endif
-                uniform float roughness;
-                void main() {
-                    #include <clipping_planes_fragment>
-                    #include <logdepthbuf_fragment>
-                    #include <normal_fragment_begin>
-                    #include <normal_fragment_maps>
+          float roughnessFactor = roughness;
 
-                    float roughnessFactor = roughness;
+          if (roughness > 10.0e9){
+            roughnessFactor = 1.;
+          } else {
+            #ifdef useRoughnessMap
+              vec4 texelRoughness = texture2D(roughnessMap, vUv);
+              // reads channel G, compatible with a combined OcclusionRoughnessMetallic (RGB) texture
+              roughnessFactor *= texelRoughness.g;
+            #endif
+          }
 
-                    if(roughness > 10.0e9){
-                        roughnessFactor = 1.;
-                    }else{
-                        #ifdef useRoughnessMap
-                            vec4 texelRoughness = texture2D( roughnessMap, vUv );
-                            // reads channel G, compatible with a combined OcclusionRoughnessMetallic (RGB) texture
-                            roughnessFactor *= texelRoughness.g;
-                        #endif
-                    }
-
-                    vec3 normalColor = packNormalToRGB( normal );
-                    #ifdef USE_MRT
-                        float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
-                        vec4 depthColor = packDepthToRGBA( fragCoordZ );
-                        gNormal = vec4( normalColor, roughnessFactor );
-                        gDepth = depthColor;
-                    #else
-                        gl_FragColor = vec4(normalColor, roughnessFactor);
-                    #endif
-                }
-            `,
+          vec3 normalColor = packNormalToRGB(normal);
+          #ifdef USE_MRT
+            float fragCoordZ = 0.5 * vHighPrecisionZW[0] / vHighPrecisionZW[1] + 0.5;
+            vec4 depthColor = packDepthToRGBA(fragCoordZ);
+            gNormal = vec4(normalColor, roughnessFactor);
+            gDepth = depthColor;
+          #else
+            gl_FragColor = vec4(normalColor, roughnessFactor);
+          #endif
+        }
+      `,
       toneMapped: false,
     })
     this.normalMapType = TangentSpaceNormalMap
@@ -166,17 +308,254 @@ class MRTMaterial extends ShaderMaterial {
       get() {
         return 'USE_MRT' in this.defines ? GLSL3 : null
       },
-
       set(_) {},
     })
   }
 }
 
-var vertexShader$1 =
-  '#define GLSLIFY 1\nvarying vec2 vUv;void main(){vUv=position.xy*0.5+0.5;gl_Position=vec4(position.xy,1.0,1.0);}'
+const vertexShader = /* glsl */ `
+  varying vec2 vUv;
 
-var fragmentShader =
-  '#define GLSLIFY 1\nvarying vec2 vUv;uniform sampler2D inputTexture;uniform sampler2D accumulatedTexture;uniform sampler2D normalTexture;uniform sampler2D depthTexture;uniform sampler2D envMap;uniform mat4 _projectionMatrix;uniform mat4 _inverseProjectionMatrix;uniform mat4 cameraMatrixWorld;uniform float cameraNear;uniform float cameraFar;uniform float rayDistance;uniform float intensity;uniform float maxDepthDifference;uniform float roughnessFade;uniform float maxRoughness;uniform float fade;uniform float thickness;uniform float ior;uniform float samples;uniform float jitter;uniform float jitterRoughness;\n#define INVALID_RAY_COORDS vec2(-1.0);\n#define EARLY_OUT_COLOR vec4(0.0, 0.0, 0.0, 1.0)\n#define FLOAT_EPSILON 0.00001\nfloat nearMinusFar;float nearMulFar;float farMinusNear;\n#include <packing>\n#include <helperFunctions>\nvec2 RayMarch(vec3 dir,inout vec3 hitPos,inout float rayHitDepthDifference);vec2 BinarySearch(in vec3 dir,inout vec3 hitPos,inout float rayHitDepthDifference);float fastGetViewZ(const in float depth);vec3 getIBLRadiance(const in vec3 viewDir,const in vec3 normal,const in float roughness);void main(){vec4 depthTexel=textureLod(depthTexture,vUv,0.0);if(dot(depthTexel.rgb,depthTexel.rgb)<FLOAT_EPSILON){gl_FragColor=EARLY_OUT_COLOR;return;}float unpackedDepth=unpackRGBAToDepth(depthTexel);vec4 normalTexel=textureLod(normalTexture,vUv,0.0);float roughness=normalTexel.a;float specular=1.0-roughness;nearMinusFar=cameraNear-cameraFar;nearMulFar=cameraNear*cameraFar;farMinusNear=cameraFar-cameraNear;normalTexel.rgb=unpackRGBToNormal(normalTexel.rgb);float depth=fastGetViewZ(unpackedDepth);vec3 viewPos=getViewPosition(depth);vec3 viewDir=normalize(viewPos);vec3 viewNormal=normalTexel.xyz;vec3 worldPos=screenSpaceToWorldSpace(vUv,unpackedDepth);vec3 jitt=vec3(0.0);if(jitterRoughness!=0.0||jitter!=0.0){vec3 randomJitter=hash(50.0*samples*worldPos)-0.5;float spread=((2.0-specular)+roughness*jitterRoughness);float jitterMix=jitter*0.25+jitterRoughness*roughness;if(jitterMix>1.0)jitterMix=1.0;jitt=mix(vec3(0.0),randomJitter*spread,jitterMix);}viewNormal+=jitt;float fresnelFactor=fresnel_dielectric(viewDir,viewNormal,ior);vec3 iblRadiance=getIBLRadiance(-viewDir,viewNormal,0.)*fresnelFactor;float lastFrameAlpha=textureLod(accumulatedTexture,vUv,0.0).a;if(roughness>maxRoughness||(roughness>1.0-FLOAT_EPSILON&&roughnessFade>1.0-FLOAT_EPSILON)){gl_FragColor=vec4(iblRadiance,lastFrameAlpha);return;}vec3 reflected=reflect(viewDir,viewNormal);vec3 rayDir=reflected*-viewPos.z;vec3 hitPos=viewPos;float rayHitDepthDifference;vec2 coords=RayMarch(rayDir,hitPos,rayHitDepthDifference);if(coords.x==-1.0){gl_FragColor=vec4(iblRadiance,lastFrameAlpha);return;}vec4 SSRTexel=textureLod(inputTexture,coords.xy,0.0);vec4 SSRTexelReflected=textureLod(accumulatedTexture,coords.xy,0.0);vec3 SSR=SSRTexel.rgb+SSRTexelReflected.rgb;float roughnessFactor=mix(specular,1.0,max(0.0,1.0-roughnessFade));vec2 coordsNDC=(coords.xy*2.0-1.0);float screenFade=0.1;float maxDimension=min(1.0,max(abs(coordsNDC.x),abs(coordsNDC.y)));float reflectionIntensity=1.0-(max(0.0,maxDimension-screenFade)/(1.0-screenFade));reflectionIntensity=max(0.,reflectionIntensity);vec3 finalSSR=mix(iblRadiance,SSR,reflectionIntensity)*roughnessFactor;if(fade!=0.0){vec3 hitWorldPos=screenSpaceToWorldSpace(coords,rayHitDepthDifference);float reflectionDistance=distance(hitWorldPos,worldPos)+1.0;float opacity=1.0/(reflectionDistance*fade*0.1);if(opacity>1.0)opacity=1.0;finalSSR*=opacity;}finalSSR*=fresnelFactor*intensity;finalSSR=min(vec3(1.0),finalSSR);float alpha=hitPos.z==1.0 ? 1.0 : SSRTexelReflected.a;alpha=min(lastFrameAlpha,alpha);gl_FragColor=vec4(finalSSR,alpha);}vec2 RayMarch(vec3 dir,inout vec3 hitPos,inout float rayHitDepthDifference){dir=normalize(dir);dir*=rayDistance/float(steps);float depth;vec4 projectedCoord;vec4 lastProjectedCoord;float unpackedDepth;vec4 depthTexel;for(int i=0;i<steps;i++){hitPos+=dir;projectedCoord=_projectionMatrix*vec4(hitPos,1.0);projectedCoord.xy/=projectedCoord.w;projectedCoord.xy=projectedCoord.xy*0.5+0.5;\n#ifndef missedRays\nif(projectedCoord.x<0.0||projectedCoord.x>1.0||projectedCoord.y<0.0||projectedCoord.y>1.0){return INVALID_RAY_COORDS;}\n#endif\ndepthTexel=textureLod(depthTexture,projectedCoord.xy,0.0);unpackedDepth=unpackRGBAToDepth(depthTexel);depth=fastGetViewZ(unpackedDepth);rayHitDepthDifference=depth-hitPos.z;if(rayHitDepthDifference>=0.0&&rayHitDepthDifference<thickness){\n#if refineSteps == 0\nif(dot(depthTexel.rgb,depthTexel.rgb)<FLOAT_EPSILON)return INVALID_RAY_COORDS;\n#else\nreturn BinarySearch(dir,hitPos,rayHitDepthDifference);\n#endif\n}\n#ifndef missedRays\nif(hitPos.z>0.0){return INVALID_RAY_COORDS;}\n#endif\nlastProjectedCoord=projectedCoord;}hitPos.z=1.0;\n#ifndef missedRays\nreturn INVALID_RAY_COORDS;\n#endif\nrayHitDepthDifference=unpackedDepth;return projectedCoord.xy;}vec2 BinarySearch(in vec3 dir,inout vec3 hitPos,inout float rayHitDepthDifference){float depth;vec4 projectedCoord;vec2 lastMinProjectedCoordXY;float unpackedDepth;vec4 depthTexel;for(int i=0;i<refineSteps;i++){projectedCoord=_projectionMatrix*vec4(hitPos,1.0);projectedCoord.xy/=projectedCoord.w;projectedCoord.xy=projectedCoord.xy*0.5+0.5;depthTexel=textureLod(depthTexture,projectedCoord.xy,0.0);unpackedDepth=unpackRGBAToDepth(depthTexel);depth=fastGetViewZ(unpackedDepth);rayHitDepthDifference=depth-hitPos.z;dir*=0.5;if(rayHitDepthDifference>0.0){hitPos-=dir;}else{hitPos+=dir;}}if(dot(depthTexel.rgb,depthTexel.rgb)<FLOAT_EPSILON)return INVALID_RAY_COORDS;if(abs(rayHitDepthDifference)>maxDepthDifference)return INVALID_RAY_COORDS;projectedCoord=_projectionMatrix*vec4(hitPos,1.0);projectedCoord.xy/=projectedCoord.w;projectedCoord.xy=projectedCoord.xy*0.5+0.5;rayHitDepthDifference=unpackedDepth;return projectedCoord.xy;}float fastGetViewZ(const in float depth){\n#ifdef PERSPECTIVE_CAMERA\nreturn nearMulFar/(farMinusNear*depth-cameraFar);\n#else\nreturn depth*nearMinusFar-cameraNear;\n#endif\n}\n#include <common>\n#include <cube_uv_reflection_fragment>\nvec3 getIBLRadiance(const in vec3 viewDir,const in vec3 normal,const in float roughness){\n#if defined(ENVMAP_TYPE_CUBE_UV)\nvec3 reflectVec=reflect(-viewDir,normal);reflectVec=normalize(mix(reflectVec,normal,roughness*roughness));reflectVec=inverseTransformDirection(reflectVec,viewMatrix);vec4 envMapColor=textureCubeUV(envMap,reflectVec,roughness);return envMapColor.rgb*intensity;\n#else\nreturn vec3(0.0);\n#endif\n}'
+  void main() {
+    vUv = position.xy * 0.5 + 0.5;
+    gl_Position = vec4(position.xy, 1.0, 1.0);
+  }
+`
+
+const fragmentShader = /* glsl */ `
+  varying vec2 vUv;
+  uniform sampler2D inputTexture;
+  uniform sampler2D accumulatedTexture;
+  uniform sampler2D normalTexture;
+  uniform sampler2D depthTexture;
+  uniform sampler2D envMap;
+  uniform mat4 _projectionMatrix;
+  uniform mat4 _inverseProjectionMatrix;
+  uniform mat4 cameraMatrixWorld;
+  uniform float cameraNear;
+  uniform float cameraFar;
+  uniform float rayDistance;
+  uniform float intensity;
+  uniform float maxDepthDifference;
+  uniform float roughnessFade;
+  uniform float maxRoughness;
+  uniform float fade;
+  uniform float thickness;
+  uniform float ior;
+  uniform float samples;
+  uniform float jitter;
+  uniform float jitterRoughness;
+
+  #define INVALID_RAY_COORDS vec2(-1.0);
+
+  #define EARLY_OUT_COLOR vec4(0.0, 0.0, 0.0, 1.0)
+  #define FLOAT_EPSILON 0.00001
+  float nearMinusFar;
+  float nearMulFar;
+  float farMinusNear;
+
+  #include <packing>
+
+  ${helperFunctions}
+
+  vec2 RayMarch(vec3 dir, inout vec3 hitPos, inout float rayHitDepthDifference);
+  vec2 BinarySearch(in vec3 dir, inout vec3 hitPos, inout float rayHitDepthDifference);
+  float fastGetViewZ(const in float depth);
+  vec3 getIBLRadiance(const in vec3 viewDir, const in vec3 normal, const in float roughness);
+
+  void main() {
+    vec4 depthTexel = textureLod(depthTexture, vUv, 0.0);
+
+    if (dot(depthTexel.rgb, depthTexel.rgb) < FLOAT_EPSILON) {
+      gl_FragColor = EARLY_OUT_COLOR;
+      return;
+    }
+
+    float unpackedDepth = unpackRGBAToDepth(depthTexel);
+    vec4 normalTexel = textureLod(normalTexture, vUv, 0.0);
+    float roughness = normalTexel.a;
+    float specular = 1.0 - roughness;
+
+    nearMinusFar = cameraNear - cameraFar;
+    nearMulFar = cameraNear * cameraFar;
+    farMinusNear = cameraFar - cameraNear;
+
+    normalTexel.rgb = unpackRGBToNormal(normalTexel.rgb);
+
+    float depth = fastGetViewZ(unpackedDepth);
+    vec3 viewPos = getViewPosition(depth);
+    vec3 viewDir = normalize(viewPos);
+    vec3 viewNormal = normalTexel.xyz;
+    vec3 worldPos = screenSpaceToWorldSpace(vUv, unpackedDepth);
+
+    vec3 jitt=vec3(0.0);
+    if (jitterRoughness != 0.0 || jitter!=0.0){
+      vec3 randomJitter = hash(50.0 * samples * worldPos) - 0.5;
+      float spread= ((2.0 - specular) + roughness * jitterRoughness);
+      float jitterMix = jitter * 0.25 + jitterRoughness * roughness;
+      if (jitterMix > 1.0) jitterMix = 1.0;
+      jitt = mix(vec3(0.0), randomJitter * spread, jitterMix);
+    }
+    
+    viewNormal += jitt;
+    float fresnelFactor = fresnel_dielectric(viewDir, viewNormal, ior);
+    vec3 iblRadiance = getIBLRadiance(-viewDir, viewNormal, 0.0) * fresnelFactor;
+    float lastFrameAlpha = textureLod(accumulatedTexture, vUv, 0.0).a;
+    if (roughness > maxRoughness || (roughness > 1.0 - FLOAT_EPSILON && roughnessFade > 1.0 - FLOAT_EPSILON)) {
+      gl_FragColor=vec4(iblRadiance,lastFrameAlpha);
+      return;
+    }
+    
+    vec3 reflected = reflect(viewDir, viewNormal);
+    vec3 rayDir = reflected *- viewPos.z;
+    vec3 hitPos = viewPos;
+    float rayHitDepthDifference;
+    vec2 coords = RayMarch(rayDir, hitPos, rayHitDepthDifference);
+    if (coords.x == -1.0){
+      gl_FragColor=vec4(iblRadiance, lastFrameAlpha);
+      return;
+    }
+    
+    vec4 SSRTexel = textureLod(inputTexture, coords.xy, 0.0);
+    vec4 SSRTexelReflected = textureLod(accumulatedTexture, coords.xy, 0.0);
+    vec3 SSR = SSRTexel.rgb + SSRTexelReflected.rgb;
+    float roughnessFactor = mix(specular, 1.0, max(0.0, 1.0 - roughnessFade));
+    vec2 coordsNDC = (coords.xy * 2.0 - 1.0);
+    float screenFade = 0.1;
+    float maxDimension = min(1.0, max(abs(coordsNDC.x), abs(coordsNDC.y)));
+    float reflectionIntensity = 1.0 - (max(0.0, maxDimension - screenFade) / (1.0 - screenFade));
+    reflectionIntensity = max(0.0, reflectionIntensity);
+    vec3 finalSSR = mix(iblRadiance, SSR, reflectionIntensity) * roughnessFactor;
+
+    if (fade != 0.0) {
+      vec3 hitWorldPos = screenSpaceToWorldSpace(coords, rayHitDepthDifference);
+      float reflectionDistance = distance(hitWorldPos, worldPos) + 1.0;
+      float opacity = 1.0 / (reflectionDistance * fade * 0.1);
+      if(opacity > 1.0) opacity=1.0;
+      finalSSR *= opacity;
+    }
+
+    finalSSR *= fresnelFactor * intensity;
+    finalSSR = min(vec3(1.0), finalSSR);
+    float alpha = hitPos.z == 1.0 ? 1.0 : SSRTexelReflected.a;
+    alpha = min(lastFrameAlpha, alpha);
+    gl_FragColor = vec4(finalSSR, alpha);
+  }
+
+  vec2 RayMarch(vec3 dir, inout vec3 hitPos, inout float rayHitDepthDifference) {
+    dir=normalize(dir);
+    dir *= rayDistance / float(steps);
+    float depth;
+    vec4 projectedCoord;
+    vec4 lastProjectedCoord;
+    float unpackedDepth;
+    vec4 depthTexel;
+
+    for (int i = 0; i < steps; i++) {
+      hitPos += dir;
+      projectedCoord = _projectionMatrix * vec4(hitPos, 1.0);
+      projectedCoord.xy /= projectedCoord.w;
+      projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
+
+      #ifndef missedRays
+        if (
+          projectedCoord.x < 0.0 ||
+          projectedCoord.x > 1.0 ||
+          projectedCoord.y < 0.0 ||
+          projectedCoord.y > 1.0
+        ) {
+          return INVALID_RAY_COORDS;
+        }
+      #endif
+
+      depthTexel = textureLod(depthTexture, projectedCoord.xy, 0.0);
+      unpackedDepth = unpackRGBAToDepth(depthTexel);
+      depth = fastGetViewZ(unpackedDepth);
+      rayHitDepthDifference = depth - hitPos.z;
+
+      if (rayHitDepthDifference >= 0.0 && rayHitDepthDifference < thickness){
+        #if refineSteps == 0
+          if (dot(depthTexel.rgb, depthTexel.rgb) < FLOAT_EPSILON) return INVALID_RAY_COORDS;
+        #else
+          return BinarySearch(dir, hitPos, rayHitDepthDifference);
+        #endif
+      }
+
+      #ifndef missedRays
+        if (hitPos.z > 0.0) return INVALID_RAY_COORDS;
+      #endif
+
+      lastProjectedCoord = projectedCoord;
+    }
+    
+    hitPos.z = 1.0;
+
+    #ifndef missedRays
+      return INVALID_RAY_COORDS;
+    #endif
+
+    rayHitDepthDifference = unpackedDepth;
+
+    return projectedCoord.xy;
+  }
+
+  vec2 BinarySearch(in vec3 dir, inout vec3 hitPos, inout float rayHitDepthDifference) {
+    float depth;
+    vec4 projectedCoord;
+    vec2 lastMinProjectedCoordXY;
+    float unpackedDepth;
+    vec4 depthTexel;
+
+    for (int i = 0; i < refineSteps; i++){
+      projectedCoord = _projectionMatrix * vec4(hitPos, 1.0);
+      projectedCoord.xy /= projectedCoord.w;
+      projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
+      depthTexel = textureLod(depthTexture, projectedCoord.xy, 0.0);
+      unpackedDepth = unpackRGBAToDepth(depthTexel);
+      depth = fastGetViewZ(unpackedDepth);
+      rayHitDepthDifference = depth - hitPos.z;
+      dir *= 0.5;
+
+      if (rayHitDepthDifference > 0.0) {
+        hitPos -= dir;
+      } else {
+        hitPos += dir;
+      }
+    }
+    
+    if (dot(depthTexel.rgb, depthTexel.rgb) < FLOAT_EPSILON) return INVALID_RAY_COORDS;
+    if (abs(rayHitDepthDifference) > maxDepthDifference) return INVALID_RAY_COORDS;
+
+    projectedCoord = _projectionMatrix*vec4(hitPos, 1.0);
+    projectedCoord.xy /= projectedCoord.w;
+    projectedCoord.xy = projectedCoord.xy * 0.5 + 0.5;
+    rayHitDepthDifference = unpackedDepth;
+    return projectedCoord.xy;
+  }
+
+  float fastGetViewZ(const in float depth){
+    #ifdef PERSPECTIVE_CAMERA
+      return nearMulFar / (farMinusNear * depth - cameraFar);
+    #else
+      return depth * nearMinusFar - cameraNear;
+    #endif
+  }
+
+  #include <common>
+  #include <cube_uv_reflection_fragment>
+
+  vec3 getIBLRadiance(const in vec3 viewDir, const in vec3 normal, const in float roughness){
+    #if defined(ENVMAP_TYPE_CUBE_UV)
+      vec3 reflectVec = reflect(-viewDir, normal);
+      reflectVec = normalize(mix(reflectVec, normal,roughness * roughness));
+      reflectVec = inverseTransformDirection(reflectVec, viewMatrix);
+      vec4 envMapColor = textureCubeUV(envMap, reflectVec, roughness);
+      return envMapColor.rgb * intensity;
+    #else
+      return vec3(0.0);
+    #endif
+  }
+`
 
 class ReflectionsMaterial extends ShaderMaterial {
   constructor() {
@@ -216,8 +595,8 @@ class ReflectionsMaterial extends ShaderMaterial {
         CUBEUV_MAX_MIP: 0,
         vWorldPosition: 'worldPos',
       },
-      fragmentShader: fragmentShader.replace('#include <helperFunctions>', helperFunctions),
-      vertexShader: vertexShader$1,
+      fragmentShader,
+      vertexShader,
       toneMapped: false,
       depthWrite: false,
       depthTest: false,
@@ -497,11 +876,157 @@ const defaultSSROptions = {
   velocityResolutionScale: 1,
 }
 
-var vertexShader =
-  '#define GLSLIFY 1\nvarying vec2 vUv;void main(){vUv=position.xy*0.5+0.5;gl_Position=vec4(position.xy,1.0,1.0);}'
+const temporalResolve = /* glsl */ `
+  uniform sampler2D inputTexture;
+  uniform sampler2D accumulatedTexture;
+  uniform sampler2D velocityTexture;
+  uniform sampler2D lastVelocityTexture;
+  uniform float blend;
+  uniform float correction;
+  uniform float exponent;
+  uniform float samples;
+  uniform vec2 invTexSize;
+  uniform mat4 curInverseProjectionMatrix;
+  uniform mat4 curCameraMatrixWorld;
+  uniform mat4 prevInverseProjectionMatrix;
+  uniform mat4 prevCameraMatrixWorld;
+  varying vec2 vUv;
 
-var temporalResolve =
-  '#define GLSLIFY 1\nuniform sampler2D inputTexture;uniform sampler2D accumulatedTexture;uniform sampler2D velocityTexture;uniform sampler2D lastVelocityTexture;uniform float blend;uniform float correction;uniform float exponent;uniform float samples;uniform vec2 invTexSize;uniform mat4 curInverseProjectionMatrix;uniform mat4 curCameraMatrixWorld;uniform mat4 prevInverseProjectionMatrix;uniform mat4 prevCameraMatrixWorld;varying vec2 vUv;\n#define MAX_NEIGHBOR_DEPTH_DIFFERENCE 0.001\n#define FLOAT_EPSILON 0.00001\n#define FLOAT_ONE_MINUS_EPSILON 0.99999\nvec3 transformexponent;vec3 undoColorTransformExponent;vec3 transformColor(vec3 color){if(exponent==1.0)return color;return pow(abs(color),transformexponent);}vec3 undoColorTransform(vec3 color){if(exponent==1.0)return color;return max(pow(abs(color),undoColorTransformExponent),vec3(0.0));}void main(){if(exponent!=1.0){transformexponent=vec3(1.0/exponent);undoColorTransformExponent=vec3(exponent);}vec4 inputTexel=textureLod(inputTexture,vUv,0.0);vec4 accumulatedTexel;vec3 inputColor=transformColor(inputTexel.rgb);vec3 accumulatedColor;float alpha=inputTexel.a;float velocityDisocclusion;bool didReproject=false;\n#ifdef boxBlur\nvec3 boxBlurredColor=inputTexel.rgb;\n#endif\nvec4 velocity=textureLod(velocityTexture,vUv,0.0);bool isMoving=alpha<1.0||dot(velocity.xy,velocity.xy)>0.0;if(isMoving){vec3 minNeighborColor=inputColor;vec3 maxNeighborColor=inputColor;vec3 col;vec2 neighborUv;vec2 reprojectedUv=vUv-velocity.xy;vec4 lastVelocity=textureLod(lastVelocityTexture,reprojectedUv,0.0);float depth=velocity.b;float closestDepth=depth;float lastClosestDepth=lastVelocity.b;float neighborDepth;float lastNeighborDepth;for(int x=-correctionRadius;x<=correctionRadius;x++){for(int y=-correctionRadius;y<=correctionRadius;y++){if(x!=0||y!=0){neighborUv=vUv+vec2(x,y)*invTexSize;vec4 neigborVelocity=textureLod(velocityTexture,neighborUv,0.0);neighborDepth=neigborVelocity.b;col=textureLod(inputTexture,neighborUv,0.0).xyz;int absX=abs(x);int absY=abs(y);\n#ifdef dilation\nif(absX==1&&absY==1){if(neighborDepth>closestDepth){velocity=neigborVelocity;closestDepth=neighborDepth;}vec4 lastNeighborVelocity=textureLod(velocityTexture,vUv+vec2(x,y)*invTexSize,0.0);lastNeighborDepth=lastNeighborVelocity.b;if(neighborDepth>closestDepth){lastVelocity=lastNeighborVelocity;lastClosestDepth=lastNeighborDepth;}}\n#endif\nif(abs(depth-neighborDepth)<MAX_NEIGHBOR_DEPTH_DIFFERENCE){\n#ifdef boxBlur\nif(absX<=2&&absY<=2)boxBlurredColor+=col;\n#endif\ncol=transformColor(col);minNeighborColor=min(col,minNeighborColor);maxNeighborColor=max(col,maxNeighborColor);}}}}float velocityLength=length(lastVelocity.xy-velocity.xy);velocityDisocclusion=(velocityLength-0.000005)*10.0;velocityDisocclusion*=velocityDisocclusion;reprojectedUv=vUv-velocity.xy;\n#ifdef boxBlur\nfloat pxRadius=correctionRadius>5 ? 121.0 : pow(float(correctionRadius*2+1),2.0);boxBlurredColor/=pxRadius;boxBlurredColor=transformColor(boxBlurredColor);\n#endif\nif(reprojectedUv.x>=0.0&&reprojectedUv.x<=1.0&&reprojectedUv.y>=0.0&&reprojectedUv.y<=1.0){accumulatedTexel=textureLod(accumulatedTexture,reprojectedUv,0.0);accumulatedColor=transformColor(accumulatedTexel.rgb);vec3 clampedColor=clamp(accumulatedColor,minNeighborColor,maxNeighborColor);accumulatedColor=mix(accumulatedColor,clampedColor,correction);didReproject=true;}else{\n#ifdef boxBlur\naccumulatedColor=boxBlurredColor;\n#else\naccumulatedColor=inputColor;\n#endif\n}if(velocity.r>FLOAT_ONE_MINUS_EPSILON&&velocity.g>FLOAT_ONE_MINUS_EPSILON){alpha=0.0;velocityDisocclusion=1.0;}}else{accumulatedColor=transformColor(textureLod(accumulatedTexture,vUv,0.0).rgb);}vec3 outputColor=inputColor;\n#include <custom_compose_shader>\ngl_FragColor=vec4(undoColorTransform(outputColor),alpha);}'
+  #define MAX_NEIGHBOR_DEPTH_DIFFERENCE 0.001
+  #define FLOAT_EPSILON 0.00001
+  #define FLOAT_ONE_MINUS_EPSILON 0.99999
+
+  vec3 transformexponent;
+  vec3 undoColorTransformExponent;
+
+  vec3 transformColor(vec3 color) {
+    if (exponent == 1.0) return color;
+    return pow(abs(color), transformexponent);
+  }
+
+  vec3 undoColorTransform(vec3 color) {
+    if (exponent == 1.0) return color;
+    return max(pow(abs(color), undoColorTransformExponent), vec3(0.0));
+  }
+
+  void main() {
+    if (exponent != 1.0){
+      transformexponent = vec3(1.0 / exponent);
+      undoColorTransformExponent = vec3(exponent);
+    }
+
+    vec4 inputTexel = textureLod(inputTexture, vUv, 0.0);
+    vec4 accumulatedTexel;
+    vec3 inputColor = transformColor(inputTexel.rgb);
+    vec3 accumulatedColor;
+    float alpha = inputTexel.a;
+    float velocityDisocclusion;
+    bool didReproject = false;
+
+    #ifdef boxBlur
+      vec3 boxBlurredColor = inputTexel.rgb;
+    #endif
+
+    vec4 velocity = textureLod(velocityTexture, vUv, 0.0);
+    bool isMoving = alpha < 1.0 || dot(velocity.xy, velocity.xy) > 0.0;
+    if (isMoving) {
+      vec3 minNeighborColor = inputColor;
+      vec3 maxNeighborColor = inputColor;
+      vec3 col;
+      vec2 neighborUv;
+      vec2 reprojectedUv = vUv-velocity.xy;
+      vec4 lastVelocity = textureLod(lastVelocityTexture, reprojectedUv, 0.0);
+      float depth = velocity.b;
+      float closestDepth = depth;
+      float lastClosestDepth = lastVelocity.b;
+      float neighborDepth;
+      float lastNeighborDepth;
+
+      for (int x = -correctionRadius; x <= correctionRadius; x++) {
+        for (int y = -correctionRadius; y <= correctionRadius; y++) {
+          if (x != 0 || y != 0) {
+            neighborUv = vUv + vec2(x,y) * invTexSize;
+            vec4 neigborVelocity = textureLod(velocityTexture, neighborUv, 0.0);
+            neighborDepth = neigborVelocity.b;
+            col = textureLod(inputTexture, neighborUv, 0.0).xyz;
+            int absX = abs(x);
+            int absY = abs(y);
+
+            #ifdef dilation
+              if (absX == 1 && absY == 1) {
+                if (neighborDepth > closestDepth) {
+                  velocity=neigborVelocity;
+                  closestDepth=neighborDepth;
+                }
+
+                vec4 lastNeighborVelocity = textureLod(velocityTexture, vUv + vec2(x, y) * invTexSize, 0.0);
+                lastNeighborDepth = lastNeighborVelocity.b;
+
+                if (neighborDepth > closestDepth) {
+                  lastVelocity = lastNeighborVelocity;
+                  lastClosestDepth = lastNeighborDepth;
+                }
+              }
+            #endif
+
+            if (abs(depth-neighborDepth) < MAX_NEIGHBOR_DEPTH_DIFFERENCE) {
+              #ifdef boxBlur
+                if (absX <= 2 && absY <= 2) boxBlurredColor += col;
+              #endif
+
+              col = transformColor(col);
+              minNeighborColor = min(col, minNeighborColor);
+              maxNeighborColor = max(col, maxNeighborColor);
+            }
+          }
+        }
+      }
+
+      float velocityLength = length(lastVelocity.xy - velocity.xy);
+      velocityDisocclusion = (velocityLength - 0.000005) * 10.0;
+      velocityDisocclusion *= velocityDisocclusion;
+      reprojectedUv = vUv - velocity.xy;
+
+      #ifdef boxBlur
+        float pxRadius = correctionRadius > 5 ? 121.0 : pow(float(correctionRadius * 2 + 1), 2.0);
+        boxBlurredColor /= pxRadius;
+        boxBlurredColor = transformColor(boxBlurredColor);
+      #endif
+
+      if (
+        reprojectedUv.x >=0.0 &&
+        reprojectedUv.x <= 1.0 &&
+        reprojectedUv.y >= 0.0 &&
+        reprojectedUv.y <= 1.0
+      ) {
+        accumulatedTexel = textureLod(accumulatedTexture, reprojectedUv, 0.0);
+        accumulatedColor = transformColor(accumulatedTexel.rgb);
+        vec3 clampedColor = clamp(accumulatedColor, minNeighborColor, maxNeighborColor);
+        accumulatedColor = mix(accumulatedColor, clampedColor, correction);
+        didReproject = true;
+      } else {
+        #ifdef boxBlur
+          accumulatedColor=boxBlurredColor;
+        #else
+          accumulatedColor=inputColor;
+        #endif
+      }
+
+      if (velocity.r > FLOAT_ONE_MINUS_EPSILON && velocity.g > FLOAT_ONE_MINUS_EPSILON) {
+        alpha = 0.0;
+        velocityDisocclusion = 1.0;
+      }
+    } else {
+      accumulatedColor = transformColor(textureLod(accumulatedTexture, vUv, 0.0).rgb);
+    }
+
+    vec3 outputColor = inputColor;
+
+    #include <custom_compose_shader>
+
+    gl_FragColor = vec4(undoColorTransform(outputColor), alpha);
+  }
+`
 
 class TemporalResolveMaterial extends ShaderMaterial {
   constructor(customComposeShader) {
@@ -1072,10 +1597,6 @@ function useBoxProjectedEnvMap(shader, envMapPosition, envMapSize) {
       )
 }
 
-const finalFragmentShader = finalSSRShader
-  .replace('#include <helperFunctions>', helperFunctions)
-  .replace('#include <boxBlur>', boxBlur) // all the properties for which we don't have to resample
-
 const noResetSamplesProperties = ['blur', 'blurSharpness', 'blurKernel']
 const defaultCubeRenderTarget = new WebGLCubeRenderTarget(1)
 let pmremGenerator
@@ -1086,7 +1607,7 @@ class SSREffect extends Effect {
    * @param {SSROptions} [options] The optional options for the SSR effect
    */
   constructor(scene, camera, options = defaultSSROptions) {
-    super('SSREffect', finalFragmentShader, {
+    super('SSREffect', finalSSRShader, {
       type: 'FinalSSRMaterial',
       uniforms: new Map([
         ['reflectionsTexture', new Uniform(null)],
