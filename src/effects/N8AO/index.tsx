@@ -3,7 +3,7 @@
 
 import { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
-import { N8AOPostPass } from 'n8ao'
+import { N8AOPostPass } from './N8AOPostPass'
 import { useThree, ReactThreeFiber, applyProps } from '@react-three/fiber'
 
 type N8AOProps = {
