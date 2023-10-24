@@ -141,11 +141,13 @@ export const EffectComposer = React.memo(
             if (child instanceof Effect) {
               const effects: Effect[] = [child]
 
-              let next: unknown = null
-              while ((next = children[i + 1]) instanceof Effect) {
-                if (isConvolution(next)) break
-                effects.push(next)
-                i++
+              if (!isConvolution(child)) {
+                let next: unknown = null
+                while ((next = children[i + 1]) instanceof Effect) {
+                  if (isConvolution(next)) break
+                  effects.push(next)
+                  i++
+                }
               }
 
               const pass = new EffectPass(camera, ...effects)
