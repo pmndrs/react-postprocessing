@@ -115,10 +115,20 @@ class ASCIIEffect extends Effect {
 }
 
 export const ASCII = forwardRef<ASCIIEffect, IASCIIEffectProps>(
-  ({ characters = ` .:,'-^=*+?!|0#X%WM@`, fontSize = 54, cellSize = 16, color = '#ffffff', invert = false }, fref) => {
+  (
+    {
+      font = 'arial',
+      characters = ` .:,'-^=*+?!|0#X%WM@`,
+      fontSize = 54,
+      cellSize = 16,
+      color = '#ffffff',
+      invert = false,
+    },
+    fref
+  ) => {
     const effect = useMemo(
-      () => new ASCIIEffect({ characters, fontSize, cellSize, color, invert }),
-      [characters, fontSize, cellSize, color, invert]
+      () => new ASCIIEffect({ characters, font, fontSize, cellSize, color, invert }),
+      [characters, fontSize, cellSize, color, invert, font]
     )
     return <primitive ref={fref} object={effect} />
   }
