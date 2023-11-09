@@ -105,5 +105,11 @@ export const Outline = forwardRef(function Outline(
     }
   }, [api, effect.selection, invalidate])
 
+  useEffect(() => {
+    return () => {
+      effect.dispose()
+    }
+  }, [effect])
+
   return <primitive ref={forwardRef} object={effect} />
 })
