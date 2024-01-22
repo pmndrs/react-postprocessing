@@ -11,6 +11,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          cache: "yarn"
+          cache: "npm"
       - name: "install deps and build"
-        run: yarn install --frozen-lockfile
+        run: npm ci && npm run build

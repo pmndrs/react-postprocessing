@@ -16,11 +16,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          cache: 'npm'
       - run: |
-          yarn install --frozen-lockfile
-          yarn release
-          yarn build-storybook
+          npm ci
+          npm run release
+          npm run build-storybook
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
