@@ -58,8 +58,8 @@ export const DepthOfField = forwardRef(function DepthOfField(
     // Depth texture for depth picking with optional packing strategy
     if (depthTexture) effect.setDepthTexture(depthTexture.texture, depthTexture.packing as DepthPackingStrategies)
     // Temporary fix that restores DOF 6.21.3 behavior, everything since then lets shapes leak through the blur
-    const maskMaterial = (effect as any).maskPass.getFullscreenMaterial()
-    maskMaterial.maskFunction = MaskFunction.MULTIPLY_RGB_SET_ALPHA
+    const maskPass = (effect as any).maskPass
+    maskPass.maskFunction = MaskFunction.MULTIPLY_RGB_SET_ALPHA
     return effect
   }, [
     camera,
