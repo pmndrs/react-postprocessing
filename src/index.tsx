@@ -33,6 +33,7 @@ export * from './effects/LUT'
 export * from './effects/TiltShift'
 export * from './effects/TiltShift2'
 export * from './effects/ASCII'
+export * from './effects/Water'
 
 // These are not effect passes
 export * from './effects/SSR'
