@@ -1,5 +1,5 @@
 import type { TextureDataType } from 'three'
-import { HalfFloatType } from 'three'
+import { HalfFloatType, NoToneMapping } from 'three'
 import React, {
   forwardRef,
   useMemo,
@@ -32,11 +32,12 @@ export const EffectComposerContext = createContext<{
   resolutionScale?: number
 }>(null!)
 
-export type EffectComposerProps = {
+export type EffectComposerProps = {  
   enabled?: boolean
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
-  disableNormalPass?: boolean
+  /** Only used for SSGI currently, leave it disabled for everything else unless it's needed */
+  enableNormalPass?: boolean
   stencilBuffer?: boolean
   autoClear?: boolean
   resolutionScale?: number
@@ -62,7 +63,7 @@ export const EffectComposer = React.memo(
         renderPriority = 1,
         autoClear = true,
         depthBuffer,
-        disableNormalPass,
+        enableNormalPass,
         stencilBuffer,
         multisampling = 8,
         frameBufferType = HalfFloatType,
@@ -89,7 +90,7 @@ export const EffectComposer = React.memo(
         // Create normal pass
         let downSamplingPass = null
         let normalPass = null
-        if (!disableNormalPass) {
+        if (enableNormalPass) {
           normalPass = new NormalPass(scene, camera)
           normalPass.enabled = false
           effectComposer.addPass(normalPass)
@@ -109,7 +110,7 @@ export const EffectComposer = React.memo(
         multisampling,
         frameBufferType,
         scene,
-        disableNormalPass,
+        enableNormalPass,
         resolutionScale,
       ])
 
@@ -169,6 +170,15 @@ export const EffectComposer = React.memo(
           if (downSamplingPass) downSamplingPass.enabled = false
         }
       }, [composer, children, camera, normalPass, downSamplingPass, instance])
+
+      // Disable tone mapping because threejs disallows tonemapping on render targets
+      useEffect(() => {
+        const currentTonemapping = gl.toneMapping
+        gl.toneMapping = NoToneMapping
+        return () => {
+          gl.toneMapping = currentTonemapping
+        }
+      }, [])
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(
