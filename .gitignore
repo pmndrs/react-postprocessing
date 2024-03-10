@@ -9,10 +9,8 @@ $RECYCLE.BIN/
 .DS_Store
 .vscode
 .docz/
-package-lock.json
 coverage/
 .idea
-yarn-error.log
 .size-snapshot.json
 pnpm-debug.log
 .parcel-cache
