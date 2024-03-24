@@ -24,7 +24,7 @@ export const Texture = forwardRef<TextureEffect, TextureProps>(function Texture(
   const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props, t, texture])
   const effect = useMemo(() => {
     let tEffect = new TextureEffect({ ...props, texture: t || texture });
-    if (opacity) {
+    if (typeof opacity === "number") {
       tEffect.blendMode.opacity.value = opacity;
     }
     return tEffect;
