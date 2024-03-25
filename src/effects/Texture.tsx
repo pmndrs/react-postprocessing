@@ -21,13 +21,8 @@ export const Texture = forwardRef<TextureEffect, TextureProps>(function Texture(
     else t.colorSpace = 'srgb'
     t.wrapS = t.wrapT = RepeatWrapping
   }, [t])
-  const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props, t, texture])
   const effect = useMemo(() => {
-    let tEffect = new TextureEffect({ ...props, texture: t || texture });
-    if (typeof opacity === "number") {
-      tEffect.blendMode.opacity.value = opacity;
-    }
-    return tEffect;
-  }, [props, t, texture, opacity])
-  return <primitive ref={ref} object={effect} dispose={null} />
+    return new TextureEffect({ ...props, texture: t || texture });
+  }, [props, t, texture])
+  return <primitive ref={ref} object={effect} blendMode-opacity-value={opacity ?? 1} dispose={null} />
 })
