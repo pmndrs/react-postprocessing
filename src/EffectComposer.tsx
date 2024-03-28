@@ -1,14 +1,6 @@
 import type { TextureDataType } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
-import React, {
-  forwardRef,
-  useMemo,
-  useEffect,
-  useLayoutEffect,
-  createContext,
-  useRef,
-  useImperativeHandle,
-} from 'react'
+import React, { forwardRef, useMemo, useEffect, createContext, useRef, useImperativeHandle } from 'react'
 import { useThree, useFrame, useInstanceHandle } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
@@ -32,7 +24,7 @@ export const EffectComposerContext = createContext<{
   resolutionScale?: number
 }>(null!)
 
-export type EffectComposerProps = {  
+export type EffectComposerProps = {
   enabled?: boolean
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
@@ -74,10 +66,18 @@ export const EffectComposer = React.memo(
       const scene = _scene || defaultScene
       const camera = _camera || defaultCamera
 
-      const [composer, normalPass, downSamplingPass] = useMemo(() => {
+      const composer = useRef<EffectComposerImpl | undefined>()
+      const normalPass = useRef<NormalPass | undefined>()
+      const downSamplingPass = useRef<DepthDownsamplingPass | undefined>()
+
+      const group = useRef(null)
+      const instance = useInstanceHandle(group)
+
+      useEffect(() => {
         const webGL2Available = isWebGL2Available()
+
         // Initialize composer
-        const effectComposer = new EffectComposerImpl(gl, {
+        composer.current = new EffectComposerImpl(gl, {
           depthBuffer,
           stencilBuffer,
           multisampling: multisampling > 0 && webGL2Available ? multisampling : 0,
@@ -85,55 +85,26 @@ export const EffectComposer = React.memo(
         })
 
         // Add render pass
-        effectComposer.addPass(new RenderPass(scene, camera))
+        composer.current.addPass(new RenderPass(scene, camera))
 
         // Create normal pass
-        let downSamplingPass = null
-        let normalPass = null
         if (enableNormalPass) {
-          normalPass = new NormalPass(scene, camera)
-          normalPass.enabled = false
-          effectComposer.addPass(normalPass)
+          normalPass.current = new NormalPass(scene, camera)
+          normalPass.current.enabled = false
+          composer.current.addPass(normalPass.current)
           if (resolutionScale !== undefined && webGL2Available) {
-            downSamplingPass = new DepthDownsamplingPass({ normalBuffer: normalPass.texture, resolutionScale })
-            downSamplingPass.enabled = false
-            effectComposer.addPass(downSamplingPass)
+            downSamplingPass.current = new DepthDownsamplingPass({
+              normalBuffer: normalPass.current.texture,
+              resolutionScale,
+            })
+            downSamplingPass.current.enabled = false
+            composer.current.addPass(downSamplingPass.current)
           }
         }
 
-        return [effectComposer, normalPass, downSamplingPass]
-      }, [
-        camera,
-        gl,
-        depthBuffer,
-        stencilBuffer,
-        multisampling,
-        frameBufferType,
-        scene,
-        enableNormalPass,
-        resolutionScale,
-      ])
-
-      useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
-      useFrame(
-        (_, delta) => {
-          if (enabled) {
-            const currentAutoClear = gl.autoClear
-            gl.autoClear = autoClear
-            if (stencilBuffer && !autoClear) gl.clearStencil()
-            composer.render(delta)
-            gl.autoClear = currentAutoClear
-          }
-        },
-        enabled ? renderPriority : 0
-      )
-
-      const group = useRef(null)
-      const instance = useInstanceHandle(group)
-      useLayoutEffect(() => {
         const passes: Pass[] = []
 
-        if (group.current && instance.current && composer) {
+        if (group.current && instance.current && composer.current) {
           const children = instance.current.objects as unknown[]
 
           for (let i = 0; i < children.length; i++) {
@@ -158,18 +129,50 @@ export const EffectComposer = React.memo(
             }
           }
 
-          for (const pass of passes) composer?.addPass(pass)
+          for (const pass of passes) composer.current?.addPass(pass)
 
-          if (normalPass) normalPass.enabled = true
-          if (downSamplingPass) downSamplingPass.enabled = true
+          if (normalPass.current) normalPass.current.enabled = true
+          if (downSamplingPass.current) downSamplingPass.current.enabled = true
         }
 
         return () => {
-          for (const pass of passes) composer?.removePass(pass)
-          if (normalPass) normalPass.enabled = false
-          if (downSamplingPass) downSamplingPass.enabled = false
+          for (const pass of passes) composer.current?.removePass(pass)
+          if (normalPass.current) normalPass.current.enabled = false
+          if (downSamplingPass.current) downSamplingPass.current.enabled = false
+          normalPass.current?.dispose()
+          downSamplingPass.current?.dispose()
+          composer.current?.dispose()
+
+          composer.current = undefined
+          normalPass.current = undefined
+          downSamplingPass.current = undefined
         }
-      }, [composer, children, camera, normalPass, downSamplingPass, instance])
+      }, [
+        camera,
+        gl,
+        depthBuffer,
+        stencilBuffer,
+        multisampling,
+        frameBufferType,
+        scene,
+        enableNormalPass,
+        resolutionScale,
+        instance,
+      ])
+
+      useEffect(() => composer.current?.setSize(size.width, size.height), [size])
+      useFrame(
+        (_, delta) => {
+          if (enabled) {
+            const currentAutoClear = gl.autoClear
+            gl.autoClear = autoClear
+            if (stencilBuffer && !autoClear) gl.clearStencil()
+            composer.current?.render(delta)
+            gl.autoClear = currentAutoClear
+          }
+        },
+        enabled ? renderPriority : 0
+      )
 
       // Disable tone mapping because threejs disallows tonemapping on render targets
       useEffect(() => {
@@ -182,7 +185,14 @@ export const EffectComposer = React.memo(
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(
-        () => ({ composer, normalPass, downSamplingPass, resolutionScale, camera, scene }),
+        () => ({
+          composer: composer.current!,
+          normalPass: normalPass.current!,
+          downSamplingPass: downSamplingPass.current!,
+          resolutionScale,
+          camera,
+          scene,
+        }),
         [composer, normalPass, downSamplingPass, resolutionScale, camera, scene]
       )
 
