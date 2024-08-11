@@ -15,6 +15,7 @@ jobs:
     with:
       mdx: './docs'
       libname: 'React Postprocessing'
+      home_redirect: '/introduction'
 
   deploy:
     needs: build
