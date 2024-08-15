@@ -16,6 +16,7 @@ jobs:
       mdx: './docs'
       libname: 'React Postprocessing'
       home_redirect: '/introduction'
+      emoji: '📬'
 
   deploy:
     needs: build
