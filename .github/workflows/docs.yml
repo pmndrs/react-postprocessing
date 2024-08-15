@@ -17,6 +17,7 @@ jobs:
       libname: 'React Postprocessing'
       home_redirect: '/introduction'
       emoji: '📬'
+      logo: '/logo.jpg'
 
   deploy:
     needs: build
