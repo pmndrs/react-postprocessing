@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   build:
-    uses: pmndrs/docs/.github/workflows/build.yml@app-router
+    uses: pmndrs/docs/.github/workflows/build.yml@main
     with:
       mdx: './docs'
       libname: 'React Postprocessing'
