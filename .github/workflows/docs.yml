@@ -15,9 +15,11 @@ jobs:
     with:
       mdx: 'docs'
       libname: 'React Postprocessing'
+      libname_short: 'pp'
       home_redirect: '/introduction'
       icon: '📬'
       logo: '/logo.jpg'
+      github: 'https://github.com/pmndrs/react-postprocessing'
 
   deploy:
     needs: build
