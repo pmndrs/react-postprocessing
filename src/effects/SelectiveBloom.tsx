@@ -14,6 +14,8 @@ export type SelectiveBloomProps = BloomEffectOptions &
     lights: Object3D[] | ObjectRef[]
     selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
     selectionLayer: number
+    inverted: boolean
+    ignoreBackground: boolean
   }>
 
 const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.enable(effect.selection.layer)
@@ -24,6 +26,8 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
     selection = [],
     selectionLayer = 10,
     lights = [],
+    inverted = false,
+    ignoreBackground = false,
     luminanceThreshold,
     luminanceSmoothing,
     intensity,
@@ -43,8 +47,8 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
   const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
-    () =>
-      new SelectiveBloomEffect(scene, camera, {
+    () => {
+      const effect = new SelectiveBloomEffect(scene, camera, {
         blendFunction: BlendFunction.ADD,
         luminanceThreshold,
         luminanceSmoothing,
@@ -54,8 +58,12 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
         kernelSize,
         mipmapBlur,
         ...props,
-      }),
-    [scene, camera, luminanceThreshold, luminanceSmoothing, intensity, width, height, kernelSize, mipmapBlur, props]
+      });
+      effect.inverted = inverted;
+      effect.ignoreBackground = ignoreBackground;
+      return effect;
+    },
+    [scene, camera, luminanceThreshold, luminanceSmoothing, intensity, width, height, kernelSize, mipmapBlur, inverted, ignoreBackground, props]
   )
 
   const api = useContext(selectionContext)
