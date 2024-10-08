@@ -49,7 +49,7 @@
     "buffer": "^6.0.3",
     "maath": "^0.6.0",
     "n8ao": "^1.6.6",
-    "postprocessing": "^6.32.1",
+    "postprocessing": "^6.35.2",
     "three-stdlib": "^2.23.4"
   },
   "devDependencies": {

@@ -8394,10 +8394,10 @@ postcss@^8.4.23:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postprocessing@^6.32.1:
-  version "6.32.1"
-  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.32.1.tgz#a91fa4101246620e12113cded7028d9e4b504845"
-  integrity sha512-GiUv5vN/QCWnPJ3DdYPYn/4V1amps94T/0jFPSUL40KfaLCkfE9yPudzTtJJQjs168QNpwkmnvYF9RcP3HiAWA==
+postprocessing@^6.35.2:
+  version "6.35.2"
+  resolved "https://registry.yarnpkg.com/postprocessing/-/postprocessing-6.35.2.tgz#7a7b42f7d3cc21cd2fded2505af645bf62276716"
+  integrity sha512-yGmidrVzA1dSEmExYGgWOGcRvyOVahvurNo9iuzOonRCY6f1hnJe6/HMVSnKV9ppjLtCTqzZOI9iz8CACkmijw==
 
 potpack@^1.0.1:
   version "1.0.2"
