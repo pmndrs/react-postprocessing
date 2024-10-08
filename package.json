@@ -36,7 +36,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "vite build && tsc --emitDeclarationOnly",
-    "prepare": "yarn build",
+    "prepare": "npm run build",
     "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
     "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
     "test": "echo no tests yet",
@@ -91,5 +91,8 @@
     "@react-three/fiber": ">=8.0",
     "react": ">=18.0",
     "three": ">= 0.138.0"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
