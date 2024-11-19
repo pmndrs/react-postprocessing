@@ -15,7 +15,7 @@ const WaterShader = {
     vUv.y += sin(x-y) * amplitude * cos(y);
     vec4 rgba = texture2D(inputBuffer, vUv);
     outputColor = rgba;
-  }`
+  }`,
 }
 
 export class WaterEffectImpl extends Effect {
@@ -23,9 +23,9 @@ export class WaterEffectImpl extends Effect {
     super('WaterEffect', WaterShader.fragmentShader, {
       blendFunction,
       attributes: EffectAttribute.CONVOLUTION,
-      uniforms: new Map<string, Uniform<number | number[]>>([['factor', new Uniform(factor)]])
+      uniforms: new Map<string, Uniform<number | number[]>>([['factor', new Uniform(factor)]]),
     })
   }
 }
 
-export const WaterEffect = wrapEffect(WaterEffectImpl, { blendFunction: BlendFunction.NORMAL })
+export const WaterEffect = wrapEffect(WaterEffectImpl, { blendFunction: BlendFunction.NORMAL, args: [] })

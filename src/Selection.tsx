@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import React, { createContext, useState, useContext, useEffect, useRef, useMemo } from 'react'
+import React, { createContext, useState, useContext, useEffect, useRef, useMemo, type JSX } from 'react'
 
 export type Api = {
   selected: THREE.Object3D[]

@@ -1,7 +1,7 @@
 import React, { MutableRefObject } from 'react'
 import { Vector2 } from 'three'
 import * as THREE from 'three'
-import { type ReactThreeFiber, extend, useThree } from '@react-three/fiber'
+import { type ReactThreeFiber, ThreeElement, extend, useThree } from '@react-three/fiber'
 import type { Effect, BlendFunction } from 'postprocessing'
 
 export const resolveRef = <T,>(ref: T | React.MutableRefObject<T>) =>
@@ -9,9 +9,8 @@ export const resolveRef = <T,>(ref: T | React.MutableRefObject<T>) =>
 
 export type EffectConstructor = new (...args: any[]) => Effect
 
-export type EffectProps<T extends EffectConstructor> = ReactThreeFiber.Node<
-  T extends Function ? T['prototype'] : InstanceType<T>,
-  T
+export type EffectProps<T extends EffectConstructor> = ThreeElement<
+  T extends Function ? T['prototype'] : InstanceType<T>
 > &
   ConstructorParameters<T>[0] & {
     blendFunction?: BlendFunction

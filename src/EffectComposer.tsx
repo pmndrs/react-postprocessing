@@ -9,7 +9,7 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react'
-import { useThree, useFrame, useInstanceHandle, LocalState } from '@react-three/fiber'
+import { useThree, useFrame, useInstanceHandle } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
@@ -22,7 +22,6 @@ import {
   EffectAttribute,
 } from 'postprocessing'
 import { isWebGL2Available } from 'three-stdlib'
-import { Instance } from '@react-three/fiber/dist/declarations/src/core/renderer'
 
 export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl
@@ -51,10 +50,6 @@ export type EffectComposerProps = {
 
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
-
-interface NewLocalState extends LocalState {
-  children: Instance[]
-}
 
 export const EffectComposer = React.memo(
   forwardRef(
@@ -139,7 +134,7 @@ export const EffectComposer = React.memo(
         const passes: Pass[] = []
 
         if (group.current && instance.current && composer) {
-          const children = (instance.current as NewLocalState).children
+          const children = instance.current.children
 
           for (let i = 0; i < children.length; i++) {
             const child = children[i].object
