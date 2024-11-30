@@ -91,7 +91,7 @@ export const Outline = forwardRef(function Outline(
     invalidate()
   }, [effect, invalidate, selectionLayer])
 
-  const ref = useRef<OutlineEffect>()
+  const ref = useRef<OutlineEffect>(undefined)
   useEffect(() => {
     if (api && api.enabled) {
       if (api.selected?.length) {
