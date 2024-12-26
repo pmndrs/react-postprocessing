@@ -39,7 +39,7 @@
     "prepare": "yarn build",
     "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
     "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
-    "test": "echo no tests yet",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit false --strict --jsx react",
     "release": "semantic-release",
     "storybook": "storybook dev -p 6006",
@@ -85,7 +85,8 @@
     "storybook": "^7.0.10",
     "three": "^0.151.3",
     "typescript": "^5.0.4",
-    "vite": "^4.3.5"
+    "vite": "^4.3.5",
+    "vitest": "^2.1.8"
   },
   "peerDependencies": {
     "@react-three/fiber": ">=8.0",

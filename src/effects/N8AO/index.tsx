@@ -40,7 +40,9 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
     ref: Ref<N8AOPostPass>
   ) => {
     const { camera, scene } = useThree()
-    const effect = useMemo(() => new N8AOPostPass(scene, camera), [])
+    const effect = useMemo(() => new N8AOPostPass(scene, camera), [camera, scene])
+
+    // TODO: implement dispose upstream; this effect has memory leaks without
     useLayoutEffect(() => {
       applyProps(effect.configuration, {
         color,
@@ -67,10 +69,13 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
       renderMode,
       halfRes,
       depthAwareUpsampling,
+      effect,
     ])
+
     useLayoutEffect(() => {
       if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
-    }, [quality])
+    }, [effect, quality])
+
     return <primitive ref={ref} object={effect} />
   }
 )

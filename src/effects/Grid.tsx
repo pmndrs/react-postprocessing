@@ -16,6 +16,6 @@ export const Grid = forwardRef(function Grid({ size, ...props }: GridProps, ref:
   useLayoutEffect(() => {
     if (size) effect.setSize(size.width, size.height)
     invalidate()
-  }, [effect, size])
+  }, [effect, size, invalidate])
   return <primitive ref={ref} object={effect} dispose={null} />
 })
