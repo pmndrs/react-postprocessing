@@ -12,7 +12,6 @@ import {
   WebGLRenderTarget,
   LinearFilter,
   HalfFloatType,
-  WebGLMultipleRenderTargets,
   ShaderChunk,
   Color,
   Quaternion,
@@ -678,7 +677,7 @@ class ReflectionsPass extends Pass {
 
     if (this.USE_MRT) {
       // buffers: normal, depth (2), roughness will be written to the alpha channel of the normal buffer
-      this.gBuffersRenderTarget = new WebGLMultipleRenderTargets(width, height, 2, {
+      this.gBuffersRenderTarget = new WebGLRenderTarget(width, height, 2, {
         minFilter: LinearFilter,
         magFilter: LinearFilter,
       })
