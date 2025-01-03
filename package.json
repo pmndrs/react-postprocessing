@@ -62,8 +62,8 @@
     "@storybook/react": "^7.0.10",
     "@storybook/react-vite": "^7.0.11",
     "@storybook/testing-library": "^0.0.14-next.2",
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
+    "@types/react": "^19.0.2",
+    "@types/react-dom": "^19.0.2",
     "@types/three": "^0.150.2",
     "@typescript-eslint/eslint-plugin": "^5.59.1",
     "@typescript-eslint/parser": "^5.59.1",
@@ -78,8 +78,8 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
-    "react": "^19.0.0-rc.1",
-    "react-dom": "^19.0.0-rc.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "rimraf": "^5.0.0",
     "semantic-release": "^21.0.2",
     "storybook": "^7.0.10",
@@ -90,11 +90,7 @@
   },
   "peerDependencies": {
     "@react-three/fiber": ">=8.0",
-    "react": ">=18.0",
+    "react": ">=19.0",
     "three": ">= 0.138.0"
-  },
-  "overrides": {
-    "@types/react": "npm:types-react@19.0.0-rc.1",
-    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }
