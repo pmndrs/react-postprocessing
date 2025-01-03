@@ -1,6 +1,8 @@
 import type { TextureDataType, Group } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
-import React, {
+import {
+  type JSX,
+  memo,
   forwardRef,
   useMemo,
   useEffect,
@@ -51,7 +53,7 @@ export type EffectComposerProps = {
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
-export const EffectComposer = React.memo(
+export const EffectComposer = memo(
   forwardRef<EffectComposerImpl, EffectComposerProps>(
     (
       {

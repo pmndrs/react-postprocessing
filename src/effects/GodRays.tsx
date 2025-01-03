@@ -5,7 +5,7 @@ import { EffectComposerContext } from '../EffectComposer'
 import { resolveRef } from '../util'
 
 type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
-  sun: Mesh | Points | React.MutableRefObject<Mesh | Points>
+  sun: Mesh | Points | React.RefObject<Mesh | Points>
 }
 
 export const GodRays = forwardRef(function GodRays(props: GodRaysProps, ref: Ref<GodRaysEffect>) {

@@ -1,12 +1,13 @@
 import * as THREE from 'three'
-import React, { createContext, useState, useContext, useEffect, useRef, useMemo, type JSX } from 'react'
+import React, { createContext, useState, useContext, useEffect, useRef, useMemo } from 'react'
+import { ThreeElements } from '@react-three/fiber'
 
 export type Api = {
   selected: THREE.Object3D[]
   select: React.Dispatch<React.SetStateAction<THREE.Object3D[]>>
   enabled: boolean
 }
-export type SelectApi = JSX.IntrinsicElements['group'] & {
+export type SelectApi = Omit<ThreeElements['group'], 'ref'> & {
   enabled?: boolean
 }
 
