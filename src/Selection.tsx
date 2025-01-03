@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import React, { createContext, useState, useContext, useEffect, useRef, useMemo } from 'react'
-import { ThreeElements } from '@react-three/fiber'
+import { type ThreeElements } from '@react-three/fiber'
 
 export type Api = {
   selected: THREE.Object3D[]

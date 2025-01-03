@@ -1,7 +1,7 @@
 import React, { RefObject } from 'react'
 import { Vector2 } from 'three'
 import * as THREE from 'three'
-import { type ReactThreeFiber, ThreeElement, extend, useThree } from '@react-three/fiber'
+import { type ReactThreeFiber, type ThreeElement, extend, useThree } from '@react-three/fiber'
 import type { Effect, BlendFunction } from 'postprocessing'
 
 export const resolveRef = <T,>(ref: T | React.RefObject<T>) =>
