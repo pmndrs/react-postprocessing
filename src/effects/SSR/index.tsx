@@ -64,7 +64,7 @@ export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
 
   ref: Ref<SSREffect>
 ) {
-  const { invalidate } = useThree()
+  const invalidate = useThree((s) => s.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
   const effect = useMemo(
     () => new SSREffect(scene, camera, { ENABLE_BLUR, USE_MRT, ...props }),
@@ -83,7 +83,7 @@ export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
         }
       }
     }
-  }, [api])
+  }, [api, effect, invalidate])
 
   return <primitive ref={ref} object={effect} {...props} />
 })

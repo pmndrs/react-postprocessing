@@ -1466,9 +1466,15 @@ class TemporalResolvePass extends Pass {
     renderer.setRenderTarget(this.renderTarget)
     renderer.render(this.scene, this.camera) // save the render target's texture for use in next frame
 
-    renderer.copyFramebufferToTexture(zeroVec2, this.accumulatedTexture)
-    renderer.setRenderTarget(this.velocityPass.renderTarget)
-    renderer.copyFramebufferToTexture(zeroVec2, this.lastVelocityTexture)
+    if (Number(REVISION) >= 165) {
+      renderer.copyFramebufferToTexture(this.accumulatedTexture, zeroVec2)
+      renderer.setRenderTarget(this.velocityPass.renderTarget)
+      renderer.copyFramebufferToTexture(this.lastVelocityTexture, zeroVec2)
+    } else {
+      renderer.copyFramebufferToTexture(zeroVec2, this.accumulatedTexture)
+      renderer.setRenderTarget(this.velocityPass.renderTarget)
+      renderer.copyFramebufferToTexture(zeroVec2, this.accumulatedTexture)
+    }
   }
 }
 

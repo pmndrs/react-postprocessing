@@ -1,4 +1,4 @@
-import type { TextureDataType } from 'three'
+import type { TextureDataType, Group } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
 import React, {
   forwardRef,
@@ -9,7 +9,7 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react'
-import { useThree, useFrame, useInstanceHandle } from '@react-three/fiber'
+import { useThree, useFrame, type Instance } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
@@ -52,7 +52,7 @@ const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
 export const EffectComposer = React.memo(
-  forwardRef(
+  forwardRef<EffectComposerImpl, EffectComposerProps>(
     (
       {
         children,
@@ -67,7 +67,7 @@ export const EffectComposer = React.memo(
         stencilBuffer,
         multisampling = 8,
         frameBufferType = HalfFloatType,
-      }: EffectComposerProps,
+      },
       ref
     ) => {
       const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
@@ -128,13 +128,15 @@ export const EffectComposer = React.memo(
         enabled ? renderPriority : 0
       )
 
-      const group = useRef(null)
-      const instance = useInstanceHandle(group)
+      const group = useRef<Group>(null!)
       useLayoutEffect(() => {
         const passes: Pass[] = []
 
-        if (group.current && instance.current && composer) {
-          const children = instance.current.children
+        // TODO: rewrite all of this with R3F v9
+        const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
+
+        if (groupInstance && composer) {
+          const children = groupInstance.children
 
           for (let i = 0; i < children.length; i++) {
             const child = children[i].object
@@ -169,7 +171,7 @@ export const EffectComposer = React.memo(
           if (normalPass) normalPass.enabled = false
           if (downSamplingPass) downSamplingPass.enabled = false
         }
-      }, [composer, children, camera, normalPass, downSamplingPass, instance])
+      }, [composer, children, camera, normalPass, downSamplingPass])
 
       // Disable tone mapping because threejs disallows tonemapping on render targets
       useEffect(() => {
@@ -178,7 +180,7 @@ export const EffectComposer = React.memo(
         return () => {
           gl.toneMapping = currentTonemapping
         }
-      }, [])
+      }, [gl])
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(

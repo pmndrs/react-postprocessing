@@ -3,19 +3,21 @@ import { BlendFunction, Effect, EffectAttribute } from 'postprocessing'
 import { wrapEffect } from '../util'
 
 const WaterShader = {
-  fragmentShader: `
-  uniform float factor;
-  void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-    vec2 vUv = uv;
-    float frequency = 6.0 * factor;
-    float amplitude = 0.015 * factor;
-    float x = vUv.y * frequency + time * .7; 
-    float y = vUv.x * frequency + time * .3;
-    vUv.x += cos(x+y) * amplitude * cos(y);
-    vUv.y += sin(x-y) * amplitude * cos(y);
-    vec4 rgba = texture2D(inputBuffer, vUv);
-    outputColor = rgba;
-  }`,
+  fragmentShader: /* glsl */ `
+    uniform float factor;
+
+    void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+      vec2 vUv = uv;
+      float frequency = 6.0 * factor;
+      float amplitude = 0.015 * factor;
+      float x = vUv.y * frequency + time * 0.7; 
+      float y = vUv.x * frequency + time * 0.3;
+      vUv.x += cos(x + y) * amplitude * cos(y);
+      vUv.y += sin(x - y) * amplitude * cos(y);
+      vec4 rgba = texture(inputBuffer, vUv);
+      outputColor = rgba;
+    }
+  `,
 }
 
 export class WaterEffectImpl extends Effect {

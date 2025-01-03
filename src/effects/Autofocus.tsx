@@ -10,7 +10,7 @@ import React, {
   RefObject,
   useMemo,
 } from 'react'
-import { useThree, useFrame, createPortal, Vector3 } from '@react-three/fiber'
+import { useThree, useFrame, createPortal, type Vector3 } from '@react-three/fiber'
 import { CopyPass, DepthPickingPass, DepthOfFieldEffect } from 'postprocessing'
 import { easing } from 'maath'
 
