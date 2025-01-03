@@ -1,12 +1,12 @@
 import { OutlineEffect } from 'postprocessing'
-import { Ref, MutableRefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
+import { Ref, RefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
 import { resolveRef } from '../util'
 
-type ObjectRef = MutableRefObject<Object3D>
+type ObjectRef = RefObject<Object3D>
 
 export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   Partial<{
@@ -93,7 +93,7 @@ export const Outline = forwardRef(function Outline(
     invalidate()
   }, [effect, invalidate, selectionLayer])
 
-  const ref = useRef<OutlineEffect>()
+  const ref = useRef<OutlineEffect>(undefined)
   useEffect(() => {
     if (api && api.enabled) {
       if (api.selected?.length) {
