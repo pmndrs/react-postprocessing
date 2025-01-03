@@ -148,7 +148,7 @@ export const EffectComposer = memo(
 
               if (!isConvolution(child)) {
                 let next: unknown = null
-                while ((next = children[i + 1]) instanceof Effect) {
+                while ((next = children[i + 1]?.object) instanceof Effect) {
                   if (isConvolution(next)) break
                   effects.push(next)
                   i++
