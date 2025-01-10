@@ -30,7 +30,7 @@ export type AutofocusProps = React.ComponentProps<typeof DepthOfField> & {
 }
 
 export type AutofocusApi = {
-  dofRef: RefObject<DepthOfFieldEffect>
+  dofRef: RefObject<DepthOfFieldEffect | null>
   hitpoint: THREE.Vector3
   update: (delta: number, updateTarget: boolean) => void
 }
