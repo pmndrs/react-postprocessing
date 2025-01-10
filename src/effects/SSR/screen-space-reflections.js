@@ -12,7 +12,6 @@ import {
   WebGLRenderTarget,
   LinearFilter,
   HalfFloatType,
-  WebGLMultipleRenderTargets,
   ShaderChunk,
   Color,
   Quaternion,
@@ -27,6 +26,7 @@ import {
   PMREMGenerator,
   Texture,
 } from 'three'
+import { WebGLMultipleRenderTargets } from '../../compat'
 
 const boxBlur = /* glsl */ `
   uniform float blur;
