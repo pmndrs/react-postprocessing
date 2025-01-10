@@ -11,9 +11,6 @@ declare global {
 }
 global.IS_REACT_ACT_ENVIRONMENT = true
 
-// NOTE: fixed in R3F v9 stable
-global.HTMLCanvasElement = class {} as any
-
 // Mock scheduler to test React features
 vi.mock('scheduler', () => require('scheduler/unstable_mock'))
 

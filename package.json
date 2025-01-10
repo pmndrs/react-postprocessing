@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@react-three/drei": "^9.68.2",
-    "@react-three/fiber": "9.0.0-rc.1",
+    "@react-three/fiber": "9.0.0-rc.2",
     "@storybook/addon-essentials": "^7.0.10",
     "@storybook/addon-interactions": "^7.0.10",
     "@storybook/addon-links": "^7.0.10",
