@@ -42,7 +42,7 @@ From
 > the screen diagonal. This is especially beneficial for GPGPU passes and
 > effects that use complex fragment shaders.
 
-Postprocessing also supports srgb-encoding out of the box, as well as WebGL2
+Postprocessing also supports gamma correction out of the box, as well as WebGL2
 MSAA (multi sample anti aliasing), which is react-postprocessing's default, you
 get high performance crisp results w/o jagged edges.
 

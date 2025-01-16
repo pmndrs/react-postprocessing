@@ -17,7 +17,6 @@ import {
   RenderPass,
   EffectPass,
   NormalPass,
-  // @ts-ignore
   DepthDownsamplingPass,
   Effect,
   Pass,
