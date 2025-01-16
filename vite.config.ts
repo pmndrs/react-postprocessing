@@ -1,5 +1,6 @@
 import * as vite from 'vite'
 import * as path from 'node:path'
+import { BlendFunction, EffectAttribute } from 'postprocessing'
 
 export default vite.defineConfig({
   resolve: {
@@ -31,6 +32,13 @@ export default vite.defineConfig({
     },
     {
       name: 'vite-minify',
+      transform(code, url) {
+        if (!url.includes('node_modules')) {
+          code = code.replaceAll(/EffectAttribute\.(\w+)/g, (_, key) => EffectAttribute[key])
+          code = code.replaceAll(/BlendFunction\.(\w+)/g, (_, key) => BlendFunction[key])
+          return vite.transformWithEsbuild(code, url)
+        }
+      },
       renderChunk: {
         order: 'post',
         async handler(code, { fileName }) {
