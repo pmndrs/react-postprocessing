@@ -1,12 +1,13 @@
 import * as THREE from 'three'
 import React, { createContext, useState, useContext, useEffect, useRef, useMemo } from 'react'
+import { type ThreeElements } from '@react-three/fiber'
 
 export type Api = {
   selected: THREE.Object3D[]
   select: React.Dispatch<React.SetStateAction<THREE.Object3D[]>>
   enabled: boolean
 }
-export type SelectApi = JSX.IntrinsicElements['group'] & {
+export type SelectApi = Omit<ThreeElements['group'], 'ref'> & {
   enabled?: boolean
 }
 
@@ -24,7 +25,7 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
   useEffect(() => {
     if (api && enabled) {
       let changed = false
-      const current: THREE.Object3D<THREE.Event>[] = []
+      const current: THREE.Object3D[] = []
       group.current.traverse((o) => {
         o.type === 'Mesh' && current.push(o)
         if (api.selected.indexOf(o) === -1) changed = true

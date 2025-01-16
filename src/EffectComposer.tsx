@@ -1,6 +1,8 @@
-import type { TextureDataType } from 'three'
+import type { TextureDataType, Group } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
-import React, {
+import {
+  type JSX,
+  memo,
   forwardRef,
   useMemo,
   useEffect,
@@ -9,13 +11,12 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react'
-import { useThree, useFrame } from '@react-three/fiber'
+import { useThree, useFrame, type Instance } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
   EffectPass,
   NormalPass,
-  // @ts-ignore
   DepthDownsamplingPass,
   Effect,
   Pass,
@@ -51,7 +52,7 @@ export type EffectComposerProps = {
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
-export const EffectComposer = React.memo(
+export const EffectComposer = memo(
   forwardRef<EffectComposerImpl, EffectComposerProps>(
     (
       {
@@ -128,25 +129,25 @@ export const EffectComposer = React.memo(
         enabled ? renderPriority : 0
       )
 
-      const group = useRef(null)
+      const group = useRef<Group>(null!)
       useLayoutEffect(() => {
         const passes: Pass[] = []
 
         // TODO: rewrite all of this with R3F v9
-        const groupInstance = (group.current as any)?.__r3f as { objects: unknown[] }
+        const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
 
         if (groupInstance && composer) {
-          const children = groupInstance.objects
+          const children = groupInstance.children
 
           for (let i = 0; i < children.length; i++) {
-            const child = children[i]
+            const child = children[i].object
 
             if (child instanceof Effect) {
               const effects: Effect[] = [child]
 
               if (!isConvolution(child)) {
                 let next: unknown = null
-                while ((next = children[i + 1]) instanceof Effect) {
+                while ((next = children[i + 1]?.object) instanceof Effect) {
                   if (isConvolution(next)) break
                   effects.push(next)
                   i++
