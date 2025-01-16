@@ -11,57 +11,36 @@
     "3d"
   ],
   "license": "MIT",
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "exports": {
-    "types": "./dist/index.d.ts",
-    "require": "./dist/index.cjs",
-    "import": "./dist/index.js"
-  },
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
   "files": [
-    "dist"
+    "dist/*",
+    "src/*"
   ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pmndrs/react-postprocessing.git"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix"
-    ]
-  },
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "vite build && tsc --emitDeclarationOnly",
-    "prepare": "yarn build",
+    "build": "vite build",
     "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
     "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit false --strict --jsx react",
-    "release": "semantic-release",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "typecheck": "tsc",
+    "release": "semantic-release"
   },
   "dependencies": {
-    "buffer": "^6.0.3",
     "maath": "^0.6.0",
-    "n8ao": "^1.6.6",
+    "n8ao": "^1.9.4",
     "postprocessing": "^6.32.1",
     "three-stdlib": "^2.35.7"
   },
   "devDependencies": {
     "@react-three/drei": "^9.68.2",
     "@react-three/fiber": "9.0.0-rc.4",
-    "@storybook/addon-essentials": "^7.0.10",
-    "@storybook/addon-interactions": "^7.0.10",
-    "@storybook/addon-links": "^7.0.10",
-    "@storybook/blocks": "^7.0.10",
-    "@storybook/react": "^7.0.10",
-    "@storybook/react-vite": "^7.0.11",
-    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/node": "^22.10.7",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@types/three": "^0.156.0",
@@ -74,15 +53,10 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.6.12",
-    "husky": "^8.0.3",
-    "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "rimraf": "^5.0.0",
     "semantic-release": "^21.0.2",
-    "storybook": "^7.0.10",
     "three": "^0.156.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.5",
@@ -90,7 +64,7 @@
   },
   "peerDependencies": {
     "@react-three/fiber": "9.0.0-rc.4",
-    "react": ">=19.0",
+    "react": "^19.0",
     "three": ">= 0.156.0"
   }
 }

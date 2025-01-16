@@ -5,7 +5,7 @@ export type ColorAverageProps = Partial<{
   blendFunction: BlendFunction
 }>
 
-export const ColorAverage = forwardRef<ColorAverageEffect, ColorAverageProps>(function ColorAverage(
+export const ColorAverage = /* @__PURE__ */ forwardRef<ColorAverageEffect, ColorAverageProps>(function ColorAverage(
   { blendFunction = BlendFunction.NORMAL }: ColorAverageProps,
   ref: Ref<ColorAverageEffect>
 ) {

@@ -11,7 +11,7 @@ export type SelectApi = Omit<ThreeElements['group'], 'ref'> & {
   enabled?: boolean
 }
 
-export const selectionContext = createContext<Api | null>(null)
+export const selectionContext = /* @__PURE__ */ createContext<Api | null>(null)
 
 export function Selection({ children, enabled = true }: { enabled?: boolean; children: React.ReactNode }) {
   const [selected, select] = useState<THREE.Object3D[]>([])

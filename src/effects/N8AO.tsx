@@ -3,10 +3,10 @@
 
 import { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
-import { N8AOPostPass } from './N8AOPostPass'
+import { N8AOPostPass } from 'n8ao'
 import { useThree, ReactThreeFiber, applyProps } from '@react-three/fiber'
 
-type N8AOProps = {
+export type N8AOProps = {
   aoRadius?: number
   distanceFalloff?: number
   intensity?: number
@@ -21,7 +21,7 @@ type N8AOProps = {
   renderMode?: 0 | 1 | 2 | 3 | 4
 }
 
-export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
+export const N8AO = /* @__PURE__ */ forwardRef<N8AOPostPass, N8AOProps>(
   (
     {
       halfRes,

@@ -24,7 +24,7 @@ import {
 } from 'postprocessing'
 import { isWebGL2Available } from 'three-stdlib'
 
-export const EffectComposerContext = createContext<{
+export const EffectComposerContext = /* @__PURE__ */ createContext<{
   composer: EffectComposerImpl
   normalPass: NormalPass | null
   downSamplingPass: DepthDownsamplingPass | null
@@ -52,8 +52,8 @@ export type EffectComposerProps = {
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
-export const EffectComposer = memo(
-  forwardRef<EffectComposerImpl, EffectComposerProps>(
+export const EffectComposer = /* @__PURE__ */ memo(
+  /* @__PURE__ */ forwardRef<EffectComposerImpl, EffectComposerProps>(
     (
       {
         children,
