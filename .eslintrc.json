@@ -10,8 +10,7 @@
     "plugin:prettier/recommended",
     "plugin:react-hooks/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings",
-    "plugin:storybook/recommended"
+    "plugin:import/warnings"
   ],
   "plugins": ["@typescript-eslint", "react", "prettier", "react-hooks", "import"],
   "parser": "@typescript-eslint/parser",
