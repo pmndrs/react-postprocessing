@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-const version = parseInt(THREE.REVISION.replace(/\D+/g, ''))
+const version = /* @__PURE__ */ (() => parseInt(THREE.REVISION.replace(/\D+/g, '')))()
 
 // https://github.com/mrdoob/three.js/pull/26644
 // https://github.com/mrdoob/three.js/pull/28901
@@ -11,13 +11,13 @@ const EffectCompositer = {
     sceneDiffuse: { value: null },
     sceneDepth: { value: null },
     tDiffuse: { value: null },
-    projMat: { value: new THREE.Matrix4() },
-    viewMat: { value: new THREE.Matrix4() },
-    projectionMatrixInv: { value: new THREE.Matrix4() },
-    viewMatrixInv: { value: new THREE.Matrix4() },
-    cameraPos: { value: new THREE.Vector3() },
-    resolution: { value: new THREE.Vector2() },
-    color: { value: new THREE.Vector3(0, 0, 0) },
+    projMat: { value: /* @__PURE__ */ new THREE.Matrix4() },
+    viewMat: { value: /* @__PURE__ */ new THREE.Matrix4() },
+    projectionMatrixInv: { value: /* @__PURE__ */ new THREE.Matrix4() },
+    viewMatrixInv: { value: /* @__PURE__ */ new THREE.Matrix4() },
+    cameraPos: { value: /* @__PURE__ */ new THREE.Vector3() },
+    resolution: { value: /* @__PURE__ */ new THREE.Vector2() },
+    color: { value: /* @__PURE__ */ new THREE.Vector3(0, 0, 0) },
     blueNoise: { value: null },
     downsampledDepth: { value: null },
     time: { value: 0.0 },

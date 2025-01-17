@@ -9,7 +9,7 @@ import { DepthDownSample } from './DepthDownSample'
 import BlueNoise from './BlueNoise'
 import { WebGLMultipleRenderTargets } from '../../compat'
 
-const bluenoiseBits = Buffer.from(BlueNoise, 'base64')
+const bluenoiseBits = /* @__PURE__ */ Buffer.from(BlueNoise, 'base64')
 
 /**
  *

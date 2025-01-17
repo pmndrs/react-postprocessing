@@ -14,7 +14,7 @@ export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
     selectionLayer: number
   }>
 
-export const Outline = forwardRef(function Outline(
+export const Outline = /* @__PURE__ */ forwardRef(function Outline(
   {
     selection = [],
     selectionLayer = 10,

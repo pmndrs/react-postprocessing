@@ -7,7 +7,7 @@ type TextureProps = ConstructorParameters<typeof TextureEffect>[0] & {
   textureSrc: string
 }
 
-export const Texture = forwardRef<TextureEffect, TextureProps>(function Texture(
+export const Texture = /* @__PURE__ */ forwardRef<TextureEffect, TextureProps>(function Texture(
   { textureSrc, texture, ...props }: TextureProps,
   ref: Ref<TextureEffect>
 ) {

@@ -14,7 +14,7 @@ export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
     strength: ReactThreeFiber.Vector2
   }>
 
-export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
+export const Glitch = /* @__PURE__ */ forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   { active = true, ...props }: GlitchProps,
   ref: Ref<GlitchEffect>
 ) {

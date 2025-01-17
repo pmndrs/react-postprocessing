@@ -16,7 +16,7 @@ type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
     blur: number
   }>
 
-export const DepthOfField = forwardRef(function DepthOfField(
+export const DepthOfField = /* @__PURE__ */ forwardRef(function DepthOfField(
   {
     blendFunction,
     worldFocusDistance,

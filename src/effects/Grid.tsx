@@ -10,7 +10,7 @@ type GridProps = ConstructorParameters<typeof GridEffect>[0] &
     }
   }>
 
-export const Grid = forwardRef(function Grid({ size, ...props }: GridProps, ref: Ref<GridEffect>) {
+export const Grid = /* @__PURE__ */ forwardRef(function Grid({ size, ...props }: GridProps, ref: Ref<GridEffect>) {
   const invalidate = useThree((state) => state.invalidate)
   const effect = useMemo(() => new GridEffect(props), [props])
   useLayoutEffect(() => {

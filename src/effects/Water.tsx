@@ -30,4 +30,7 @@ export class WaterEffectImpl extends Effect {
   }
 }
 
-export const WaterEffect = wrapEffect(WaterEffectImpl, { blendFunction: BlendFunction.NORMAL, args: [] })
+export const WaterEffect = /* @__PURE__ */ wrapEffect(WaterEffectImpl, {
+  blendFunction: BlendFunction.NORMAL,
+  args: [],
+})

@@ -87,4 +87,4 @@ export class TiltShiftEffect extends Effect {
   }
 }
 
-export const TiltShift2 = wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.NORMAL, args: [] })
+export const TiltShift2 = /* @__PURE__ */ wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.NORMAL, args: [] })

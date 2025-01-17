@@ -3,11 +3,11 @@ import * as THREE from 'three'
 const DepthDownSample = {
   uniforms: {
     sceneDepth: { value: null },
-    resolution: { value: new THREE.Vector2() },
+    resolution: { value: /* @__PURE__ */ new THREE.Vector2() },
     near: { value: 0.1 },
     far: { value: 1000.0 },
-    viewMatrixInv: { value: new THREE.Matrix4() },
-    projectionMatrixInv: { value: new THREE.Matrix4() },
+    viewMatrixInv: { value: /* @__PURE__ */ new THREE.Matrix4() },
+    projectionMatrixInv: { value: /* @__PURE__ */ new THREE.Matrix4() },
     logDepth: { value: false },
   },
   depthWrite: false,

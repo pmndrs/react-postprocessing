@@ -9,7 +9,7 @@ export type LUTProps = {
   tetrahedralInterpolation?: boolean
 }
 
-export const LUT = forwardRef(function LUT(
+export const LUT = /* @__PURE__ */ forwardRef(function LUT(
   { lut, tetrahedralInterpolation, ...props }: LUTProps,
   ref: Ref<LUT3DEffect>
 ) {
