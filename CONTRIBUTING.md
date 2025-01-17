@@ -15,14 +15,6 @@ You can also just [![Open in GitHub Codespaces](https://img.shields.io/static/v1
 
 Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
 
-## Storybook
-
-If you're adding a brand new feature, you need to make sure you add a storybook entry, here's a few tips:
-
-- Keep the story simple & show the essence of the component, remember some people may be looking at using drei for the first time & it's important the stories are clear and concise.
-- Keep assets minimal (3D Models, textures) to avoid bloating the repository
-- If you think a more involved example is necessary, you can always add a codesandbox to the main README while keeping the story minimalistic
-
 ## Publishing
 
 We use `semantic-release` to deploy the package. Because of this only certain commits will trigger the action of creating a release:

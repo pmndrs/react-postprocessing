@@ -41,9 +41,7 @@
     "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
     "test": "vitest run",
     "typecheck": "tsc --noEmit false --strict --jsx react",
-    "release": "semantic-release",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "release": "semantic-release"
   },
   "dependencies": {
     "buffer": "^6.0.3",
@@ -55,13 +53,7 @@
   "devDependencies": {
     "@react-three/drei": "^9.68.2",
     "@react-three/fiber": "9.0.0-rc.4",
-    "@storybook/addon-essentials": "^7.0.10",
-    "@storybook/addon-interactions": "^7.0.10",
-    "@storybook/addon-links": "^7.0.10",
-    "@storybook/blocks": "^7.0.10",
-    "@storybook/react": "^7.0.10",
-    "@storybook/react-vite": "^7.0.11",
-    "@storybook/testing-library": "^0.0.14-next.2",
+    "@types/node": "^22.10.7",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "@types/three": "^0.156.0",
@@ -74,7 +66,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.6.12",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
@@ -82,7 +73,6 @@
     "react-dom": "^19.0.0",
     "rimraf": "^5.0.0",
     "semantic-release": "^21.0.2",
-    "storybook": "^7.0.10",
     "three": "^0.156.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.5",
