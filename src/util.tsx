@@ -21,10 +21,7 @@ let i = 0
 const components = new WeakMap<EffectConstructor, React.ExoticComponent<any> | string>()
 
 export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: EffectProps<T>) =>
-  /* @__PURE__ */ React.forwardRef<T, EffectProps<T>>(function Effect(
-    { blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props },
-    ref
-  ) {
+  /* @__PURE__ */ function Effect({ blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props }) {
     let Component = components.get(effect)
     if (!Component) {
       const key = `@react-three/postprocessing/${effect.name}-${i++}`
@@ -45,11 +42,10 @@ export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: Ef
         blendMode-blendFunction={blendFunction}
         blendMode-opacity-value={opacity}
         {...props}
-        ref={ref}
         args={args}
       />
     )
-  })
+  }
 
 export const useVector2 = (props: Record<string, unknown>, key: string): THREE.Vector2 => {
   const value = props[key] as ReactThreeFiber.Vector2 | undefined
