@@ -12,8 +12,8 @@ class FullScreenTriangleGeometry extends THREE.BufferGeometry {
   computeBoundingSphere() {}
 }
 
-const _geometry = new FullScreenTriangleGeometry()
-const _camera = new THREE.OrthographicCamera()
+const _geometry = /* @__PURE__ */ new FullScreenTriangleGeometry()
+const _camera = /* @__PURE__ */ new THREE.OrthographicCamera()
 
 export class FullScreenTriangle {
   constructor(material) {

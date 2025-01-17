@@ -5,7 +5,10 @@ import { EffectComposerContext } from '../EffectComposer'
 // first two args are camera and texture
 type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2]
 
-export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOProps, ref: Ref<SSAOEffect>) {
+export const SSAO = /* @__PURE__ */ forwardRef<SSAOEffect, SSAOProps>(function SSAO(
+  props: SSAOProps,
+  ref: Ref<SSAOEffect>
+) {
   const { camera, normalPass, downSamplingPass, resolutionScale } = useContext(EffectComposerContext)
   const effect = useMemo<SSAOEffect | {}>(() => {
     if (normalPass === null && downSamplingPass === null) {

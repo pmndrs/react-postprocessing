@@ -21,7 +21,7 @@ type N8AOProps = {
   renderMode?: 0 | 1 | 2 | 3 | 4
 }
 
-export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
+export const N8AO = /* @__PURE__ */ forwardRef<N8AOPostPass, N8AOProps>(
   (
     {
       halfRes,

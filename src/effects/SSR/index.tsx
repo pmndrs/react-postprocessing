@@ -59,7 +59,7 @@ type SSRProps = {
   USE_NORMALMAP?: boolean
 }
 
-export const SSR = forwardRef<SSREffect, SSRProps>(function SSR(
+export const SSR = /* @__PURE__ */ forwardRef<SSREffect, SSRProps>(function SSR(
   { ENABLE_BLUR = true, USE_MRT = true, ...props }: SSRProps,
 
   ref: Ref<SSREffect>

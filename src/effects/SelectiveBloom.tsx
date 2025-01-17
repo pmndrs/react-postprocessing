@@ -19,7 +19,7 @@ export type SelectiveBloomProps = BloomEffectOptions &
 const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.enable(effect.selection.layer)
 const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.disable(effect.selection.layer)
 
-export const SelectiveBloom = forwardRef(function SelectiveBloom(
+export const SelectiveBloom = /* @__PURE__ */ forwardRef(function SelectiveBloom(
   {
     selection = [],
     selectionLayer = 10,

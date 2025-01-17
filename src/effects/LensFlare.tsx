@@ -120,7 +120,7 @@ type LensFlareProps = ConstructorParameters<typeof LensFlareEffect>[0] & {
   smoothTime?: number
 }
 
-export const LensFlare = forwardRef<LensFlareEffect, LensFlareProps>(
+export const LensFlare = /* @__PURE__ */ forwardRef<LensFlareEffect, LensFlareProps>(
   ({ position = new THREE.Vector3(-25, 6, -60), followMouse = false, smoothTime = 0.07, ...props }, ref) => {
     const viewport = useThree(({ viewport }) => viewport)
     const raycaster = useThree(({ raycaster }) => raycaster)

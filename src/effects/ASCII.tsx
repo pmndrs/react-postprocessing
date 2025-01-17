@@ -114,7 +114,7 @@ class ASCIIEffect extends Effect {
   }
 }
 
-export const ASCII = forwardRef<ASCIIEffect, IASCIIEffectProps>(
+export const ASCII = /* @__PURE__ */ forwardRef<ASCIIEffect, IASCIIEffectProps>(
   (
     {
       font = 'arial',
