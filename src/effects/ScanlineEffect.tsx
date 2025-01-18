@@ -4,5 +4,4 @@ import { wrapEffect } from '../util.tsx'
 export const Scanline = /* @__PURE__ */ wrapEffect(ScanlineEffect, {
   blendFunction: BlendFunction.OVERLAY,
   density: 1.25,
-  args: [],
 })

@@ -1,4 +1,4 @@
 import { TiltShiftEffect, BlendFunction } from 'postprocessing'
 import { wrapEffect } from '../util.tsx'
 
-export const TiltShift = /* @__PURE__ */ wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.ADD, args: [] })
+export const TiltShift = /* @__PURE__ */ wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.ADD })
