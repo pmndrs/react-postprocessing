@@ -1,5 +1,5 @@
 import type { TextureDataType } from 'three'
-import { HalfFloatType } from 'three'
+import { HalfFloatType, NoToneMapping } from 'three'
 import React, {
   forwardRef,
   useMemo,
@@ -9,7 +9,7 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react'
-import { useThree, useFrame, useInstanceHandle } from '@react-three/fiber'
+import { useThree, useFrame } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
@@ -19,6 +19,7 @@ import {
   DepthDownsamplingPass,
   Effect,
   Pass,
+  EffectAttribute,
 } from 'postprocessing'
 import { isWebGL2Available } from 'three-stdlib'
 
@@ -35,7 +36,8 @@ export type EffectComposerProps = {
   enabled?: boolean
   children: JSX.Element | JSX.Element[]
   depthBuffer?: boolean
-  disableNormalPass?: boolean
+  /** Only used for SSGI currently, leave it disabled for everything else unless it's needed */
+  enableNormalPass?: boolean
   stencilBuffer?: boolean
   autoClear?: boolean
   resolutionScale?: number
@@ -46,8 +48,11 @@ export type EffectComposerProps = {
   scene?: THREE.Scene
 }
 
+const isConvolution = (effect: Effect): boolean =>
+  (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
+
 export const EffectComposer = React.memo(
-  forwardRef(
+  forwardRef<EffectComposerImpl, EffectComposerProps>(
     (
       {
         children,
@@ -58,11 +63,11 @@ export const EffectComposer = React.memo(
         renderPriority = 1,
         autoClear = true,
         depthBuffer,
-        disableNormalPass,
+        enableNormalPass,
         stencilBuffer,
         multisampling = 8,
         frameBufferType = HalfFloatType,
-      }: EffectComposerProps,
+      },
       ref
     ) => {
       const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
@@ -85,7 +90,7 @@ export const EffectComposer = React.memo(
         // Create normal pass
         let downSamplingPass = null
         let normalPass = null
-        if (!disableNormalPass) {
+        if (enableNormalPass) {
           normalPass = new NormalPass(scene, camera)
           normalPass.enabled = false
           effectComposer.addPass(normalPass)
@@ -105,7 +110,7 @@ export const EffectComposer = React.memo(
         multisampling,
         frameBufferType,
         scene,
-        disableNormalPass,
+        enableNormalPass,
         resolutionScale,
       ])
 
@@ -124,20 +129,29 @@ export const EffectComposer = React.memo(
       )
 
       const group = useRef(null)
-      const instance = useInstanceHandle(group)
       useLayoutEffect(() => {
         const passes: Pass[] = []
 
-        if (group.current && instance.current && composer) {
-          const children = instance.current.objects as unknown[]
+        // TODO: rewrite all of this with R3F v9
+        const groupInstance = (group.current as any)?.__r3f as { objects: unknown[] }
+
+        if (groupInstance && composer) {
+          const children = groupInstance.objects
 
           for (let i = 0; i < children.length; i++) {
             const child = children[i]
 
             if (child instanceof Effect) {
-              const effects: Effect[] = []
-              while (children[i] instanceof Effect) effects.push(children[i++] as Effect)
-              i--
+              const effects: Effect[] = [child]
+
+              if (!isConvolution(child)) {
+                let next: unknown = null
+                while ((next = children[i + 1]) instanceof Effect) {
+                  if (isConvolution(next)) break
+                  effects.push(next)
+                  i++
+                }
+              }
 
               const pass = new EffectPass(camera, ...effects)
               passes.push(pass)
@@ -157,7 +171,16 @@ export const EffectComposer = React.memo(
           if (normalPass) normalPass.enabled = false
           if (downSamplingPass) downSamplingPass.enabled = false
         }
-      }, [composer, children, camera, normalPass, downSamplingPass, instance])
+      }, [composer, children, camera, normalPass, downSamplingPass])
+
+      // Disable tone mapping because threejs disallows tonemapping on render targets
+      useEffect(() => {
+        const currentTonemapping = gl.toneMapping
+        gl.toneMapping = NoToneMapping
+        return () => {
+          gl.toneMapping = currentTonemapping
+        }
+      }, [gl])
 
       // Memoize state, otherwise it would trigger all consumers on every render
       const state = useMemo(

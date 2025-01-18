@@ -52,6 +52,8 @@ export const Outline = forwardRef(function Outline(
         xRay,
         ...props,
       }),
+    // NOTE: `props` is an unstable reference, so we can't memoize it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       blendFunction,
       blur,
@@ -104,6 +106,12 @@ export const Outline = forwardRef(function Outline(
       }
     }
   }, [api, effect.selection, invalidate])
+
+  useEffect(() => {
+    return () => {
+      effect.dispose()
+    }
+  }, [effect])
 
   return <primitive ref={forwardRef} object={effect} />
 })

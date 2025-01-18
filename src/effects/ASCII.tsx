@@ -47,6 +47,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
 `
 
 interface IASCIIEffectProps {
+  font?: string
   characters?: string
   fontSize?: number
   cellSize?: number
@@ -56,6 +57,7 @@ interface IASCIIEffectProps {
 
 class ASCIIEffect extends Effect {
   constructor({
+    font = 'arial',
     characters = ` .:,'-^=*+?!|0#X%WM@`,
     fontSize = 54,
     cellSize = 16,
@@ -75,12 +77,12 @@ class ASCIIEffect extends Effect {
     const charactersTextureUniform = this.uniforms.get('uCharacters')
 
     if (charactersTextureUniform) {
-      charactersTextureUniform.value = this.createCharactersTexture(characters, fontSize)
+      charactersTextureUniform.value = this.createCharactersTexture(characters, font, fontSize)
     }
   }
 
   /** Draws the characters on a Canvas and returns a texture */
-  public createCharactersTexture(characters: string, fontSize: number): THREE.Texture {
+  public createCharactersTexture(characters: string, font: string, fontSize: number): THREE.Texture {
     const canvas = document.createElement('canvas')
     const SIZE = 1024
     const MAX_PER_ROW = 16
@@ -95,7 +97,7 @@ class ASCIIEffect extends Effect {
     }
 
     context.clearRect(0, 0, SIZE, SIZE)
-    context.font = `${fontSize}px arial`
+    context.font = `${fontSize}px ${font}`
     context.textAlign = 'center'
     context.textBaseline = 'middle'
     context.fillStyle = '#fff'
@@ -113,10 +115,20 @@ class ASCIIEffect extends Effect {
 }
 
 export const ASCII = forwardRef<ASCIIEffect, IASCIIEffectProps>(
-  ({ characters = ` .:,'-^=*+?!|0#X%WM@`, fontSize = 54, cellSize = 16, color = '#ffffff', invert = false }, fref) => {
+  (
+    {
+      font = 'arial',
+      characters = ` .:,'-^=*+?!|0#X%WM@`,
+      fontSize = 54,
+      cellSize = 16,
+      color = '#ffffff',
+      invert = false,
+    },
+    fref
+  ) => {
     const effect = useMemo(
-      () => new ASCIIEffect({ characters, fontSize, cellSize, color, invert }),
-      [characters, fontSize, cellSize, color, invert]
+      () => new ASCIIEffect({ characters, font, fontSize, cellSize, color, invert }),
+      [characters, fontSize, cellSize, color, invert, font]
     )
     return <primitive ref={fref} object={effect} />
   }

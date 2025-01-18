@@ -1,4 +1,6 @@
 import { ToneMappingEffect } from 'postprocessing'
-import { wrapEffect } from '../util'
+import { type EffectProps, wrapEffect } from '../util'
+
+export type ToneMappingProps = EffectProps<typeof ToneMappingEffect>
 
 export const ToneMapping = wrapEffect(ToneMappingEffect)

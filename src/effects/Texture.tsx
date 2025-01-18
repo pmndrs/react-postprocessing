@@ -1,21 +1,26 @@
 import { TextureEffect } from 'postprocessing'
 import { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
 import { useLoader } from '@react-three/fiber'
-import { TextureLoader, sRGBEncoding, RepeatWrapping } from 'three'
+import { TextureLoader, RepeatWrapping } from 'three'
 
 type TextureProps = ConstructorParameters<typeof TextureEffect>[0] & {
   textureSrc: string
+  /** opacity of provided texture */
+  opacity?: number
 }
 
 export const Texture = forwardRef<TextureEffect, TextureProps>(function Texture(
-  { textureSrc, texture, ...props }: TextureProps,
+  { textureSrc, texture, opacity = 1, ...props }: TextureProps,
   ref: Ref<TextureEffect>
 ) {
   const t = useLoader(TextureLoader, textureSrc)
   useLayoutEffect(() => {
-    t.encoding = sRGBEncoding
+    // @ts-ignore
+    if ('encoding' in t) t.encoding = 3001 // sRGBEncoding
+    // @ts-ignore
+    else t.colorSpace = 'srgb'
     t.wrapS = t.wrapT = RepeatWrapping
   }, [t])
   const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props, t, texture])
-  return <primitive ref={ref} object={effect} dispose={null} />
+  return <primitive ref={ref} object={effect} blendMode-opacity-value={opacity} dispose={null} />
 })
