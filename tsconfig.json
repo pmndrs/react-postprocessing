@@ -11,6 +11,7 @@
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
     "paths": {
       "@react-three/postprocessing": ["./src"]
     }
