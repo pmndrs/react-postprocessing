@@ -15,19 +15,10 @@ export default defineConfig({
     },
     rollupOptions: {
       external: (id: string) => !id.startsWith('.') && !path.isAbsolute(id) && !inline.includes(id),
-    },
-  },
-  plugins: [
-    {
-      name: 'n8ao-fix',
-      generateBundle(_, bundle) {
-        for (const id in bundle) {
-          const asset = bundle[id]
-          if ('code' in asset) {
-            asset.code = asset.code.replace(/three\/(addons|examples)[^'"`]+/g, 'three-stdlib')
-          }
-        }
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: 'src',
       },
     },
-  ],
+  },
 })

@@ -3,7 +3,7 @@
 
 import { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
-import { N8AOPostPass } from 'n8ao'
+import { N8AOPostPass } from './N8AOPostPass'
 import { useThree, ReactThreeFiber, applyProps } from '@react-three/fiber'
 
 type N8AOProps = {
@@ -15,6 +15,8 @@ type N8AOProps = {
   denoiseSamples?: number
   denoiseRadius?: number
   color?: ReactThreeFiber.Color
+  halfRes?: boolean
+  depthAwareUpsampling?: boolean
   screenSpaceRadius?: boolean
   renderMode?: 0 | 1 | 2 | 3 | 4
 }
@@ -22,8 +24,10 @@ type N8AOProps = {
 export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
   (
     {
+      halfRes,
       screenSpaceRadius,
       quality,
+      depthAwareUpsampling = true,
       aoRadius = 5,
       aoSamples = 16,
       denoiseSamples = 4,
@@ -36,7 +40,9 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
     ref: Ref<N8AOPostPass>
   ) => {
     const { camera, scene } = useThree()
-    const effect = useMemo(() => new N8AOPostPass(scene, camera), [])
+    const effect = useMemo(() => new N8AOPostPass(scene, camera), [camera, scene])
+
+    // TODO: implement dispose upstream; this effect has memory leaks without
     useLayoutEffect(() => {
       applyProps(effect.configuration, {
         color,
@@ -48,6 +54,8 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
         denoiseRadius,
         screenSpaceRadius,
         renderMode,
+        halfRes,
+        depthAwareUpsampling,
       })
     }, [
       screenSpaceRadius,
@@ -59,10 +67,15 @@ export const N8AO = forwardRef<N8AOPostPass, N8AOProps>(
       denoiseSamples,
       denoiseRadius,
       renderMode,
+      halfRes,
+      depthAwareUpsampling,
+      effect,
     ])
+
     useLayoutEffect(() => {
       if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
-    }, [quality])
+    }, [effect, quality])
+
     return <primitive ref={ref} object={effect} />
   }
 )

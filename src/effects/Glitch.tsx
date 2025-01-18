@@ -33,7 +33,7 @@ export const Glitch = forwardRef<GlitchEffect, GlitchProps>(function Glitch(
   }, [active, effect, invalidate, props.mode])
   useEffect(() => {
     return () => {
-      effect.dispose()
+      effect.dispose?.()
     }
   }, [effect])
   return <primitive ref={ref} object={effect} dispose={null} />

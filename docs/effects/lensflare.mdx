@@ -1,0 +1,57 @@
+---
+title: Lensflare
+nav: 1
+---
+
+A Lens Flare adds the optical aberration caused by the dispersion of light entering the lens through its edges.
+
+Based on [ektogamat/R3F-Ultimate-Lens-Flare](https://github.com/ektogamat/R3F-Ultimate-Lens-Flare).
+
+```jsx
+import { LensFlare } from '@react-three/postprocessing'
+
+return (
+  <LensFlare
+    blendFunction={BlendFunction.Screen} // The blend function of this effect.
+    enabled={true} // Boolean to enable/disable the effect.
+    opacity={1.0} // The opacity for this effect. Default: 1.0
+    starBurst={true} // Boolean to enable/disable the start burst effect. Can be disabled to improve performance.
+    glareSize={0.96} // The glare size. Default: 0.2
+    followMouse={false} // Set it to follow the mouse, ignoring the lens position. Default: false
+    lensPosition={[0, 0.5, 0]} // The position of the lens flare in 3d space.
+    starPoints={6} // The number of points for the star. Default: 6
+    flareSize={0.01} // The flare side. Default 0.01
+    flareSpeed={0.01} // The flare animation speed. Default 0.01
+    flareShape={0.01} // Changes the appearance to anamorphic. Default 0.01
+    animated={true} // Animated flare. Default: true
+    anamorphic={false} //Set the appearance to full anamorphic. Default: false
+    colorGain={new THREE.Color(70, 70, 70)} // Set the color gain for the lens flare. Must be a THREE.Color in RBG format.
+    lensDirtTexture={'/lensDirtTexture.png'} // Texture to be used as color dirt for starburst effect.
+    haloScale={0.5} // The halo scale. Default: 0.5
+    secondaryGhosts={true} // Option to enable/disable secondary ghosts. Default: true.
+    ghostScale={0.0} // Option to enable/disable secondary ghosts. Default: true.
+    aditionalStreaks={true} // Option to enable/disable aditional streaks. Default: true.
+    smoothTime={0.07} // The time that it takes to fade the occlusion. Default: 0.07
+  />
+)
+```
+
+#### Ignoring occlusion on some objects
+
+To disable the occlusion effect, simply add `userData={{ lensflare: 'no-occlusion' }}` to your object/mesh props.
+
+#### Improving performance
+
+Use bvh `<bvh><Scene></bvh>` to enhance the internal raycaster performance.
+
+#### Limitations
+
+The Ultimate Lens Flare leverages the raycaster to examine the material type of objects and determine if they are `MeshTransmissionMaterial` or `MeshPhysicalMaterial`. It checks for the transmission parameter to identify glass-like materials. Therefore, for an object to behave like glass, its material should have either `transmission = 1` or `transparent = true` and `opacity = NUMBER`. The effect automatically interprets the opacity `NUMBER` value to determine the brightness of the flare.
+
+#### Credits
+
+- https://www.shadertoy.com/view/4sK3W3
+- https://www.shadertoy.com/view/4sX3Rs
+- https://www.shadertoy.com/view/dllSRX
+- https://www.shadertoy.com/view/Xlc3D2
+- https://www.shadertoy.com/view/XtKfRV

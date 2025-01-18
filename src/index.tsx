@@ -3,6 +3,7 @@ export * from './EffectComposer'
 export * from './util'
 
 export * from './effects/Autofocus'
+export * from './effects/LensFlare'
 export * from './effects/Bloom'
 export * from './effects/BrightnessContrast'
 export * from './effects/ChromaticAberration'
@@ -33,6 +34,7 @@ export * from './effects/LUT'
 export * from './effects/TiltShift'
 export * from './effects/TiltShift2'
 export * from './effects/ASCII'
+export * from './effects/Water'
 
 // These are not effect passes
 export * from './effects/SSR'

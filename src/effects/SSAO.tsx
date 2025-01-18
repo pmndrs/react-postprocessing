@@ -31,6 +31,8 @@ export const SSAO = forwardRef<SSAOEffect, SSAOProps>(function SSAO(props: SSAOP
       depthAwareUpsampling: true,
       ...props,
     })
-  }, [camera, normalPass, props])
+    // NOTE: `props` is an unstable reference, so we can't memoize it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [camera, downSamplingPass, normalPass, resolutionScale])
   return <primitive ref={ref} object={effect} dispose={null} />
 })
