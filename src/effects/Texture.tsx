@@ -10,7 +10,7 @@ type TextureProps = ConstructorParameters<typeof TextureEffect>[0] & {
 }
 
 export const Texture = forwardRef<TextureEffect, TextureProps>(function Texture(
-  { textureSrc, texture, opacity, ...props }: TextureProps,
+  { textureSrc, texture, opacity = 1, ...props }: TextureProps,
   ref: Ref<TextureEffect>
 ) {
   const t = useLoader(TextureLoader, textureSrc)
@@ -21,8 +21,6 @@ export const Texture = forwardRef<TextureEffect, TextureProps>(function Texture(
     else t.colorSpace = 'srgb'
     t.wrapS = t.wrapT = RepeatWrapping
   }, [t])
-  const effect = useMemo(() => {
-    return new TextureEffect({ ...props, texture: t || texture });
-  }, [props, t, texture])
-  return <primitive ref={ref} object={effect} blendMode-opacity-value={opacity ?? 1} dispose={null} />
+  const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props, t, texture])
+  return <primitive ref={ref} object={effect} blendMode-opacity-value={opacity} dispose={null} />
 })
