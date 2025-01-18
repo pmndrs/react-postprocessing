@@ -7,6 +7,7 @@ import { EffectCompositer } from './EffectCompositer'
 import { PoissionBlur } from './PoissionBlur'
 import { DepthDownSample } from './DepthDownSample'
 import BlueNoise from './BlueNoise'
+import { WebGLMultipleRenderTargets } from '../../compat'
 
 const bluenoiseBits = Buffer.from(BlueNoise, 'base64')
 
@@ -190,7 +191,7 @@ class N8AOPostPass extends Pass {
                                format: THREE.RedFormat,
                                type: THREE.FloatType
                            });*/
-        new THREE.WebGLMultipleRenderTargets(this.width / 2, this.height / 2, 2)
+        new WebGLMultipleRenderTargets(this.width / 2, this.height / 2, 2)
       this.depthDownsampleTarget.texture[0].format = THREE.RedFormat
       this.depthDownsampleTarget.texture[0].type = THREE.FloatType
       this.depthDownsampleTarget.texture[0].minFilter = THREE.NearestFilter

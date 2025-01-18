@@ -1,5 +1,11 @@
 import * as THREE from 'three'
 
+const version = parseInt(THREE.REVISION.replace(/\D+/g, ''))
+
+// https://github.com/mrdoob/three.js/pull/26644
+// https://github.com/mrdoob/three.js/pull/28901
+const sRGBTransferOETF = version >= 167 ? 'sRGBTransferOETF' : 'LinearTosRGB'
+
 const EffectCompositer = {
   uniforms: {
     sceneDiffuse: { value: null },
@@ -244,7 +250,7 @@ const EffectCompositer = {
         }
         #include <dithering_fragment>
         if (gammaCorrection) {
-            gl_FragColor = LinearTosRGB(gl_FragColor);
+            gl_FragColor = ${sRGBTransferOETF}(gl_FragColor);
         }
     }
     `,
