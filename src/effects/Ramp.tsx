@@ -147,4 +147,4 @@ export class RampEffect extends Effect {
   }
 }
 
-export const Ramp = wrapEffect(RampEffect)
+export const Ramp = /* @__PURE__ */ wrapEffect(RampEffect)
