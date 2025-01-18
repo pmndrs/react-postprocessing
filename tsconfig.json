@@ -6,7 +6,7 @@
     "lib": ["esnext", "dom"],
     "moduleResolution": "bundler",
     "strict": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "pretty": true,
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
