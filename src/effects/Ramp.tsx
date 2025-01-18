@@ -66,19 +66,22 @@ const RampShader = {
   `,
 }
 
+export enum RampType {
+  Linear,
+  Radial,
+  MirroredLinear,
+}
+
 export class RampEffect extends Effect {
   constructor({
     /**
      * Type of ramp gradient.
-     * * `0`: Linear
-     * * `1`: Radial
-     * * `2`: Mirrored Linear
      */
-    rampType = 0,
+    rampType = RampType.Linear,
     /**
      * Starting point of the ramp gradient in normalized coordinates.
      *
-     * Ranges from `[0 - 1]` as `[x, y]`. Default is `[1, 1]`.
+     * Ranges from `[0 - 1]` as `[x, y]`. Default is `[0.5, 0.5]`.
      */
     rampStart = [0.5, 0.5],
     /**
@@ -129,7 +132,7 @@ export class RampEffect extends Effect {
   } = {}) {
     super('RampEffect', RampShader.fragmentShader, {
       ...params,
-      uniforms: new Map<string, Uniform<number | number[] | boolean>>([
+      uniforms: new Map<string, Uniform>([
         ['rampType', new Uniform(rampType)],
         ['rampStart', new Uniform(rampStart)],
         ['rampEnd', new Uniform(rampEnd)],
