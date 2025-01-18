@@ -1,6 +1,6 @@
 import { Ref, forwardRef, useContext, useMemo } from 'react'
 import { SSAOEffect, BlendFunction } from 'postprocessing'
-import { EffectComposerContext } from '../EffectComposer'
+import { EffectComposerContext } from '../EffectComposer.tsx'
 
 // first two args are camera and texture
 type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2]

@@ -11,9 +11,6 @@ declare global {
 }
 global.IS_REACT_ACT_ENVIRONMENT = true
 
-// Mock scheduler to test React features
-vi.mock('scheduler', () => require('scheduler/unstable_mock'))
-
 // Create virtual R3F root for testing
 extend(THREE as any)
 const root = createRoot({

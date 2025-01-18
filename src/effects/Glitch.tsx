@@ -2,7 +2,7 @@ import { Vector2 } from 'three'
 import { GlitchEffect, GlitchMode } from 'postprocessing'
 import { Ref, forwardRef, useMemo, useLayoutEffect, useEffect } from 'react'
 import { ReactThreeFiber, useThree } from '@react-three/fiber'
-import { useVector2 } from '../util'
+import { useVector2 } from '../util.tsx'
 
 export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
   Partial<{

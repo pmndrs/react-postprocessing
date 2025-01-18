@@ -2,7 +2,7 @@ import { DepthOfFieldEffect, MaskFunction } from 'postprocessing'
 import { Ref, forwardRef, useMemo, useEffect, useContext } from 'react'
 import { ReactThreeFiber } from '@react-three/fiber'
 import { type DepthPackingStrategies, type Texture, Vector3 } from 'three'
-import { EffectComposerContext } from '../EffectComposer'
+import { EffectComposerContext } from '../EffectComposer.tsx'
 
 type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
   Partial<{

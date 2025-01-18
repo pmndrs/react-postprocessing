@@ -1,6 +1,6 @@
 import { Uniform } from 'three'
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing'
-import { wrapEffect } from '../util'
+import { wrapEffect } from '../util.tsx'
 
 const WaterShader = {
   fragmentShader: /* glsl */ `
