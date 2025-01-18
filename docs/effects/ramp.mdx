@@ -1,0 +1,42 @@
+---
+title: Ramp
+nav: 1
+---
+
+Ramp effect for linear and radial color gradients, as well as masking of effects before it in the effect array.
+
+```jsx
+import { Ramp, RampType } from '@react-three/postprocessing'
+
+return (
+  <Ramp
+    rampType={RampType.Linear}
+    rampStart={[0.5, 0.5]}
+    rampEnd={[1.0, 1.0]}
+    startColor={[0, 0, 0, 1]}
+    endColor={[1, 1, 1, 1]}
+    rampBias={0.5}
+    rampGain={0.5}
+    rampMask={false}
+    rampInvert={false}
+  />
+)
+```
+
+## Example
+
+<Codesandbox id="zdpzei" />
+
+## Props
+
+| Name       | Type                                         | Default         | Description                                                                                                    |
+| ---------- | -------------------------------------------- | --------------- | -------------------------------------------------------------------------------------------------------------- |
+| rampType   | RampType                                     | RampType.Linear | Type of ramp gradient.                                                                                         |
+| rampStart  | [x: number, y: number]                       | [0.5, 0.5]      | Starting point of the ramp gradient in normalized coordinates.                                                 |
+| rampEnd    | [x: number, y: number]                       | [1.0, 1.0]      | Ending point of the ramp gradient in normalized coordinates.                                                   |
+| startColor | [r: number, g: number, b: number, a: number] | [0, 0, 0, 1]    | Color at the starting point of the gradient.                                                                   |
+| endColor   | [r: number, g: number, b: number, a: number] | [1, 1, 1, 1]    | Color at the ending point of the gradient.                                                                     |
+| rampBias   | number                                       | 0.5             | Bias for the interpolation curve when both bias and gain are 0.5.                                              |
+| rampGain   | number                                       | 0.5             | Gain for the interpolation curve when both bias and gain are 0.5.                                              |
+| rampMask   | boolean                                      | false           | When enabled, the ramp gradient is used as an effect mask, and colors are ignored.                             |
+| rampInvert | boolean                                      | false           | Controls whether the ramp gradient is inverted. When disabled, rampStart is transparent and rampEnd is opaque. |
