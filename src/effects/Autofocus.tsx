@@ -1,4 +1,3 @@
-import * as THREE from 'three'
 import React, {
   useRef,
   useContext,
@@ -10,12 +9,13 @@ import React, {
   RefObject,
   useMemo,
 } from 'react'
-import { useThree, useFrame, createPortal, type Vector3 } from '@react-three/fiber'
+import { useThree, useFrame, createPortal } from '@react-three/fiber'
 import { CopyPass, DepthPickingPass, DepthOfFieldEffect } from 'postprocessing'
 import { easing } from 'maath'
 
 import { DepthOfField } from './DepthOfField.tsx'
 import { EffectComposerContext } from '../EffectComposer.tsx'
+import { Mesh, Vector3 } from 'three'
 
 export type AutofocusProps = React.ComponentProps<typeof DepthOfField> & {
   target?: Vector3
@@ -31,7 +31,7 @@ export type AutofocusProps = React.ComponentProps<typeof DepthOfField> & {
 
 export type AutofocusApi = {
   dofRef: RefObject<DepthOfFieldEffect | null>
-  hitpoint: THREE.Vector3
+  hitpoint: Vector3
   update: (delta: number, updateTarget: boolean) => void
 }
 
@@ -41,8 +41,8 @@ export const Autofocus = /* @__PURE__ */ forwardRef<AutofocusApi, AutofocusProps
     fref
   ) => {
     const dofRef = useRef<DepthOfFieldEffect>(null)
-    const hitpointRef = useRef<THREE.Mesh>(null)
-    const targetRef = useRef<THREE.Mesh>(null)
+    const hitpointRef = useRef<Mesh>(null)
+    const targetRef = useRef<Mesh>(null)
 
     const scene = useThree(({ scene }) => scene)
     const pointer = useThree(({ pointer }) => pointer)
@@ -67,9 +67,9 @@ export const Autofocus = /* @__PURE__ */ forwardRef<AutofocusApi, AutofocusProps
       }
     }, [depthPickingPass, copyPass])
 
-    const [hitpoint] = useState(() => new THREE.Vector3(0, 0, 0))
+    const [hitpoint] = useState(() => new Vector3(0, 0, 0))
 
-    const [ndc] = useState(() => new THREE.Vector3(0, 0, 0))
+    const [ndc] = useState(() => new Vector3(0, 0, 0))
     const getHit = useCallback(
       async (x: number, y: number) => {
         ndc.x = x

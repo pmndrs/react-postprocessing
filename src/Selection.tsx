@@ -1,10 +1,10 @@
-import * as THREE from 'three'
 import React, { createContext, useState, useContext, useEffect, useRef, useMemo } from 'react'
 import { type ThreeElements } from '@react-three/fiber'
+import { Group, Object3D } from 'three'
 
 export type Api = {
-  selected: THREE.Object3D[]
-  select: React.Dispatch<React.SetStateAction<THREE.Object3D[]>>
+  selected: Object3D[]
+  select: React.Dispatch<React.SetStateAction<Object3D[]>>
   enabled: boolean
 }
 export type SelectApi = Omit<ThreeElements['group'], 'ref'> & {
@@ -14,18 +14,18 @@ export type SelectApi = Omit<ThreeElements['group'], 'ref'> & {
 export const selectionContext = /* @__PURE__ */ createContext<Api | null>(null)
 
 export function Selection({ children, enabled = true }: { enabled?: boolean; children: React.ReactNode }) {
-  const [selected, select] = useState<THREE.Object3D[]>([])
+  const [selected, select] = useState<Object3D[]>([])
   const value = useMemo(() => ({ selected, select, enabled }), [selected, select, enabled])
   return <selectionContext.Provider value={value}>{children}</selectionContext.Provider>
 }
 
 export function Select({ enabled = false, children, ...props }: SelectApi) {
-  const group = useRef<THREE.Group>(null!)
+  const group = useRef<Group>(null!)
   const api = useContext(selectionContext)
   useEffect(() => {
     if (api && enabled) {
       let changed = false
-      const current: THREE.Object3D[] = []
+      const current: Object3D[] = []
       group.current.traverse((o) => {
         o.type === 'Mesh' && current.push(o)
         if (api.selected.indexOf(o) === -1) changed = true

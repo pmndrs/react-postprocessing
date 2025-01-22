@@ -1,6 +1,5 @@
 import React, { RefObject } from 'react'
-import { Vector2 } from 'three'
-import * as THREE from 'three'
+import { Vector2, Vector2Tuple } from 'three'
 import { type ReactThreeFiber, type ThreeElement, extend, useThree } from '@react-three/fiber'
 import type { Effect, Pass, BlendFunction } from 'postprocessing'
 
@@ -45,11 +44,11 @@ export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: Ef
     )
   }
 
-export const useVector2 = (props: Record<string, unknown>, key: string): THREE.Vector2 => {
+export const useVector2 = (props: Record<string, unknown>, key: string): Vector2 => {
   const value = props[key] as ReactThreeFiber.Vector2 | undefined
   return React.useMemo(() => {
-    if (typeof value === 'number') return new THREE.Vector2(value, value)
-    else if (value) return new THREE.Vector2(...(value as THREE.Vector2Tuple))
-    else return new THREE.Vector2()
+    if (typeof value === 'number') return new Vector2(value, value)
+    else if (value) return new Vector2(...(value as Vector2Tuple))
+    else return new Vector2()
   }, [value])
 }

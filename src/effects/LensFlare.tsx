@@ -1,7 +1,6 @@
 // Created by Anderson Mancini 2023
 // From https://github.com/ektogamat/R3F-Ultimate-Lens-Flare
 
-import * as THREE from 'three'
 import React, { useEffect, useState, useContext, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { BlendFunction, Effect } from 'postprocessing'
@@ -9,6 +8,7 @@ import { easing } from 'maath'
 
 import { EffectComposerContext } from '../EffectComposer.tsx'
 import { wrapEffect } from '../util.tsx'
+import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three'
 
 const LensFlareShader = {
   fragmentShader: /* glsl */ `
@@ -406,9 +406,9 @@ type LensFlareEffectOptions = {
   /** The glare size */
   glareSize: number
   /** The position of the lens flare in 3d space */
-  lensPosition: THREE.Vector3
+  lensPosition: Vector3
   /** Effect resolution */
-  screenRes: THREE.Vector2
+  screenRes: Vector2
   /** The number of points for the star */
   starPoints: number
   /** The flare side */
@@ -421,10 +421,10 @@ type LensFlareEffectOptions = {
   animated: boolean
   /** Set the appearance to full anamorphic */
   anamorphic: boolean
-  /** Set the color gain for the lens flare. Must be a THREE.Color in RBG format */
-  colorGain: THREE.Color
+  /** Set the color gain for the lens flare. Must be a Color in RBG format */
+  colorGain: Color
   /** Texture to be used as color dirt for starburst effect */
-  lensDirtTexture: THREE.Texture | null
+  lensDirtTexture: Texture | null
   /** The halo scale */
   haloScale: number
   /** Option to enable/disable secondary ghosts */
@@ -463,26 +463,26 @@ export class LensFlareEffect extends Effect {
   }: LensFlareEffectOptions) {
     super('LensFlareEffect', LensFlareShader.fragmentShader, {
       blendFunction,
-      uniforms: new Map<string, THREE.Uniform>([
-        ['enabled', new THREE.Uniform(enabled)],
-        ['glareSize', new THREE.Uniform(glareSize)],
-        ['lensPosition', new THREE.Uniform(lensPosition)],
-        ['time', new THREE.Uniform(0)],
-        ['screenRes', new THREE.Uniform(screenRes)],
-        ['starPoints', new THREE.Uniform(starPoints)],
-        ['flareSize', new THREE.Uniform(flareSize)],
-        ['flareSpeed', new THREE.Uniform(flareSpeed)],
-        ['flareShape', new THREE.Uniform(flareShape)],
-        ['animated', new THREE.Uniform(animated)],
-        ['anamorphic', new THREE.Uniform(anamorphic)],
-        ['colorGain', new THREE.Uniform(colorGain)],
-        ['lensDirtTexture', new THREE.Uniform(lensDirtTexture)],
-        ['haloScale', new THREE.Uniform(haloScale)],
-        ['secondaryGhosts', new THREE.Uniform(secondaryGhosts)],
-        ['aditionalStreaks', new THREE.Uniform(aditionalStreaks)],
-        ['ghostScale', new THREE.Uniform(ghostScale)],
-        ['starBurst', new THREE.Uniform(starBurst)],
-        ['opacity', new THREE.Uniform(opacity)],
+      uniforms: new Map<string, Uniform>([
+        ['enabled', new Uniform(enabled)],
+        ['glareSize', new Uniform(glareSize)],
+        ['lensPosition', new Uniform(lensPosition)],
+        ['time', new Uniform(0)],
+        ['screenRes', new Uniform(screenRes)],
+        ['starPoints', new Uniform(starPoints)],
+        ['flareSize', new Uniform(flareSize)],
+        ['flareSpeed', new Uniform(flareSpeed)],
+        ['flareShape', new Uniform(flareShape)],
+        ['animated', new Uniform(animated)],
+        ['anamorphic', new Uniform(anamorphic)],
+        ['colorGain', new Uniform(colorGain)],
+        ['lensDirtTexture', new Uniform(lensDirtTexture)],
+        ['haloScale', new Uniform(haloScale)],
+        ['secondaryGhosts', new Uniform(secondaryGhosts)],
+        ['aditionalStreaks', new Uniform(aditionalStreaks)],
+        ['ghostScale', new Uniform(ghostScale)],
+        ['starBurst', new Uniform(starBurst)],
+        ['opacity', new Uniform(opacity)],
       ]),
     })
   }
@@ -497,7 +497,7 @@ export class LensFlareEffect extends Effect {
 
 type LensFlareProps = {
   /** Position of the effect */
-  lensPosition?: THREE.Vector3
+  lensPosition?: Vector3
   /** The time that it takes to fade the occlusion */
   smoothTime?: number
 } & Partial<LensFlareEffectOptions>
@@ -510,15 +510,15 @@ export const LensFlare = ({
   blendFunction = BlendFunction.NORMAL,
   enabled = true,
   glareSize = 0.2,
-  lensPosition = new THREE.Vector3(-25, 6, -60),
-  screenRes = new THREE.Vector2(0, 0),
+  lensPosition = new Vector3(-25, 6, -60),
+  screenRes = new Vector2(0, 0),
   starPoints = 6,
   flareSize = 0.01,
   flareSpeed = 0.01,
   flareShape = 0.01,
   animated = true,
   anamorphic = false,
-  colorGain = new THREE.Color(20, 20, 20),
+  colorGain = new Color(20, 20, 20),
   lensDirtTexture = null,
   haloScale = 0.5,
   secondaryGhosts = true,
@@ -530,8 +530,8 @@ export const LensFlare = ({
   const viewport = useThree(({ viewport }) => viewport)
   const raycaster = useThree(({ raycaster }) => raycaster)
   const { scene, camera } = useContext(EffectComposerContext)
-  const [raycasterPos] = useState(() => new THREE.Vector2())
-  const [projectedPosition] = useState(() => new THREE.Vector3())
+  const [raycasterPos] = useState(() => new Vector2())
+  const [projectedPosition] = useState(() => new Vector3())
 
   const ref = useRef<LensFlareEffect>(null)
 
@@ -557,7 +557,7 @@ export const LensFlare = ({
     if (object) {
       if (object.userData?.lensflare === 'no-occlusion') {
         target = 0
-      } else if (object instanceof THREE.Mesh) {
+      } else if (object instanceof Mesh) {
         if (object.material.uniforms?._transmission?.value > 0.2) {
           //Check for MeshTransmissionMaterial
           target = 0.2
