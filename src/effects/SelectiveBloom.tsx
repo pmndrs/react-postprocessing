@@ -46,25 +46,35 @@ export const SelectiveBloom = forwardRef(function SelectiveBloom(
 
   const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
-  const effect = useMemo(
-    () => {
-      const effect = new SelectiveBloomEffect(scene, camera, {
-        blendFunction: BlendFunction.ADD,
-        luminanceThreshold,
-        luminanceSmoothing,
-        intensity,
-        width,
-        height,
-        kernelSize,
-        mipmapBlur,
-        ...props,
-      });
-      effect.inverted = inverted;
-      effect.ignoreBackground = ignoreBackground;
-      return effect;
-    },
-    [scene, camera, luminanceThreshold, luminanceSmoothing, intensity, width, height, kernelSize, mipmapBlur, inverted, ignoreBackground, props]
-  )
+  const effect = useMemo(() => {
+    const effect = new SelectiveBloomEffect(scene, camera, {
+      blendFunction: BlendFunction.ADD,
+      luminanceThreshold,
+      luminanceSmoothing,
+      intensity,
+      width,
+      height,
+      kernelSize,
+      mipmapBlur,
+      ...props,
+    })
+    effect.inverted = inverted
+    effect.ignoreBackground = ignoreBackground
+    return effect
+  }, [
+    scene,
+    camera,
+    luminanceThreshold,
+    luminanceSmoothing,
+    intensity,
+    width,
+    height,
+    kernelSize,
+    mipmapBlur,
+    inverted,
+    ignoreBackground,
+    props,
+  ])
 
   const api = useContext(selectionContext)
 
