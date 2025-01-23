@@ -86,7 +86,7 @@ export const Autofocus = /* @__PURE__ */ forwardRef<AutofocusApi, AutofocusProps
       async (delta: number, updateTarget = true) => {
         // Update hitpoint
         if (target) {
-          hitpoint.set(...(target as [number, number, number]))
+          hitpoint.set(...(target as unknown as [number, number, number]))
         } else {
           const { x, y } = followMouse ? pointer : { x: 0, y: 0 }
           const hit = await getHit(x, y)
