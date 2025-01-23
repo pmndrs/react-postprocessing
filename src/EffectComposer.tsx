@@ -1,4 +1,4 @@
-import type { TextureDataType } from 'three'
+import type { Camera, Scene, TextureDataType } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
 import React, {
   forwardRef,
@@ -27,8 +27,8 @@ export const EffectComposerContext = createContext<{
   composer: EffectComposerImpl
   normalPass: NormalPass | null
   downSamplingPass: DepthDownsamplingPass | null
-  camera: THREE.Camera
-  scene: THREE.Scene
+  camera: Camera
+  scene: Scene
   resolutionScale?: number
 }>(null!)
 
@@ -44,8 +44,8 @@ export type EffectComposerProps = {
   multisampling?: number
   frameBufferType?: TextureDataType
   renderPriority?: number
-  camera?: THREE.Camera
-  scene?: THREE.Scene
+  camera?: Camera
+  scene?: Scene
 }
 
 const isConvolution = (effect: Effect): boolean =>
