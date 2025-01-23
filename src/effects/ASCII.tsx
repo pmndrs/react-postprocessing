@@ -82,7 +82,7 @@ class ASCIIEffect extends Effect {
   }
 
   /** Draws the characters on a Canvas and returns a texture */
-  public createCharactersTexture(characters: string, font: string, fontSize: number): THREE.Texture {
+  public createCharactersTexture(characters: string, font: string, fontSize: number): Texture {
     const canvas = document.createElement('canvas')
     const SIZE = 1024
     const MAX_PER_ROW = 16
