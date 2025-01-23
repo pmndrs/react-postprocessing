@@ -1,4 +1,4 @@
-import type { TextureDataType, Group } from 'three'
+import type { TextureDataType, Group, Camera, Scene } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
 import {
   type JSX,
@@ -22,14 +22,13 @@ import {
   Pass,
   EffectAttribute,
 } from 'postprocessing'
-import { isWebGL2Available } from 'three-stdlib'
 
 export const EffectComposerContext = /* @__PURE__ */ createContext<{
   composer: EffectComposerImpl
   normalPass: NormalPass | null
   downSamplingPass: DepthDownsamplingPass | null
-  camera: THREE.Camera
-  scene: THREE.Scene
+  camera: Camera
+  scene: Scene
   resolutionScale?: number
 }>(null!)
 
@@ -45,8 +44,8 @@ export type EffectComposerProps = {
   multisampling?: number
   frameBufferType?: TextureDataType
   renderPriority?: number
-  camera?: THREE.Camera
-  scene?: THREE.Scene
+  camera?: Camera
+  scene?: Scene
 }
 
 const isConvolution = (effect: Effect): boolean =>
@@ -76,12 +75,11 @@ export const EffectComposer = /* @__PURE__ */ memo(
       const camera = _camera || defaultCamera
 
       const [composer, normalPass, downSamplingPass] = useMemo(() => {
-        const webGL2Available = isWebGL2Available()
         // Initialize composer
         const effectComposer = new EffectComposerImpl(gl, {
           depthBuffer,
           stencilBuffer,
-          multisampling: multisampling > 0 && webGL2Available ? multisampling : 0,
+          multisampling,
           frameBufferType,
         })
 
@@ -95,7 +93,7 @@ export const EffectComposer = /* @__PURE__ */ memo(
           normalPass = new NormalPass(scene, camera)
           normalPass.enabled = false
           effectComposer.addPass(normalPass)
-          if (resolutionScale !== undefined && webGL2Available) {
+          if (resolutionScale !== undefined) {
             downSamplingPass = new DepthDownsamplingPass({ normalBuffer: normalPass.texture, resolutionScale })
             downSamplingPass.enabled = false
             effectComposer.addPass(downSamplingPass)

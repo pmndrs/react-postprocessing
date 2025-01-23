@@ -34,8 +34,7 @@
   "dependencies": {
     "maath": "^0.6.0",
     "n8ao": "^1.9.4",
-    "postprocessing": "^6.36.6",
-    "three-stdlib": "^2.35.7"
+    "postprocessing": "^6.36.6"
   },
   "devDependencies": {
     "@react-three/fiber": "9.0.0-rc.4",
