@@ -3,9 +3,9 @@ import type { BloomEffectOptions } from 'postprocessing'
 import React, { Ref, RefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
 import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
-import { EffectComposerContext } from '../EffectComposer.tsx'
-import { selectionContext } from '../Selection.tsx'
-import { resolveRef } from '../util.tsx'
+import { EffectComposerContext } from '../EffectComposer'
+import { selectionContext } from '../Selection'
+import { resolveRef } from '../util'
 
 type ObjectRef = RefObject<Object3D>
 

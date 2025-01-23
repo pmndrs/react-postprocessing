@@ -7,8 +7,8 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { BlendFunction, Effect } from 'postprocessing'
 import { easing } from 'maath'
 
-import { EffectComposerContext } from '../EffectComposer.tsx'
-import { wrapEffect } from '../util.tsx'
+import { EffectComposerContext } from '../EffectComposer'
+import { wrapEffect } from '../util'
 
 const LensFlareShader = {
   fragmentShader: /* glsl */ `

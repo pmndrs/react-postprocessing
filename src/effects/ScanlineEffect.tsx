@@ -1,5 +1,5 @@
 import { ScanlineEffect, BlendFunction } from 'postprocessing'
-import { wrapEffect } from '../util.tsx'
+import { wrapEffect } from '../util'
 
 export const Scanline = /* @__PURE__ */ wrapEffect(ScanlineEffect, {
   blendFunction: BlendFunction.OVERLAY,

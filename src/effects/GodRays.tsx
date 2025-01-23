@@ -2,7 +2,7 @@ import { GodRaysEffect } from 'postprocessing'
 import React, { Ref, forwardRef, useMemo, useContext, useLayoutEffect } from 'react'
 import { Mesh, Points } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
-import { resolveRef } from '../util.tsx'
+import { resolveRef } from '../util'
 
 type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
   sun: Mesh | Points | React.RefObject<Mesh | Points>
