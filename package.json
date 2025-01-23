@@ -37,7 +37,7 @@
     "postprocessing": "^6.36.6"
   },
   "devDependencies": {
-    "@react-three/fiber": "9.0.0-rc.4",
+    "@react-three/fiber": "9.0.0-rc.5",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
@@ -61,7 +61,7 @@
     "vitest": "^2.1.8"
   },
   "peerDependencies": {
-    "@react-three/fiber": "9.0.0-rc.4",
+    "@react-three/fiber": "9.0.0-rc.5",
     "react": "^19.0",
     "three": ">= 0.156.0"
   }
