@@ -1,7 +1,6 @@
 node_modules/
 coverage/
 example/
-dist/
 build/
 Thumbs.db
 ehthumbs.db
