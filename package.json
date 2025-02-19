@@ -12,8 +12,8 @@
   ],
   "license": "MIT",
   "files": [
-    "dist/*",
-    "src/*"
+    "dist",
+    "src"
   ],
   "type": "module",
   "main": "./dist/index.js",
