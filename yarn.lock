@@ -649,10 +649,10 @@
     "@pnpm/network.ca-file" "^1.0.1"
     config-chain "^1.1.11"
 
-"@react-three/fiber@^9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-9.0.0.tgz#34a9a578845cae4dc6f0d2dbe4cdee90a148de2c"
-  integrity sha512-yfX7PzGFVMAvLbOf3ONw3WrVENasCZ2Vw/CxQ/6iSG/sgOwxPB7+gOTu1au5o7/TlXLm2dJo6H62k2CgMdPgOA==
+"@react-three/fiber@^9.0.1":
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/@react-three/fiber/-/fiber-9.0.1.tgz#4a506f05036f413205213663911c20e563617179"
+  integrity sha512-X21kQBQ+czPNt9ue3x7BO/TUM8C71VckEX6Y7ndaXSH892T1XGQYiOtN4Av8NkP2aaQZnASsA/Kip0sykeR/tw==
   dependencies:
     "@babel/runtime" "^7.17.8"
     "@types/react-reconciler" "^0.28.9"
@@ -664,6 +664,7 @@
     react-use-measure "^2.1.7"
     scheduler "^0.25.0"
     suspend-react "^0.1.3"
+    use-sync-external-store "^1.4.0"
     zustand "^5.0.3"
 
 "@rollup/rollup-android-arm-eabi@4.28.1":
@@ -5499,6 +5500,11 @@ url-join@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-4.0.1.tgz#b642e21a2646808ffa178c4c5fda39844e12cde7"
   integrity sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==
+
+use-sync-external-store@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.4.0.tgz#adbc795d8eeb47029963016cefdf89dc799fcebc"
+  integrity sha512-9WXSPC5fMv61vaupRkCKCxsPxBocVnwakBEkMIHHpkTTg6icbJtg6jzgtLDm4bl3cSHAca52rYWih0k4K3PfHw==
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

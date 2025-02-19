@@ -37,7 +37,7 @@
     "postprocessing": "^6.36.6"
   },
   "devDependencies": {
-    "@react-three/fiber": "^9.0.0",
+    "@react-three/fiber": "^9.0.1",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
