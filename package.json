@@ -1,6 +1,6 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "0.0.0-semantic-release",
+  "version": "3.0.2",
   "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
@@ -28,8 +28,7 @@
     "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
     "eslint:ci": "eslint . --ext=js,ts,jsx,tsx",
     "test": "vitest run",
-    "typecheck": "tsc",
-    "release": "semantic-release"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "maath": "^0.6.0",
@@ -54,7 +53,6 @@
     "prettier": "^2.8.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "semantic-release": "^21.0.2",
     "three": "^0.156.0",
     "typescript": "^5.0.4",
     "vite": "^4.3.5",
