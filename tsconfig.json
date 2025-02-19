@@ -1,28 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
     "outDir": "dist",
-    "declaration": true,
-    "declarationDir": "dist",
-    "esModuleInterop": true,
-    "module": "ESNext",
-    "moduleResolution": "node",
-    "jsx": "react-jsx",
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "skipLibCheck": true,
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext", "dom"],
+    "moduleResolution": "bundler",
     "strict": true,
+    "jsx": "react-jsx",
+    "pretty": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@react-three/postprocessing": [
-        "./"
-      ]
+      "@react-three/postprocessing": ["./src"]
     }
-  },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "./node_modules/**/*"
-  ]
+  }
 }

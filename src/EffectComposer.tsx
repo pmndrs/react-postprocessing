@@ -1,6 +1,8 @@
-import type { Camera, Scene, TextureDataType } from 'three'
+import type { TextureDataType, Group, Camera, Scene } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
-import React, {
+import {
+  type JSX,
+  memo,
   forwardRef,
   useMemo,
   useEffect,
@@ -9,21 +11,19 @@ import React, {
   useRef,
   useImperativeHandle,
 } from 'react'
-import { useThree, useFrame } from '@react-three/fiber'
+import { useThree, useFrame, type Instance } from '@react-three/fiber'
 import {
   EffectComposer as EffectComposerImpl,
   RenderPass,
   EffectPass,
   NormalPass,
-  // @ts-ignore
   DepthDownsamplingPass,
   Effect,
   Pass,
   EffectAttribute,
 } from 'postprocessing'
-import { isWebGL2Available } from 'three-stdlib'
 
-export const EffectComposerContext = createContext<{
+export const EffectComposerContext = /* @__PURE__ */ createContext<{
   composer: EffectComposerImpl
   normalPass: NormalPass | null
   downSamplingPass: DepthDownsamplingPass | null
@@ -51,8 +51,8 @@ export type EffectComposerProps = {
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
-export const EffectComposer = React.memo(
-  forwardRef<EffectComposerImpl, EffectComposerProps>(
+export const EffectComposer = /* @__PURE__ */ memo(
+  /* @__PURE__ */ forwardRef<EffectComposerImpl, EffectComposerProps>(
     (
       {
         children,
@@ -75,12 +75,11 @@ export const EffectComposer = React.memo(
       const camera = _camera || defaultCamera
 
       const [composer, normalPass, downSamplingPass] = useMemo(() => {
-        const webGL2Available = isWebGL2Available()
         // Initialize composer
         const effectComposer = new EffectComposerImpl(gl, {
           depthBuffer,
           stencilBuffer,
-          multisampling: multisampling > 0 && webGL2Available ? multisampling : 0,
+          multisampling,
           frameBufferType,
         })
 
@@ -94,7 +93,7 @@ export const EffectComposer = React.memo(
           normalPass = new NormalPass(scene, camera)
           normalPass.enabled = false
           effectComposer.addPass(normalPass)
-          if (resolutionScale !== undefined && webGL2Available) {
+          if (resolutionScale !== undefined) {
             downSamplingPass = new DepthDownsamplingPass({ normalBuffer: normalPass.texture, resolutionScale })
             downSamplingPass.enabled = false
             effectComposer.addPass(downSamplingPass)
@@ -128,25 +127,25 @@ export const EffectComposer = React.memo(
         enabled ? renderPriority : 0
       )
 
-      const group = useRef(null)
+      const group = useRef<Group>(null!)
       useLayoutEffect(() => {
         const passes: Pass[] = []
 
         // TODO: rewrite all of this with R3F v9
-        const groupInstance = (group.current as any)?.__r3f as { objects: unknown[] }
+        const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
 
         if (groupInstance && composer) {
-          const children = groupInstance.objects
+          const children = groupInstance.children
 
           for (let i = 0; i < children.length; i++) {
-            const child = children[i]
+            const child = children[i].object
 
             if (child instanceof Effect) {
               const effects: Effect[] = [child]
 
               if (!isConvolution(child)) {
                 let next: unknown = null
-                while ((next = children[i + 1]) instanceof Effect) {
+                while ((next = children[i + 1]?.object) instanceof Effect) {
                   if (isConvolution(next)) break
                   effects.push(next)
                   i++

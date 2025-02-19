@@ -2,7 +2,7 @@
 // From https://github.com/ektogamat/R3F-Ultimate-Lens-Flare
 
 import * as THREE from 'three'
-import { useEffect, useState, useContext, useRef } from 'react'
+import React, { useEffect, useState, useContext, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { BlendFunction, Effect } from 'postprocessing'
 import { easing } from 'maath'
@@ -586,7 +586,6 @@ export const LensFlare = ({
 
   return (
     <LensFlareWrapped
-      // @ts-expect-error fixed with React 19
       ref={ref}
       blendFunction={blendFunction}
       enabled={enabled}

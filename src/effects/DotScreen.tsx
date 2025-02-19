@@ -1,4 +1,4 @@
 import { DotScreenEffect } from 'postprocessing'
 import { wrapEffect } from '../util'
 
-export const DotScreen = wrapEffect(DotScreenEffect)
+export const DotScreen = /* @__PURE__ */ wrapEffect(DotScreenEffect)

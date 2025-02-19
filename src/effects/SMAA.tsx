@@ -1,4 +1,4 @@
 import { SMAAEffect } from 'postprocessing'
 import { wrapEffect } from '../util'
 
-export const SMAA = wrapEffect(SMAAEffect)
+export const SMAA = /* @__PURE__ */ wrapEffect(SMAAEffect)

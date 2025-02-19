@@ -5,7 +5,7 @@ export type PixelationProps = {
   granularity?: number
 }
 
-export const Pixelation = forwardRef<PixelationEffect, PixelationProps>(function Pixelation(
+export const Pixelation = /* @__PURE__ */ forwardRef<PixelationEffect, PixelationProps>(function Pixelation(
   { granularity = 5 }: PixelationProps,
   ref: Ref<PixelationEffect>
 ) {

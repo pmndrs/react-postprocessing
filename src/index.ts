@@ -37,5 +37,4 @@ export * from './effects/ASCII'
 export * from './effects/Water'
 
 // These are not effect passes
-export * from './effects/SSR'
 export * from './effects/N8AO'

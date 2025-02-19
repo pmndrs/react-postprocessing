@@ -1,6 +1,6 @@
 import { BloomEffect, BlendFunction } from 'postprocessing'
 import { wrapEffect } from '../util'
 
-export const Bloom = wrapEffect(BloomEffect, {
+export const Bloom = /* @__PURE__ */ wrapEffect(BloomEffect, {
   blendFunction: BlendFunction.ADD,
 })
