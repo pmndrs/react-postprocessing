@@ -8,11 +8,13 @@
     "strict": true,
     "jsx": "react-jsx",
     "pretty": true,
-    "noEmit": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true,
     "paths": {
       "@react-three/postprocessing": ["./src"]
     }
-  }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.*"]
 }
