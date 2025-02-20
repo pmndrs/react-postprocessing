@@ -25,12 +25,6 @@ export default vite.defineConfig({
   },
   plugins: [
     {
-      name: 'vite-tsc',
-      generateBundle() {
-        this.emitFile({ type: 'asset', fileName: 'index.d.ts', source: `export * from '../src/index.ts'` })
-      },
-    },
-    {
       name: 'vite-minify',
       transform(code, url) {
         if (!url.includes('node_modules')) {
