@@ -138,6 +138,7 @@ export const EffectComposer = /* @__PURE__ */ memo(
           const children = groupInstance.children
 
           for (let i = 0; i < children.length; i++) {
+            if (children[i] === undefined) continue
             const child = children[i].object
 
             if (child instanceof Effect) {
