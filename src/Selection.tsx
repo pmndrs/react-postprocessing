@@ -37,7 +37,7 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
         }
       }
     }
-  }, [enabled, children, api])
+  }, [enabled, children])
   return (
     <group ref={group} {...props}>
       {children}
