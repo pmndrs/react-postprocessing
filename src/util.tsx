@@ -21,6 +21,7 @@ const components = new WeakMap<EffectConstructor, React.ExoticComponent<any> | s
 export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: EffectProps<T>) =>
   /* @__PURE__ */ function Effect({ blendFunction = defaults?.blendFunction, opacity = defaults?.opacity, ...props }) {
     let Component = components.get(effect)
+    const { ref, ...params } = props
     if (!Component) {
       const key = `@react-three/postprocessing/${effect.name}-${i++}`
       extend({ [key]: effect })
@@ -29,9 +30,9 @@ export const wrapEffect = <T extends EffectConstructor>(effect: T, defaults?: Ef
 
     const camera = useThree((state) => state.camera)
     const args = React.useMemo(
-      () => [...(defaults?.args ?? []), ...(props.args ?? [{ ...defaults, ...props }])],
+      () => [...(defaults?.args ?? []), ...(params.args ?? [{ ...defaults, ...params }])],
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [JSON.stringify(props)]
+      [JSON.stringify(params)]
     )
 
     return (
