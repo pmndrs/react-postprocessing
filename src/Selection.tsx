@@ -44,7 +44,7 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
     return () => {
       select((prev) => prev.filter(obj => !current.includes(obj)))
     }
-  }, [enabled, select])
+  }, [enabled, select, children])
   return (
     <group ref={group} {...props}>
       {children}
