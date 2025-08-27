@@ -1,5 +1,5 @@
 import type { TextureDataType, Group, Camera, Scene } from 'three'
-import { HalfFloatType, NoToneMapping } from 'three'
+import { HalfFloatType, NoToneMapping, Vector2 } from 'three'
 import {
   type JSX,
   memo,
@@ -50,6 +50,8 @@ export type EffectComposerProps = {
 
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
+
+const glSize = new Vector2()
 
 export const EffectComposer = /* @__PURE__ */ memo(
   /* @__PURE__ */ forwardRef<EffectComposerImpl, EffectComposerProps>(
@@ -113,7 +115,9 @@ export const EffectComposer = /* @__PURE__ */ memo(
         resolutionScale,
       ])
 
-      useEffect(() => composer?.setSize(size.width, size.height), [composer, size])
+      gl.getSize(glSize)
+
+      useEffect(() => composer.setSize(glSize.width, glSize.height), [composer, glSize.width, glSize.height])
       useFrame(
         (_, delta) => {
           if (enabled) {
