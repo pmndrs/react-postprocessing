@@ -12,22 +12,42 @@ export type SelectApi = Omit<ThreeElements['group'], 'ref'> & {
 }
 
 export const selectionContext = /* @__PURE__ */ createContext<Api | null>(null)
+export const selectContext = /* @__PURE__ */ createContext<Api | null>(null)
 
-export function Selection({ children, enabled = true }: { enabled?: boolean; children: React.ReactNode }) {
+export function Selection(
+  { children, enabled = true }: { enabled?: boolean; children: React.ReactNode }
+) {
   const [selected, select] = useState<THREE.Object3D[]>([])
-  const value = useMemo(() => ({ selected, select, enabled }), [selected, select, enabled])
-  return <selectionContext.Provider value={value}>{children}</selectionContext.Provider>
+  const selectApiRef = useRef({ selected, select, enabled })
+  const selectApi = selectApiRef.current
+
+  //non-reactive api for selectContext
+  selectApi.selected = selected
+  selectApi.select = select
+  selectApi.enabled = enabled
+
+  const selectionApi = useMemo(() => ({ selected, select, enabled }), [selected, select, enabled])
+
+  return (
+    <selectContext.Provider value={selectApiRef.current}>
+      <selectionContext.Provider value={selectionApi}>
+        {children}
+      </selectionContext.Provider>
+    </selectContext.Provider>
+  )
 }
 
 export function Select({ enabled = false, children, ...props }: SelectApi) {
   const group = useRef<THREE.Group>(null!)
-  const api = useContext(selectionContext)
+  const api = useContext(selectContext)
   useEffect(() => {
     if (api && enabled) {
       let changed = false
       const current: THREE.Object3D[] = []
       group.current.traverse((o) => {
-        o.type === 'Mesh' && current.push(o)
+        if (o.type === 'Mesh') {
+          current.push(o)
+        }
         if (api.selected.indexOf(o) === -1) changed = true
       })
       if (changed) {
@@ -37,7 +57,7 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
         }
       }
     }
-  }, [enabled, children, api])
+  }, [enabled, children, api]);
   return (
     <group ref={group} {...props}>
       {children}
