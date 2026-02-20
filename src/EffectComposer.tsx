@@ -65,7 +65,7 @@ export const EffectComposer = /* @__PURE__ */ memo(
         depthBuffer,
         enableNormalPass,
         stencilBuffer,
-        multisampling = 8,
+        multisampling = 2,
         frameBufferType = HalfFloatType,
       },
       ref
