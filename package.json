@@ -23,6 +23,10 @@
     "type": "git",
     "url": "git+https://github.com/pmndrs/react-postprocessing.git"
   },
+  "bugs": {
+    "url": "https://github.com/pmndrs/react-postprocessing/issues"
+  },
+  "homepage": "https://github.com/pmndrs/react-postprocessing#readme",
   "scripts": {
     "build": "rimraf dist && vite build && tsc",
     "eslint": "eslint . --fix --ext=js,ts,jsx,tsx",
