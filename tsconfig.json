@@ -11,6 +11,7 @@
     "pretty": true,
     "declaration": true,
     "emitDeclarationOnly": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@react-three/postprocessing": ["./src"]
