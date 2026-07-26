@@ -1,5 +1,5 @@
-import { ScanlineEffect, BlendFunction } from 'postprocessing'
-import { wrapEffect } from '../util'
+import { BlendFunction, ScanlineEffect } from 'postprocessing'
+import { wrapEffect } from '../wrapEffect'
 
 export const Scanline = /* @__PURE__ */ wrapEffect(ScanlineEffect, {
   blendFunction: BlendFunction.OVERLAY,
