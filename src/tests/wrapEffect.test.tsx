@@ -1,0 +1,79 @@
+import { Effect, EffectComposer as EffectComposerImpl } from 'postprocessing'
+import * as React from 'react'
+import { describe, expect, it } from 'vitest'
+import { EffectComposer } from '../EffectComposer'
+import { wrapEffect } from '../wrapEffect'
+import { flush, root } from './test-utils'
+
+class FakeEffect extends Effect {
+  value: number
+  constructor({ value = 0 }: { value?: number } = {}) {
+    super('FakeEffect', 'mainImage() {}')
+    this.value = value
+  }
+}
+
+const FakeEffectComponent = /* @__PURE__ */ wrapEffect(FakeEffect)
+
+describe('wrapEffect', () => {
+  it('passes the constructed value through to the underlying effect instance', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <FakeEffectComponent value={42} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    // @ts-expect-error
+    const effect = composerRef.current!.passes[1].effects[0]
+
+    expect(effect).toBeInstanceOf(FakeEffect)
+    expect(effect.value).toBe(42)
+
+    await React.act(async () => root.render(null))
+  })
+
+  it('registers the new instance in the same act() as the args change, not one render later', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <FakeEffectComponent value={1} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    const firstEffect =
+      // @ts-expect-error
+      composerRef.current!.passes[1].effects[0]
+
+    expect(firstEffect.value).toBe(1)
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <FakeEffectComponent value={2} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    const secondEffect =
+      // @ts-expect-error
+      composerRef.current!.passes[1].effects[0]
+
+    expect(secondEffect).not.toBe(firstEffect)
+    expect(secondEffect.value).toBe(2)
+
+    await React.act(async () => root.render(null))
+  })
+})
