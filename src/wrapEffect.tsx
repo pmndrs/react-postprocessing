@@ -26,6 +26,22 @@ let i = 0
 
 const components = new WeakMap<EffectConstructor, ExoticComponent<any> | string>()
 
+// Some prop values (textures, refs, other three.js objects with back-
+// references) form cycles that JSON.stringify can't walk on its own —
+// it throws "Converting circular structure to JSON". This is only used
+// as a memo fingerprint, not real serialization, so breaking a cycle
+// with a placeholder is enough to keep it from crashing.
+function stableStringify(value: unknown): string {
+  const seen = new WeakSet<object>()
+  return JSON.stringify(value, (_key, val) => {
+    if (typeof val === 'object' && val !== null) {
+      if (seen.has(val)) return '[Circular]'
+      seen.add(val)
+    }
+    return val
+  })
+}
+
 export function wrapEffect<T extends EffectConstructor>(
   effect: T,
   defaults?: EffectProps<T>
@@ -52,7 +68,7 @@ export function wrapEffect<T extends EffectConstructor>(
         ...((props.args as unknown as any[]) ?? [{ ...defaults, ...props }]),
       ],
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [JSON.stringify(props)]
+      [stableStringify(props)]
     )
 
     return (

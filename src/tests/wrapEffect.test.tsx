@@ -15,6 +15,14 @@ class FakeEffect extends Effect {
 
 const FakeEffectComponent = /* @__PURE__ */ wrapEffect(FakeEffect)
 
+class CircularPropsEffect extends Effect {
+  constructor(_props: Record<string, unknown> = {}) {
+    super('CircularPropsEffect', 'mainImage() {}')
+  }
+}
+
+const CircularPropsComponent = /* @__PURE__ */ wrapEffect(CircularPropsEffect)
+
 describe('wrapEffect', () => {
   it('passes the constructed value through to the underlying effect instance', async () => {
     const composerRef = React.createRef<EffectComposerImpl>()
@@ -73,6 +81,29 @@ describe('wrapEffect', () => {
 
     expect(secondEffect).not.toBe(firstEffect)
     expect(secondEffect.value).toBe(2)
+
+    await React.act(async () => root.render(null))
+  })
+
+  it('does not crash when a prop value contains a circular reference (#333, #334)', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const circular: Record<string, unknown> = { value: 1 }
+    circular.self = circular
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <CircularPropsComponent extra={circular} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    // @ts-expect-error
+    const effect = composerRef.current!.passes[1].effects[0]
+
+    expect(effect).toBeInstanceOf(CircularPropsEffect)
 
     await React.act(async () => root.render(null))
   })
