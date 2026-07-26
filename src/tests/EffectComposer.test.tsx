@@ -237,6 +237,34 @@ describe('EffectComposer', () => {
       expect(effects[0]).toBeInstanceOf(EffectB)
     })
 
+    it('accepts conditionally-rendered children via `condition && <Effect/>` without a type cast', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      // Boxed behind a function so TS can't literal-narrow `show` to `false`
+      // at the call site below — that would make `show && <WrappedEffectA/>`
+      // type as just `false` instead of `boolean | Element`, silently
+      // defeating the point of this test (a real regression to the old,
+      // too-narrow `children: JSX.Element | JSX.Element[]` type wouldn't
+      // get caught by tsc).
+      const shouldShow = (value: boolean): boolean => value
+
+      await React.act(async () =>
+        root.render(<EffectComposer ref={ref}>{shouldShow(false) && <WrappedEffectA />}</EffectComposer>)
+      )
+
+      await flush()
+
+      expect(ref.current!.passes.filter((p) => p instanceof EffectPass)).toHaveLength(0)
+
+      await React.act(async () =>
+        root.render(<EffectComposer ref={ref}>{shouldShow(true) && <WrappedEffectA />}</EffectComposer>)
+      )
+
+      const effects = await waitForEffects(ref, 1)
+
+      expect(effects[0]).toBeInstanceOf(EffectA)
+    })
+
     it('recreates the composer when the camera changes and keeps effects', async () => {
       const ref = React.createRef<EffectComposerImpl>()
 

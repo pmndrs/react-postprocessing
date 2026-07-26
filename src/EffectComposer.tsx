@@ -18,7 +18,7 @@ import {
   useMemo,
   useRef,
   useState,
-  type JSX,
+  type ReactNode,
   type Ref,
 } from 'react'
 import type { Camera, Group, Scene, TextureDataType } from 'three'
@@ -35,7 +35,7 @@ export const EffectComposerContext = /* @__PURE__ */ createContext<{
 
 export type EffectComposerProps = {
   enabled?: boolean
-  children: JSX.Element | JSX.Element[]
+  children: ReactNode
   depthBuffer?: boolean
   /** Only used for SSGI currently, leave it disabled for everything else unless it's needed */
   enableNormalPass?: boolean
