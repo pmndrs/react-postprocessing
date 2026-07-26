@@ -1,23 +1,27 @@
-import { TextureEffect } from 'postprocessing'
-import { Ref, forwardRef, useMemo, useLayoutEffect } from 'react'
 import { useLoader } from '@react-three/fiber'
-import { TextureLoader, SRGBColorSpace, RepeatWrapping } from 'three'
+import { TextureEffect } from 'postprocessing'
+import { Ref, useLayoutEffect, useMemo } from 'react'
+import { RepeatWrapping, SRGBColorSpace, TextureLoader } from 'three'
+import { useDispose } from '../util'
 
 type TextureProps = ConstructorParameters<typeof TextureEffect>[0] & {
   textureSrc: string
   /** opacity of provided texture */
   opacity?: number
+  ref: Ref<TextureEffect>
 }
 
-export const Texture = /* @__PURE__ */ forwardRef<TextureEffect, TextureProps>(function Texture(
-  { textureSrc, texture, opacity = 1, ...props }: TextureProps,
-  ref: Ref<TextureEffect>
-) {
+export function Texture({ textureSrc, texture, opacity = 1, ref, ...props }: TextureProps) {
   const t = useLoader(TextureLoader, textureSrc)
+
   useLayoutEffect(() => {
     t.colorSpace = SRGBColorSpace
     t.wrapS = t.wrapT = RepeatWrapping
   }, [t])
-  const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [props, t, texture])
-  return <primitive ref={ref} object={effect} blendMode-opacity-value={opacity} dispose={null} />
-})
+
+  const effect = useMemo(() => new TextureEffect({ ...props, texture: t || texture }), [])
+
+  useDispose(effect)
+
+  return <primitive ref={ref} object={effect} blendMode-opacity-value={opacity} />
+}
