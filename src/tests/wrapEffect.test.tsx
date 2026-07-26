@@ -169,4 +169,41 @@ describe('wrapEffect', () => {
     await React.act(async () => root.render(null))
     toJSONSpy.mockRestore()
   })
+
+  it('does not crash on repeated re-renders once a ref is attached', async () => {
+    // Regression for a bug specific to the *old* wrapEffect: it never
+    // destructured `ref` out of props, so `ref` landed in `...props` and
+    // JSON.stringify(props) tried to serialize `ref.current` — the mounted
+    // effect instance itself — on every re-render after the first, which
+    // crashed the same way #333/#334 did for texture props. Current
+    // wrapEffect destructures `ref` explicitly, so it never reaches the
+    // fingerprint at all; this just locks that in.
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const effectRef = React.createRef<FakeEffect>()
+
+    function Harness({ tick: _tick }: { tick: number }) {
+      return (
+        <EffectComposer ref={composerRef}>
+          <FakeEffectComponent ref={effectRef} value={1} />
+        </EffectComposer>
+      )
+    }
+
+    await React.act(async () => root.render(<Harness tick={0} />))
+    await flush()
+
+    expect(effectRef.current).toBeInstanceOf(FakeEffect)
+    const firstInstance = effectRef.current
+
+    for (let tick = 1; tick <= 5; tick++) {
+      await React.act(async () => root.render(<Harness tick={tick} />))
+    }
+
+    await flush()
+
+    expect(effectRef.current).toBe(firstInstance)
+    expect(effectRef.current).toBeInstanceOf(FakeEffect)
+
+    await React.act(async () => root.render(null))
+  })
 })
