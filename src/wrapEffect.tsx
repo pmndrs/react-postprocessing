@@ -26,20 +26,57 @@ let i = 0
 
 const components = new WeakMap<EffectConstructor, ExoticComponent<any> | string>()
 
-// Some prop values (textures, refs, other three.js objects with back-
-// references) form cycles that JSON.stringify can't walk on its own —
-// it throws "Converting circular structure to JSON". This is only used
-// as a memo fingerprint, not real serialization, so breaking a cycle
-// with a placeholder is enough to keep it from crashing.
+const identityTokens = new WeakMap<object, number>()
+let nextIdentityToken = 0
+
+// Same object in, same token out — lets otherwise-opaque values (textures,
+// refs, any class instance) still change the fingerprint when swapped for
+// a different instance, without walking into them.
+function identityOf(value: object): number {
+  let token = identityTokens.get(value)
+  if (token === undefined) {
+    token = nextIdentityToken++
+    identityTokens.set(value, token)
+  }
+  return token
+}
+
+// Walks props into a JSON-safe fingerprint for the args memo below. Two
+// things JSON.stringify can't be trusted with here:
+//  - it throws on cycles (refs, or any three.js object with a back-
+//    reference), so cycles are cut off with a WeakSet guard instead.
+//  - it calls a value's own toJSON first if present, which for e.g.
+//    THREE.Texture re-encodes the whole image to a base64 data URL on
+//    every single render (measured ~39ms for a 512x512 texture) just to
+//    throw the result away. Reading properties directly sidesteps that.
+//  - reading properties directly instead means typed arrays need their
+//    own case: Object.keys() on one returns every numeric index, so
+//    walking a texture's backing buffer element-by-element is even
+//    slower (~340ms for the same texture) than the toJSON it replaces.
+//    Identity is enough — same buffer means unchanged.
+function fingerprint(value: unknown, seen: WeakSet<object>): unknown {
+  if (value === null || typeof value !== 'object') return value
+  if (seen.has(value)) return '[Circular]'
+
+  if (ArrayBuffer.isView(value) || value instanceof ArrayBuffer) {
+    return identityOf(value)
+  }
+
+  seen.add(value)
+
+  if (Array.isArray(value)) {
+    return value.map((item) => fingerprint(item, seen))
+  }
+
+  const out: Record<string, unknown> = {}
+  for (const key of Object.keys(value).sort()) {
+    out[key] = fingerprint((value as Record<string, unknown>)[key], seen)
+  }
+  return out
+}
+
 function stableStringify(value: unknown): string {
-  const seen = new WeakSet<object>()
-  return JSON.stringify(value, (_key, val) => {
-    if (typeof val === 'object' && val !== null) {
-      if (seen.has(val)) return '[Circular]'
-      seen.add(val)
-    }
-    return val
-  })
+  return JSON.stringify(fingerprint(value, new WeakSet()))
 }
 
 export function wrapEffect<T extends EffectConstructor>(

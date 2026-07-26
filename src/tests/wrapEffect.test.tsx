@@ -1,6 +1,7 @@
 import { Effect, EffectComposer as EffectComposerImpl } from 'postprocessing'
 import * as React from 'react'
-import { describe, expect, it } from 'vitest'
+import { DataTexture, Texture } from 'three'
+import { describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
 import { wrapEffect } from '../wrapEffect'
 import { flush, root } from './test-utils'
@@ -106,5 +107,66 @@ describe('wrapEffect', () => {
     expect(effect).toBeInstanceOf(CircularPropsEffect)
 
     await React.act(async () => root.render(null))
+  })
+
+  it('fingerprints a texture prop by identity, without invoking its toJSON (perf)', async () => {
+    const toJSONSpy = vi.spyOn(Texture.prototype, 'toJSON')
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const textureA = new DataTexture(new Uint8Array(4), 1, 1)
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <CircularPropsComponent extra={textureA} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    const firstEffect =
+      // @ts-expect-error
+      composerRef.current!.passes[1].effects[0]
+
+    // same texture reference on re-render — should not recreate the instance
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <CircularPropsComponent extra={textureA} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    const secondEffect =
+      // @ts-expect-error
+      composerRef.current!.passes[1].effects[0]
+
+    expect(secondEffect).toBe(firstEffect)
+
+    // a genuinely different texture instance — should recreate
+    const textureB = new DataTexture(new Uint8Array(4), 1, 1)
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <CircularPropsComponent extra={textureB} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+
+    const thirdEffect =
+      // @ts-expect-error
+      composerRef.current!.passes[1].effects[0]
+
+    expect(thirdEffect).not.toBe(secondEffect)
+
+    expect(toJSONSpy).not.toHaveBeenCalled()
+
+    await React.act(async () => root.render(null))
+    toJSONSpy.mockRestore()
   })
 })
