@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
+    "target": "ES6",
+    "module": "ESNext",
     "outDir": "dist",
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["esnext", "dom"],
+    "rootDir": "src",
+    "lib": ["ESNext", "DOM"],
     "moduleResolution": "bundler",
     "strict": true,
     "jsx": "react-jsx",
     "pretty": true,
     "declaration": true,
     "emitDeclarationOnly": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@react-three/postprocessing": ["./src"]

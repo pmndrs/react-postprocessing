@@ -18,3 +18,5 @@ pnpm-debug.log
 .parcel-cache
 pnpm-lock.yaml
 storybook-static
+
+*.tgz
