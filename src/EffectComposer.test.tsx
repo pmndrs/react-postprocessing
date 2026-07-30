@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as THREE from 'three'
-import { vi, describe, it, expect } from 'vitest'
-import { extend, createRoot, act } from '@react-three/fiber'
+import { describe, it, expect } from 'vitest'
+import { extend, createRoot } from '@react-three/fiber'
 import { EffectComposer } from './EffectComposer'
 import { EffectComposer as EffectComposerImpl, RenderPass, Pass, Effect, EffectPass } from 'postprocessing'
 
@@ -57,7 +57,7 @@ describe('EffectComposer', () => {
     const passB = new Pass()
 
     // Forward order
-    await act(async () =>
+    await React.act(async () =>
       root.render(
         <EffectComposer ref={composerRef}>
           {/* EffectPass(effectA, effectB) */}
@@ -87,10 +87,10 @@ describe('EffectComposer', () => {
     expect(composerRef.current!.passes[4]).toBe(passB)
 
     // NOTE: instance children ordering is unstable until R3F v9, so we remount from scratch
-    await act(async () => root.render(null))
+    await React.act(async () => root.render(null))
 
     // Reverse order
-    await act(async () =>
+    await React.act(async () =>
       root.render(
         <EffectComposer ref={composerRef}>
           {/* PassB */}
@@ -121,6 +121,6 @@ describe('EffectComposer', () => {
   })
 
   it.skip('should split convolution effects', async () => {
-    await act(async () => root.render(null))
+    await React.act(async () => root.render(null))
   })
 })
