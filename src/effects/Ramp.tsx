@@ -1,6 +1,6 @@
-import { Uniform } from 'three'
 import { Effect } from 'postprocessing'
-import { wrapEffect } from '../util'
+import { Uniform } from 'three'
+import { wrapEffect } from '../wrapEffect'
 
 const RampShader = {
   fragmentShader: /* glsl */ `

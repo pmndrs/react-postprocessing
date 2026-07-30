@@ -1,4 +1,4 @@
 import { FXAAEffect } from 'postprocessing'
-import { wrapEffect } from '../util'
+import { wrapEffect } from '../wrapEffect'
 
 export const FXAA = /* @__PURE__ */ wrapEffect(FXAAEffect)

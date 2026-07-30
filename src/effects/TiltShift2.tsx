@@ -1,9 +1,9 @@
-import { Uniform } from 'three'
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing'
-import { wrapEffect } from '../util'
+import { Uniform } from 'three'
+import { wrapEffect } from '../wrapEffect'
 
 const TiltShiftShader = {
-  fragmentShader: `
+  fragmentShader: /* glsl */ `
 
     // original shader by Evan Wallace
 
