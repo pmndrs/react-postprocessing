@@ -60,22 +60,6 @@ const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
 /**
- * r3f's host config doesn't detach an existing instance from its old slot
- * when React moves it (a key-preserving reorder of siblings) — it just
- * splices/pushes the moved instance into its new slot, leaving a stale
- * duplicate of the same object behind at the old one. Deduping by last
- * occurrence recovers the correct order regardless: the stale copy is
- * always left behind first, the moved one lands later.
- */
-function dedupeByLastOccurrence(children: Instance<Group>['children']): unknown[] {
-  const lastIndex = new Map<unknown, number>()
-  children.forEach((child, index) => lastIndex.set(child.object, index))
-  return Array.from(lastIndex.entries())
-    .sort(([, a], [, b]) => a - b)
-    .map(([object]) => object)
-}
-
-/**
  * Groups a flat, ordered list of Effect/Pass instances into actual composer
  * passes, merging consecutive non-convolution Effects into a single
  * EffectPass.
@@ -192,7 +176,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
 
     if (groupInstance) {
-      const nodes = dedupeByLastOccurrence(groupInstance.children).filter(
+      const nodes = groupInstance.children.map((child) => child.object).filter(
         (object): object is Effect | Pass => object instanceof Effect || object instanceof Pass
       )
 
