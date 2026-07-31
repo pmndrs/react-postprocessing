@@ -485,6 +485,197 @@ describe('EffectComposer', () => {
     })
   })
 
+  describe('renderer state restoration', () => {
+    it('restores autoClear to its previous value once the composer is fully unmounted', async () => {
+      const gl = root.render(null).getState().gl
+      gl.autoClear = true // known baseline, independent of whatever earlier tests in this file left behind
+
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      await waitForComposer(ref)
+      expect(gl.autoClear).toBe(false)
+
+      await React.act(async () => root.render(null))
+
+      expect(gl.autoClear).toBe(true)
+    })
+
+    it('keeps autoClear disabled while a sibling composer on the same renderer is still mounted, regardless of unmount order', async () => {
+      const gl = root.render(null).getState().gl
+      gl.autoClear = true
+
+      const refA = React.createRef<EffectComposerImpl>()
+      const refB = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <>
+            <EffectComposer key="a" ref={refA}>
+              <WrappedEffectA />
+            </EffectComposer>
+            <EffectComposer key="b" ref={refB}>
+              <WrappedEffectB />
+            </EffectComposer>
+          </>
+        )
+      )
+
+      await waitForComposer(refA)
+      await waitForComposer(refB)
+      expect(gl.autoClear).toBe(false)
+
+      // Unmount the first composer only (key "a" drops out of the tree) -
+      // the second is still relying on autoClear staying off, so this must
+      // not restore it yet. Keying both is essential here: without it,
+      // React would match by position and reuse "a"'s instance in place
+      // (just updating its props to "b"'s), unmounting the wrong one.
+      await React.act(async () =>
+        root.render(
+          <EffectComposer key="b" ref={refB}>
+            <WrappedEffectB />
+          </EffectComposer>
+        )
+      )
+
+      expect(gl.autoClear).toBe(false)
+
+      // Now the last one goes too - only now should it actually restore.
+      await React.act(async () => root.render(null))
+
+      expect(gl.autoClear).toBe(true)
+    })
+
+    it('restores toneMapping to its previous value once the composer is fully unmounted', async () => {
+      const gl = root.render(null).getState().gl
+      gl.toneMapping = THREE.ACESFilmicToneMapping // known baseline, distinct from NoToneMapping
+
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      await waitForComposer(ref)
+      expect(gl.toneMapping).toBe(THREE.NoToneMapping)
+
+      await React.act(async () => root.render(null))
+
+      expect(gl.toneMapping).toBe(THREE.ACESFilmicToneMapping)
+    })
+
+    it('keeps toneMapping disabled while a sibling composer on the same renderer is still mounted, regardless of unmount order', async () => {
+      const gl = root.render(null).getState().gl
+      gl.toneMapping = THREE.ACESFilmicToneMapping
+
+      const refA = React.createRef<EffectComposerImpl>()
+      const refB = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <>
+            <EffectComposer key="a" ref={refA}>
+              <WrappedEffectA />
+            </EffectComposer>
+            <EffectComposer key="b" ref={refB}>
+              <WrappedEffectB />
+            </EffectComposer>
+          </>
+        )
+      )
+
+      await waitForComposer(refA)
+      await waitForComposer(refB)
+      expect(gl.toneMapping).toBe(THREE.NoToneMapping)
+
+      // Unmount the first composer only - the second still relies on
+      // toneMapping staying off, so this must not restore it yet.
+      await React.act(async () =>
+        root.render(
+          <EffectComposer key="b" ref={refB}>
+            <WrappedEffectB />
+          </EffectComposer>
+        )
+      )
+
+      expect(gl.toneMapping).toBe(THREE.NoToneMapping)
+
+      // Now the last one goes too - only now should it actually restore.
+      await React.act(async () => root.render(null))
+
+      expect(gl.toneMapping).toBe(THREE.ACESFilmicToneMapping)
+    })
+
+    it('does not clobber a manual autoClear change made while the composer was mounted', async () => {
+      const gl = root.render(null).getState().gl
+      // Pre-mount baseline is false (not the usual true) specifically so
+      // it differs from the manual override below - autoClear only has two
+      // states, so this is the only way to make an unconditional restore-
+      // to-original and a "preserve the manual change" outcome observably
+      // different from each other.
+      gl.autoClear = false
+
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      await waitForComposer(ref)
+      expect(gl.autoClear).toBe(false)
+
+      // Something outside this component takes manual control while the
+      // composer happens to still be mounted - a deliberate, more current
+      // intent than whatever we captured before mount.
+      gl.autoClear = true
+
+      await React.act(async () => root.render(null))
+
+      // Must stay what the manual override set it to, not get silently
+      // reset back to the pre-mount value we originally captured (false).
+      expect(gl.autoClear).toBe(true)
+    })
+
+    it('does not clobber a manual toneMapping change made while the composer was mounted', async () => {
+      const gl = root.render(null).getState().gl
+      gl.toneMapping = THREE.ACESFilmicToneMapping
+
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      await waitForComposer(ref)
+      expect(gl.toneMapping).toBe(THREE.NoToneMapping)
+
+      gl.toneMapping = THREE.ReinhardToneMapping
+
+      await React.act(async () => root.render(null))
+
+      expect(gl.toneMapping).toBe(THREE.ReinhardToneMapping)
+    })
+  })
+
   describe('StrictMode', () => {
     it('preserves effects after the StrictMode fake-unmount/remount cycle', async () => {
       const ref = React.createRef<EffectComposerImpl>()
