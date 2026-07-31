@@ -1,10 +1,11 @@
 // From https://github.com/N8python/n8ao
 // https://twitter.com/N8Programs/status/1660996748485984261
 
-import { Ref, forwardRef, useLayoutEffect, useMemo } from 'react'
+import { ReactThreeFiber, applyProps, useThree } from '@react-three/fiber'
+import { Ref, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
 import { N8AOPostPass } from 'n8ao'
-import { useThree, ReactThreeFiber, applyProps } from '@react-three/fiber'
+import { useDispose } from '../util'
 
 export type N8AOProps = {
   aoRadius?: number
@@ -19,46 +20,32 @@ export type N8AOProps = {
   depthAwareUpsampling?: boolean
   screenSpaceRadius?: boolean
   renderMode?: 0 | 1 | 2 | 3 | 4
+  ref?: Ref<N8AOPostPass>
 }
 
-export const N8AO = /* @__PURE__ */ forwardRef<N8AOPostPass, N8AOProps>(
-  (
-    {
-      halfRes,
-      screenSpaceRadius,
-      quality,
-      depthAwareUpsampling = true,
-      aoRadius = 5,
-      aoSamples = 16,
-      denoiseSamples = 4,
-      denoiseRadius = 12,
-      distanceFalloff = 1,
-      intensity = 1,
-      color,
-      renderMode = 0,
-    },
-    ref: Ref<N8AOPostPass>
-  ) => {
-    const { camera, scene } = useThree()
-    const effect = useMemo(() => new N8AOPostPass(scene, camera), [camera, scene])
+export function N8AO({
+  halfRes,
+  screenSpaceRadius,
+  quality,
+  depthAwareUpsampling = true,
+  aoRadius = 5,
+  aoSamples = 16,
+  denoiseSamples = 4,
+  denoiseRadius = 12,
+  distanceFalloff = 1,
+  intensity = 1,
+  color,
+  renderMode = 0,
+  ref,
+}: N8AOProps) {
+  const { camera, scene } = useThree()
+  const effect = useMemo(() => new N8AOPostPass(scene, camera), [camera, scene])
 
-    // TODO: implement dispose upstream; this effect has memory leaks without
-    useLayoutEffect(() => {
-      applyProps(effect.configuration, {
-        color,
-        aoRadius,
-        distanceFalloff,
-        intensity,
-        aoSamples,
-        denoiseSamples,
-        denoiseRadius,
-        screenSpaceRadius,
-        renderMode,
-        halfRes,
-        depthAwareUpsampling,
-      })
-    }, [
-      screenSpaceRadius,
+  // TODO: implement dispose upstream; this effect has memory leaks without
+  useDispose(effect)
+
+  useLayoutEffect(() => {
+    applyProps(effect.configuration, {
       color,
       aoRadius,
       distanceFalloff,
@@ -66,16 +53,29 @@ export const N8AO = /* @__PURE__ */ forwardRef<N8AOPostPass, N8AOProps>(
       aoSamples,
       denoiseSamples,
       denoiseRadius,
+      screenSpaceRadius,
       renderMode,
       halfRes,
       depthAwareUpsampling,
-      effect,
-    ])
+    })
+  }, [
+    screenSpaceRadius,
+    color,
+    aoRadius,
+    distanceFalloff,
+    intensity,
+    aoSamples,
+    denoiseSamples,
+    denoiseRadius,
+    renderMode,
+    halfRes,
+    depthAwareUpsampling,
+    effect,
+  ])
 
-    useLayoutEffect(() => {
-      if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
-    }, [effect, quality])
+  useLayoutEffect(() => {
+    if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
+  }, [effect, quality])
 
-    return <primitive ref={ref} object={effect} />
-  }
-)
+  return <primitive ref={ref} object={effect} />
+}
