@@ -1,11 +1,14 @@
+import type { ReactThreeFiber } from '@react-three/fiber'
 import { DepthOfFieldEffect, MaskFunction } from 'postprocessing'
-import { Ref, forwardRef, useMemo, useEffect, useContext } from 'react'
-import { ReactThreeFiber } from '@react-three/fiber'
+import type { Ref } from 'react'
+import { use, useMemo } from 'react'
 import { type DepthPackingStrategies, type Texture, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
+import { useDispose } from '../util'
 
-type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
+export type DepthOfFieldProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
   Partial<{
+    ref: Ref<DepthOfFieldEffect>
     target: ReactThreeFiber.Vector3
     depthTexture: {
       texture: Texture
@@ -16,28 +19,27 @@ type DOFProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
     blur: number
   }>
 
-export const DepthOfField = /* @__PURE__ */ forwardRef(function DepthOfField(
-  {
-    blendFunction,
-    worldFocusDistance,
-    worldFocusRange,
-    focusDistance,
-    focusRange,
-    focalLength,
-    bokehScale,
-    resolutionScale,
-    resolutionX,
-    resolutionY,
-    width,
-    height,
-    target,
-    depthTexture,
-    ...props
-  }: DOFProps,
-  ref: Ref<DepthOfFieldEffect>
-) {
-  const { camera } = useContext(EffectComposerContext)
+export function DepthOfField({
+  ref,
+  blendFunction,
+  worldFocusDistance,
+  worldFocusRange,
+  focusDistance,
+  focusRange,
+  focalLength,
+  bokehScale,
+  resolutionScale,
+  resolutionX,
+  resolutionY,
+  width,
+  height,
+  target,
+  depthTexture,
+  ...props
+}: DepthOfFieldProps) {
+  const { camera } = use(EffectComposerContext)
   const autoFocus = target != null
+
   const effect = useMemo(() => {
     const effect = new DepthOfFieldEffect(camera, {
       blendFunction,
@@ -79,11 +81,7 @@ export const DepthOfField = /* @__PURE__ */ forwardRef(function DepthOfField(
     depthTexture,
   ])
 
-  useEffect(() => {
-    return () => {
-      effect.dispose()
-    }
-  }, [effect])
+  useDispose(effect)
 
-  return <primitive {...props} ref={ref} object={effect} target={target} />
-})
+  return <primitive {...props} object={effect} ref={ref} target={target} />
+}

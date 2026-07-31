@@ -1,16 +1,20 @@
 import { GodRaysEffect } from 'postprocessing'
-import React, { Ref, forwardRef, useMemo, useContext, useLayoutEffect } from 'react'
+import { Ref, RefObject, useContext, useLayoutEffect, useMemo } from 'react'
 import { Mesh, Points } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
-import { resolveRef } from '../util'
+import { resolveRef, useDispose } from '../util'
 
 type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
-  sun: Mesh | Points | React.RefObject<Mesh | Points>
+  sun: Mesh | Points | RefObject<Mesh | Points>
+  ref?: Ref<GodRaysEffect>
 }
 
-export const GodRays = /* @__PURE__ */ forwardRef(function GodRays(props: GodRaysProps, ref: Ref<GodRaysEffect>) {
+export function GodRays({ ref, ...props }: GodRaysProps) {
   const { camera } = useContext(EffectComposerContext)
   const effect = useMemo(() => new GodRaysEffect(camera, resolveRef(props.sun), props), [camera, props])
   useLayoutEffect(() => void (effect.lightSource = resolveRef(props.sun)), [effect, props.sun])
-  return <primitive ref={ref} object={effect} dispose={null} />
-})
+
+  useDispose(effect)
+
+  return <primitive ref={ref} object={effect} />
+}

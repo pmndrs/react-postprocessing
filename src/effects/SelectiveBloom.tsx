@@ -1,11 +1,11 @@
-import { SelectiveBloomEffect, BlendFunction } from 'postprocessing'
-import type { BloomEffectOptions } from 'postprocessing'
-import React, { Ref, RefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
-import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
+import type { BloomEffectOptions } from 'postprocessing'
+import { BlendFunction, SelectiveBloomEffect } from 'postprocessing'
+import { Ref, RefObject, useContext, useEffect, useMemo } from 'react'
+import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
-import { resolveRef } from '../util'
+import { resolveRef, useDispose } from '../util'
 
 type ObjectRef = RefObject<Object3D>
 
@@ -16,30 +16,28 @@ export type SelectiveBloomProps = BloomEffectOptions &
     selectionLayer: number
     inverted: boolean
     ignoreBackground: boolean
+    ref?: Ref<SelectiveBloomEffect>
   }>
 
 const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.enable(effect.selection.layer)
 const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.disable(effect.selection.layer)
 
-export const SelectiveBloom = /* @__PURE__ */ forwardRef(function SelectiveBloom(
-  {
-    selection = [],
-    selectionLayer = 10,
-    lights = [],
-    inverted = false,
-    ignoreBackground = false,
-    luminanceThreshold,
-    luminanceSmoothing,
-    intensity,
-    width,
-    height,
-    kernelSize,
-    mipmapBlur,
-
-    ...props
-  }: SelectiveBloomProps,
-  forwardRef: Ref<SelectiveBloomEffect>
-) {
+export function SelectiveBloom({
+  selection = [],
+  selectionLayer = 10,
+  lights = [],
+  inverted = false,
+  ignoreBackground = false,
+  luminanceThreshold,
+  luminanceSmoothing,
+  intensity,
+  width,
+  height,
+  kernelSize,
+  mipmapBlur,
+  ref,
+  ...props
+}: SelectiveBloomProps) {
   if (lights.length === 0) {
     console.warn('SelectiveBloom requires lights to work.')
   }
@@ -122,5 +120,7 @@ export const SelectiveBloom = /* @__PURE__ */ forwardRef(function SelectiveBloom
     }
   }, [api, effect.selection, invalidate])
 
-  return <primitive ref={forwardRef} object={effect} dispose={null} />
-})
+  useDispose(effect)
+
+  return <primitive ref={ref} object={effect} />
+}

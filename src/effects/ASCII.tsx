@@ -1,29 +1,30 @@
 // From: https://github.com/emilwidlund/ASCII
 // https://twitter.com/emilwidlund/status/1652386482420609024
 
-import { forwardRef, useMemo } from 'react'
-import { CanvasTexture, Color, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three'
 import { Effect } from 'postprocessing'
+import { Ref, useMemo } from 'react'
+import { CanvasTexture, Color, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three'
+import { useDispose } from '../util'
 
-const fragment = `
-uniform sampler2D uCharacters;
-uniform float uCharactersCount;
-uniform float uCellSize;
-uniform bool uInvert;
-uniform vec3 uColor;
+const fragment = /* glsl */ `
+  uniform sampler2D uCharacters;
+  uniform float uCharactersCount;
+  uniform float uCellSize;
+  uniform bool uInvert;
+  uniform vec3 uColor;
 
-const vec2 SIZE = vec2(16.);
+  const vec2 SIZE = vec2(16.);
 
-vec3 greyscale(vec3 color, float strength) {
+  vec3 greyscale(vec3 color, float strength) {
     float g = dot(color, vec3(0.299, 0.587, 0.114));
     return mix(color, vec3(g), strength);
-}
+  }
 
-vec3 greyscale(vec3 color) {
+  vec3 greyscale(vec3 color) {
     return greyscale(color, 1.0);
-}
+  }
 
-void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+  void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
     vec2 cell = resolution / uCellSize;
     vec2 grid = 1.0 / cell;
     vec2 pixelizedUV = grid * (0.5 + floor(uv / grid));
@@ -43,7 +44,7 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     asciiCharacter.rgb = uColor * asciiCharacter.r;
     asciiCharacter.a = pixelized.a;
     outputColor = asciiCharacter;
-}
+  }
 `
 
 interface IASCIIEffectProps {
@@ -53,6 +54,7 @@ interface IASCIIEffectProps {
   cellSize?: number
   color?: string
   invert?: boolean
+  ref?: Ref<ASCIIEffect>
 }
 
 class ASCIIEffect extends Effect {
@@ -63,7 +65,7 @@ class ASCIIEffect extends Effect {
     cellSize = 16,
     color = '#ffffff',
     invert = false,
-  }: IASCIIEffectProps = {}) {
+  }: Omit<IASCIIEffectProps, 'ref'> = {}) {
     const uniforms = new Map<string, Uniform>([
       ['uCharacters', new Uniform(new Texture())],
       ['uCellSize', new Uniform(cellSize)],
@@ -114,22 +116,21 @@ class ASCIIEffect extends Effect {
   }
 }
 
-export const ASCII = /* @__PURE__ */ forwardRef<ASCIIEffect, IASCIIEffectProps>(
-  (
-    {
-      font = 'arial',
-      characters = ` .:,'-^=*+?!|0#X%WM@`,
-      fontSize = 54,
-      cellSize = 16,
-      color = '#ffffff',
-      invert = false,
-    },
-    fref
-  ) => {
-    const effect = useMemo(
-      () => new ASCIIEffect({ characters, font, fontSize, cellSize, color, invert }),
-      [characters, fontSize, cellSize, color, invert, font]
-    )
-    return <primitive ref={fref} object={effect} />
-  }
-)
+export function ASCII({
+  font = 'arial',
+  characters = ` .:,'-^=*+?!|0#X%WM@`,
+  fontSize = 54,
+  cellSize = 16,
+  color = '#ffffff',
+  invert = false,
+  ref,
+}: IASCIIEffectProps) {
+  const effect = useMemo(
+    () => new ASCIIEffect({ characters, font, fontSize, cellSize, color, invert }),
+    [characters, fontSize, cellSize, color, invert, font]
+  )
+
+  useDispose(effect)
+
+  return <primitive ref={ref} object={effect} />
+}

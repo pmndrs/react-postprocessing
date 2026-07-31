@@ -1,4 +1,5 @@
 import {
+  BlendFunction,
   ColorAverageEffect,
   DepthDownsamplingPass,
   Effect,
@@ -402,6 +403,85 @@ describe('EffectComposer', () => {
       expect(disposeSpy).toHaveBeenCalledTimes(cycles)
 
       disposeSpy.mockRestore()
+    })
+
+    it('disposes a hand-constructed effect exactly once on unmount', async () => {
+      const disposeSpy = vi.spyOn(ColorAverageEffect.prototype, 'dispose')
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+            <ColorAverage />
+          </EffectComposer>
+        )
+      )
+
+      await waitForComposer(ref)
+      await React.act(async () => root.render(null))
+
+      expect(disposeSpy).toHaveBeenCalledTimes(1)
+      disposeSpy.mockRestore()
+    })
+
+    it('disposes exactly as many ColorAverage instances as it constructs, across repeated prop changes', async () => {
+      const disposeSpy = vi.spyOn(ColorAverageEffect.prototype, 'dispose')
+      const ref = React.createRef<ColorAverageEffect>()
+      const seenInstances = new Set<ColorAverageEffect>()
+      const cycles = 20
+
+      try {
+        for (let i = 0; i < cycles; i++) {
+          await React.act(async () =>
+            root.render(
+              <EffectComposer>
+                <ColorAverage ref={ref} blendFunction={i % 2 === 0 ? BlendFunction.NORMAL : BlendFunction.ADD} />
+              </EffectComposer>
+            )
+          )
+          await flush()
+          if (ref.current) seenInstances.add(ref.current)
+        }
+
+        await React.act(async () => root.render(null))
+
+        expect(seenInstances.size).toBe(cycles)
+        expect(disposeSpy).toHaveBeenCalledTimes(cycles)
+      } finally {
+        disposeSpy.mockRestore()
+      }
+    })
+
+    it('never disposes the same ColorAverage instance twice, even in StrictMode', async () => {
+      const disposedNodes: ColorAverageEffect[] = []
+      const disposeSpy = vi.spyOn(ColorAverageEffect.prototype, 'dispose').mockImplementation(function (
+        this: ColorAverageEffect
+      ) {
+        disposedNodes.push(this)
+      })
+
+      try {
+        const ref = React.createRef<ColorAverageEffect>()
+        for (let i = 0; i < 20; i++) {
+          await React.act(async () =>
+            root.render(
+              strict(
+                <EffectComposer>
+                  <ColorAverage ref={ref} blendFunction={i % 2 === 0 ? BlendFunction.NORMAL : BlendFunction.ADD} />
+                </EffectComposer>
+              )
+            )
+          )
+          await flush()
+        }
+        await React.act(async () => root.render(null))
+
+        const uniqueDisposed = new Set(disposedNodes)
+        expect(uniqueDisposed.size).toBe(disposedNodes.length)
+      } finally {
+        disposeSpy.mockRestore()
+      }
     })
   })
 

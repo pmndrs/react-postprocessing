@@ -1,18 +1,17 @@
 import { useThree } from '@react-three/fiber'
-import { LUT3DEffect, BlendFunction } from 'postprocessing'
-import React, { forwardRef, Ref, useLayoutEffect, useMemo } from 'react'
+import { BlendFunction, LUT3DEffect } from 'postprocessing'
+import { Ref, useLayoutEffect, useMemo } from 'react'
 import type { Texture } from 'three'
+import { useDispose } from '../util'
 
 export type LUTProps = {
   lut: Texture
   blendFunction?: BlendFunction
   tetrahedralInterpolation?: boolean
+  ref: Ref<LUT3DEffect>
 }
 
-export const LUT = /* @__PURE__ */ forwardRef(function LUT(
-  { lut, tetrahedralInterpolation, ...props }: LUTProps,
-  ref: Ref<LUT3DEffect>
-) {
+export function LUT({ lut, tetrahedralInterpolation, ref, ...props }: LUTProps) {
   const effect = useMemo(() => new LUT3DEffect(lut, props), [lut, props])
   const invalidate = useThree((state) => state.invalidate)
 
@@ -22,5 +21,7 @@ export const LUT = /* @__PURE__ */ forwardRef(function LUT(
     invalidate()
   }, [effect, invalidate, lut, tetrahedralInterpolation])
 
-  return <primitive ref={ref} object={effect} dispose={null} />
-})
+  useDispose(effect)
+
+  return <primitive ref={ref} object={effect} />
+}

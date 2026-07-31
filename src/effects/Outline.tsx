@@ -1,10 +1,10 @@
-import { OutlineEffect } from 'postprocessing'
-import { Ref, RefObject, forwardRef, useMemo, useEffect, useContext, useRef } from 'react'
-import { Object3D } from 'three'
 import { useThree } from '@react-three/fiber'
+import { OutlineEffect } from 'postprocessing'
+import { Ref, RefObject, useContext, useEffect, useMemo } from 'react'
+import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { selectionContext } from '../Selection'
-import { resolveRef } from '../util'
+import { resolveRef, useDispose } from '../util'
 
 type ObjectRef = RefObject<Object3D>
 
@@ -12,27 +12,26 @@ export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   Partial<{
     selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
     selectionLayer: number
+    ref?: Ref<OutlineEffect>
   }>
 
-export const Outline = /* @__PURE__ */ forwardRef(function Outline(
-  {
-    selection = [],
-    selectionLayer = 10,
-    blendFunction,
-    patternTexture,
-    edgeStrength,
-    pulseSpeed,
-    visibleEdgeColor,
-    hiddenEdgeColor,
-    width,
-    height,
-    kernelSize,
-    blur,
-    xRay,
-    ...props
-  }: OutlineProps,
-  forwardRef: Ref<OutlineEffect>
-) {
+export function Outline({
+  selection = [],
+  selectionLayer = 10,
+  blendFunction,
+  patternTexture,
+  edgeStrength,
+  pulseSpeed,
+  visibleEdgeColor,
+  hiddenEdgeColor,
+  width,
+  height,
+  kernelSize,
+  blur,
+  xRay,
+  ref,
+  ...props
+}: OutlineProps) {
   const invalidate = useThree((state) => state.invalidate)
   const { scene, camera } = useContext(EffectComposerContext)
 
@@ -93,7 +92,6 @@ export const Outline = /* @__PURE__ */ forwardRef(function Outline(
     invalidate()
   }, [effect, invalidate, selectionLayer])
 
-  const ref = useRef<OutlineEffect>(undefined)
   useEffect(() => {
     if (api && api.enabled) {
       if (api.selected?.length) {
@@ -107,11 +105,7 @@ export const Outline = /* @__PURE__ */ forwardRef(function Outline(
     }
   }, [api, effect.selection, invalidate])
 
-  useEffect(() => {
-    return () => {
-      effect.dispose()
-    }
-  }, [effect])
+  useDispose(effect)
 
-  return <primitive ref={forwardRef} object={effect} />
-})
+  return <primitive ref={ref} object={effect} />
+}
