@@ -18,6 +18,23 @@ import { Mesh, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { DepthOfField } from './DepthOfField'
 
+// EffectComposerImpl.dispose() disposes every pass it currently holds —
+// including these two, since they're added via composer.addPass below.
+// When Autofocus unmounts alongside its ancestor EffectComposer (e.g. a
+// full tree unmount), both the composer's own teardown AND this
+// component's cleanup effect would dispose the same instances. Wrapping
+// dispose here makes it safe no matter which caller gets there first.
+function makeDisposeIdempotent<T extends { dispose: () => void }>(instance: T): T {
+  let disposed = false
+  const dispose = instance.dispose.bind(instance)
+  instance.dispose = () => {
+    if (disposed) return
+    disposed = true
+    dispose()
+  }
+  return instance
+}
+
 export type AutofocusProps = ComponentProps<typeof DepthOfField> & {
   target?: R3FVector3
   /** should the target follow the pointer */
@@ -55,8 +72,8 @@ export function Autofocus({
   const { composer, camera } = useContext(EffectComposerContext)
 
   // see: https://codesandbox.io/s/depthpickingpass-x130hg
-  const [depthPickingPass] = useState(() => new DepthPickingPass())
-  const [copyPass] = useState(() => new CopyPass())
+  const [depthPickingPass] = useState(() => makeDisposeIdempotent(new DepthPickingPass()))
+  const [copyPass] = useState(() => makeDisposeIdempotent(new CopyPass()))
   useEffect(() => {
     composer.addPass(depthPickingPass)
     composer.addPass(copyPass)
