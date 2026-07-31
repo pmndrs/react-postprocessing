@@ -21,7 +21,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react'
-import type { Camera, Group, Scene, TextureDataType } from 'three'
+import type { Camera, Group, Scene, TextureDataType, WebGLRenderer } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
 
 export const EffectComposerContext = /* @__PURE__ */ createContext<{
@@ -58,6 +58,44 @@ type ComposerState = {
 
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
+
+/**
+ * autoClear/toneMapping get force-set and never restored by whoever sets
+ * them. Ref-counted per (renderer, property) since composers can share a
+ * renderer; skips restoring if the value already changed since acquire.
+ */
+function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(property: K) {
+  const refs = new WeakMap<
+    WebGLRenderer,
+    { count: number; original: WebGLRenderer[K]; forcedValue: WebGLRenderer[K] }
+  >()
+
+  return {
+    acquire(gl: WebGLRenderer, forcedValue: WebGLRenderer[K]): void {
+      const existing = refs.get(gl)
+      if (existing) {
+        existing.count++
+        existing.forcedValue = forcedValue
+      } else {
+        refs.set(gl, { count: 1, original: gl[property], forcedValue })
+      }
+    },
+    release(gl: WebGLRenderer): void {
+      const entry = refs.get(gl)
+      if (!entry) return
+
+      if (--entry.count <= 0) {
+        if (gl[property] === entry.forcedValue) {
+          gl[property] = entry.original
+        }
+        refs.delete(gl)
+      }
+    },
+  }
+}
+
+const autoClearGuard = /* @__PURE__ */ createRendererPropertyGuard('autoClear')
+const toneMappingGuard = /* @__PURE__ */ createRendererPropertyGuard('toneMapping')
 
 /**
  * Groups a flat, ordered list of Effect/Pass instances into actual composer
@@ -116,6 +154,8 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   const [composerState, setComposerState] = useState<ComposerState | null>(null)
 
   useEffect(() => {
+    autoClearGuard.acquire(gl, false)
+
     const effectComposer = new EffectComposerImpl(gl, { depthBuffer, stencilBuffer, multisampling, frameBufferType })
     effectComposer.addPass(new RenderPass(scene, camera))
 
@@ -140,6 +180,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
 
     return () => {
       effectComposer.dispose()
+      autoClearGuard.release(gl)
     }
     // `size` intentionally excluded: it's applied via the composer.setSize
     // effect below, and shouldn't tear down/recreate the whole composer.
@@ -199,10 +240,10 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
 
   // Disable tone mapping because threejs disallows tonemapping on render targets
   useEffect(() => {
-    const currentTonemapping = gl.toneMapping
+    toneMappingGuard.acquire(gl, NoToneMapping)
     gl.toneMapping = NoToneMapping
     return () => {
-      gl.toneMapping = currentTonemapping
+      toneMappingGuard.release(gl)
     }
   }, [gl])
 
