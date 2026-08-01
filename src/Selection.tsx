@@ -39,29 +39,45 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
   const group = useRef<Group>(null!)
   // Stable setter, unlike the context value - avoids retriggering off our own write.
   const select = use(selectionContext)?.select
+  // What this Select currently has claimed in `selected`, so a re-run
+  // diffs against that instead of unconditionally clearing and re-adding through effect cleanup.
+  const claimed = useRef<Object3D[]>([])
 
   useEffect(() => {
-    if (!select || !enabled) return
+    if (!select) return
 
     const current: Object3D[] = []
-    group.current.traverse((o) => {
-      if (isSelectable(o)) current.push(o)
-    })
-
-    // Diff against latest state inside the updater; bail with the same
-    // reference when unchanged so React can skip the re-render.
-    select((prev) => {
-      const additions = current.filter((o) => !prev.includes(o))
-      return additions.length ? [...prev, ...additions] : prev
-    })
-
-    return () => {
-      select((prev) => {
-        const next = prev.filter((o) => !current.includes(o))
-        return next.length !== prev.length ? next : prev
+    if (enabled) {
+      group.current.traverse((o) => {
+        if (isSelectable(o)) current.push(o)
       })
     }
+
+    const previouslyClaimed = claimed.current
+    claimed.current = current
+
+    select((prev) => {
+      // Add anything missing from live state - covers both the normal
+      // case and re-asserting a claim some other Select's own update
+      // dropped in the meantime (nested Selects share objects). Only
+      // remove what this Select itself is no longer claiming.
+      const toAdd = current.filter((o) => !prev.includes(o))
+      const toRemove = previouslyClaimed.filter((o) => !current.includes(o) && prev.includes(o))
+      if (!toAdd.length && !toRemove.length) return prev
+      const kept = toRemove.length ? prev.filter((o) => !toRemove.includes(o)) : prev
+      return toAdd.length ? [...kept, ...toAdd] : kept
+    })
   }, [enabled, children, select])
+
+  // Only for unmount - a separate effect so it doesn't fire on every
+  // enabled/children change like the diffing effect above does.
+  useEffect(() => {
+    return () => {
+      if (!select || !claimed.current.length) return
+      const stillClaimed = claimed.current
+      select((prev) => prev.filter((o) => !stillClaimed.includes(o)))
+    }
+  }, [select])
 
   return (
     <group ref={group} {...props}>

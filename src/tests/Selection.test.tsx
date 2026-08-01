@@ -107,9 +107,7 @@ describe('Selection/Select', () => {
     await React.act(async () => render(true))
     await flush()
     await flush()
-    expect(snapshots[snapshots.length - 1]).toEqual(
-      expect.arrayContaining([meshARef.current, meshBRef.current])
-    )
+    expect(snapshots[snapshots.length - 1]).toEqual(expect.arrayContaining([meshARef.current, meshBRef.current]))
 
     await React.act(async () => render(false))
     await flush()
@@ -228,5 +226,46 @@ describe('Selection/Select', () => {
     // The inner Select's own cleanup drops its claim, but the mesh never
     // left the outer Select's subtree - its own traversal still finds it.
     expect(snapshots[snapshots.length - 1]).toContain(meshRef.current)
+  })
+
+  it('does not change the selected array reference on a re-render where children only changes identity', async () => {
+    const refs: THREE.Object3D[][] = []
+    const meshRef = React.createRef<THREE.Mesh>()
+
+    function CaptureRef() {
+      const api = React.useContext(selectionContext)
+      React.useEffect(() => {
+        if (api) refs.push(api.selected)
+      })
+      return null
+    }
+
+    // A fresh JSX tree every call, like a parent re-rendering for an
+    // unrelated reason - Select's own `children` prop is a new reference
+    // each time even though the underlying mesh never changes.
+    const render = () =>
+      root.render(
+        <Selection>
+          <CaptureRef />
+          <Select enabled>
+            <mesh ref={meshRef}>
+              <boxGeometry />
+              <meshBasicMaterial />
+            </mesh>
+          </Select>
+        </Selection>
+      )
+
+    await React.act(async () => render())
+    await flush()
+    await flush()
+
+    refs.length = 0
+    for (let i = 0; i < 5; i++) {
+      await React.act(async () => render())
+      await flush()
+    }
+
+    expect(new Set(refs).size).toBe(1)
   })
 })
