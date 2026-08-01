@@ -29,7 +29,7 @@ export function Selection({ children, enabled = true }: { enabled?: boolean; chi
   return <selectionContext.Provider value={value}>{children}</selectionContext.Provider>
 }
 
-// `.type` is a free-form string; these flags cover Mesh/Line/Points subclasses too.
+// Covers Mesh/Line/Points subclasses too, unlike `.type`.
 function isSelectable(object: Object3D): boolean {
   const o = object as Partial<Mesh & Line & Points>
   return !!(o.isMesh || o.isLine || o.isPoints)
@@ -37,10 +37,8 @@ function isSelectable(object: Object3D): boolean {
 
 export function Select({ enabled = false, children, ...props }: SelectApi) {
   const group = useRef<Group>(null!)
-  // Stable setter, unlike the context value - avoids retriggering off our own write.
+  // Stable, unlike the context value - avoids retriggering off our own write.
   const select = use(selectionContext)?.select
-  // What this Select currently has claimed in `selected`, so a re-run
-  // diffs against that instead of unconditionally clearing and re-adding through effect cleanup.
   const claimed = useRef<Object3D[]>([])
 
   useEffect(() => {
@@ -57,25 +55,26 @@ export function Select({ enabled = false, children, ...props }: SelectApi) {
     claimed.current = current
 
     select((prev) => {
-      // Add anything missing from live state - covers both the normal
-      // case and re-asserting a claim some other Select's own update
-      // dropped in the meantime (nested Selects share objects). Only
-      // remove what this Select itself is no longer claiming.
-      const toAdd = current.filter((o) => !prev.includes(o))
-      const toRemove = previouslyClaimed.filter((o) => !current.includes(o) && prev.includes(o))
+      const prevSet = new Set(prev)
+      const currentSet = new Set(current)
+      const toAdd = current.filter((o) => !prevSet.has(o))
+      const toRemove = previouslyClaimed.filter((o) => !currentSet.has(o) && prevSet.has(o))
       if (!toAdd.length && !toRemove.length) return prev
-      const kept = toRemove.length ? prev.filter((o) => !toRemove.includes(o)) : prev
+      const toRemoveSet = toRemove.length ? new Set(toRemove) : null
+      const kept = toRemoveSet ? prev.filter((o) => !toRemoveSet.has(o)) : prev
       return toAdd.length ? [...kept, ...toAdd] : kept
     })
   }, [enabled, children, select])
 
-  // Only for unmount - a separate effect so it doesn't fire on every
-  // enabled/children change like the diffing effect above does.
+  // Separate from the effect above so unmount cleanup doesn't fire on every enabled/children change.
   useEffect(() => {
     return () => {
       if (!select || !claimed.current.length) return
-      const stillClaimed = claimed.current
-      select((prev) => prev.filter((o) => !stillClaimed.includes(o)))
+      const stillClaimed = new Set(claimed.current)
+      select((prev) => {
+        const next = prev.filter((o) => !stillClaimed.has(o))
+        return next.length !== prev.length ? next : prev
+      })
     }
   }, [select])
 
