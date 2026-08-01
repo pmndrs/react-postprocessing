@@ -1,6 +1,6 @@
 import { EffectComposer as EffectComposerImpl, OutlineEffect, Selection as PPSelection } from 'postprocessing'
 import * as React from 'react'
-import { Mesh } from 'three'
+import { Mesh, Object3D } from 'three'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
 import { Outline } from '../effects/Outline'
@@ -70,5 +70,20 @@ describe('Outline', () => {
     await flush()
 
     expect(Array.from(effectRef.current!.selection)).not.toContain(meshRef.current)
+  })
+
+  it('does not throw when a selection ref has not attached yet', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const unattachedRef = React.createRef<Object3D>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <Outline selection={[unattachedRef]} />
+        </EffectComposer>
+      )
+    )
+    await waitForComposer(composerRef)
+    await expect(flush()).resolves.not.toThrow()
   })
 })

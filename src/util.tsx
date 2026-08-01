@@ -21,7 +21,7 @@ export const resolveRef = <T,>(ref: T | RefObject<T>) =>
  */
 export function useSelectionSync(
   effect: { selection: PPSelection },
-  selection: Object3D | Object3D[] | RefObject<Object3D> | RefObject<Object3D>[],
+  selection: Object3D | Object3D[] | RefObject<Object3D | null> | RefObject<Object3D | null>[],
   selectionLayer: number
 ): void {
   const invalidate = useThree((state) => state.invalidate)
@@ -34,9 +34,9 @@ export function useSelectionSync(
 
   useEffect(() => {
     if (api) return
-    const resolved: Object3D[] = Array.isArray(selection)
-      ? selection.map((o) => resolveRef(o))
-      : [resolveRef(selection)]
+    const resolved = (Array.isArray(selection) ? selection.map((o) => resolveRef(o)) : [resolveRef(selection)]).filter(
+      (o): o is Object3D => o != null
+    )
     if (!resolved.length) return
 
     effect.selection.set(resolved)

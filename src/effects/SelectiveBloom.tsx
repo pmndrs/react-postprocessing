@@ -6,7 +6,7 @@ import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { EMPTY_ARRAY, resolveRef, useDispose, useSelectionSync } from '../util'
 
-type ObjectRef = RefObject<Object3D>
+type ObjectRef = RefObject<Object3D | null>
 
 export type SelectiveBloomProps = BloomEffectOptions &
   Partial<{
@@ -29,13 +29,17 @@ export function SelectiveBloom({
   ignoreBackground = false,
   luminanceThreshold,
   luminanceSmoothing,
+  mipmapBlur,
   intensity,
+  radius,
+  levels,
+  kernelSize,
+  resolutionScale,
   width,
   height,
-  kernelSize,
-  mipmapBlur,
+  resolutionX,
+  resolutionY,
   ref,
-  ...props
 }: SelectiveBloomProps) {
   const { scene, camera } = use(EffectComposerContext)
 
@@ -46,28 +50,35 @@ export function SelectiveBloom({
       blendFunction: BlendFunction.ADD,
       luminanceThreshold,
       luminanceSmoothing,
+      mipmapBlur,
       intensity,
+      radius,
+      levels,
+      kernelSize,
+      resolutionScale,
       width,
       height,
-      kernelSize,
-      mipmapBlur,
-      ...props,
+      resolutionX,
+      resolutionY,
     })
     instance.inverted = inverted
     instance.ignoreBackground = ignoreBackground
     return instance
-    // NOTE: `props` is an unstable reference, so we can't memoize it
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     scene,
     camera,
     luminanceThreshold,
     luminanceSmoothing,
+    mipmapBlur,
     intensity,
+    radius,
+    levels,
+    kernelSize,
+    resolutionScale,
     width,
     height,
-    kernelSize,
-    mipmapBlur,
+    resolutionX,
+    resolutionY,
     inverted,
     ignoreBackground,
   ])
@@ -83,12 +94,17 @@ export function SelectiveBloom({
       return
     }
 
-    lights.forEach((light) => addLight(resolveRef(light), effect))
+    // Refs may not have attached yet - resolve and drop nullish entries
+    // rather than crashing addLight/removeLight on a null object.
+    const resolvedLights = lights.map((light) => resolveRef(light)).filter((light): light is Object3D => light != null)
+    if (resolvedLights.length === 0) return
+
+    resolvedLights.forEach((light) => addLight(light, effect))
 
     invalidate()
 
     return () => {
-      lights.forEach((light) => removeLight(resolveRef(light), effect))
+      resolvedLights.forEach((light) => removeLight(light, effect))
 
       invalidate()
     }

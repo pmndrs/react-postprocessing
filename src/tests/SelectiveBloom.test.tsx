@@ -1,6 +1,6 @@
 import { EffectComposer as EffectComposerImpl, SelectiveBloomEffect } from 'postprocessing'
 import * as React from 'react'
-import { Mesh, PointLight } from 'three'
+import { Mesh, Object3D, PointLight } from 'three'
 import { afterEach, describe, expect, it } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
 import { SelectiveBloom } from '../effects/SelectiveBloom'
@@ -99,5 +99,20 @@ describe('SelectiveBloom', () => {
 
     expect(onLayer(15)).toBe(true)
     expect(onLayer(10)).toBe(false)
+  })
+
+  it('does not throw when a lights ref has not attached yet', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const unattachedRef = React.createRef<Object3D>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <SelectiveBloom lights={[unattachedRef]} />
+        </EffectComposer>
+      )
+    )
+    await waitForComposer(composerRef)
+    await expect(flush()).resolves.not.toThrow()
   })
 })

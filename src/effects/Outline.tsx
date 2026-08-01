@@ -4,7 +4,7 @@ import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { EMPTY_ARRAY, useDispose, useSelectionSync } from '../util'
 
-type ObjectRef = RefObject<Object3D>
+type ObjectRef = RefObject<Object3D | null>
 
 export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   Partial<{
@@ -18,17 +18,21 @@ export function Outline({
   selectionLayer = 10,
   blendFunction,
   patternTexture,
+  patternScale,
   edgeStrength,
   pulseSpeed,
   visibleEdgeColor,
   hiddenEdgeColor,
+  multisampling,
+  resolutionScale,
+  resolutionX,
+  resolutionY,
   width,
   height,
   kernelSize,
   blur,
   xRay,
   ref,
-  ...props
 }: OutlineProps) {
   const { scene, camera } = use(EffectComposerContext)
 
@@ -37,33 +41,40 @@ export function Outline({
       new OutlineEffect(scene, camera, {
         blendFunction,
         patternTexture,
+        patternScale,
         edgeStrength,
         pulseSpeed,
         visibleEdgeColor,
         hiddenEdgeColor,
+        multisampling,
+        resolutionScale,
+        resolutionX,
+        resolutionY,
         width,
         height,
         kernelSize,
         blur,
         xRay,
-        ...props,
       }),
-    // NOTE: `props` is an unstable reference, so we can't memoize it
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       blendFunction,
-      blur,
-      camera,
-      edgeStrength,
-      height,
-      hiddenEdgeColor,
-      kernelSize,
       patternTexture,
+      patternScale,
+      edgeStrength,
       pulseSpeed,
-      scene,
       visibleEdgeColor,
+      hiddenEdgeColor,
+      multisampling,
+      resolutionScale,
+      resolutionX,
+      resolutionY,
       width,
+      height,
+      kernelSize,
+      blur,
       xRay,
+      camera,
+      scene,
     ]
   )
 
