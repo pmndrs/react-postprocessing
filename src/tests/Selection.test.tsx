@@ -268,4 +268,57 @@ describe('Selection/Select', () => {
 
     expect(new Set(refs).size).toBe(1)
   })
+
+  it('a cleanup updater returns the same reference when nothing is left for it to remove', async () => {
+    const meshRef = React.createRef<THREE.Mesh>()
+    const updaters: Array<(prev: THREE.Object3D[]) => THREE.Object3D[]> = []
+
+    // React batches both nested Selects' cleanup calls into a single
+    // re-render regardless of this bail-out (the net change from mount to
+    // unmount is real), so the optimization isn't observable through
+    // rendering alone. Capture the raw updater functions instead and
+    // replay them directly to verify the second one bails.
+    function CapturingSelection({ children }: { children: React.ReactNode }) {
+      const [selected, setSelected] = React.useState<THREE.Object3D[]>([])
+      const select = React.useCallback((updater: React.SetStateAction<THREE.Object3D[]>) => {
+        if (typeof updater === 'function') updaters.push(updater as (prev: THREE.Object3D[]) => THREE.Object3D[])
+        setSelected(updater)
+      }, [])
+      const value = React.useMemo(() => ({ selected, select, enabled: true }), [selected, select])
+      return <selectionContext.Provider value={value}>{children}</selectionContext.Provider>
+    }
+
+    const render = (mounted: boolean) =>
+      root.render(
+        <CapturingSelection>
+          {mounted && (
+            <Select enabled>
+              <Select enabled>
+                <mesh ref={meshRef}>
+                  <boxGeometry />
+                  <meshBasicMaterial />
+                </mesh>
+              </Select>
+            </Select>
+          )}
+        </CapturingSelection>
+      )
+
+    await React.act(async () => render(true))
+    await flush()
+    await flush()
+    await flush()
+
+    const mesh = meshRef.current!
+    updaters.length = 0
+    await React.act(async () => render(false))
+    await flush()
+    await flush()
+    await flush()
+
+    expect(updaters).toHaveLength(2)
+    const afterFirst = updaters[0]([mesh])
+    const afterSecond = updaters[1](afterFirst)
+    expect(afterSecond).toBe(afterFirst)
+  })
 })
