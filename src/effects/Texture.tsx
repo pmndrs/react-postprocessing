@@ -8,7 +8,7 @@ type TextureProps = ConstructorParameters<typeof TextureEffect>[0] & {
   textureSrc: string
   /** opacity of provided texture */
   opacity?: number
-  ref: Ref<TextureEffect>
+  ref?: Ref<TextureEffect>
 }
 
 export function Texture({ textureSrc, texture, opacity = 1, ref, ...props }: TextureProps) {

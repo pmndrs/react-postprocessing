@@ -8,7 +8,7 @@ export type LUTProps = {
   lut: Texture
   blendFunction?: BlendFunction
   tetrahedralInterpolation?: boolean
-  ref: Ref<LUT3DEffect>
+  ref?: Ref<LUT3DEffect>
 }
 
 export function LUT({ lut, tetrahedralInterpolation, ref, ...props }: LUTProps) {
