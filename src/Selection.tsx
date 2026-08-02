@@ -1,7 +1,7 @@
 import { type ThreeElements } from '@react-three/fiber'
 import {
   createContext,
-  useContext,
+  use,
   useEffect,
   useMemo,
   useRef,
@@ -10,7 +10,7 @@ import {
   type ReactNode,
   type SetStateAction,
 } from 'react'
-import { type Group, type Object3D } from 'three'
+import { type Group, type Line, type Mesh, type Object3D, type Points } from 'three'
 
 export type Api = {
   selected: Object3D[]
@@ -29,25 +29,55 @@ export function Selection({ children, enabled = true }: { enabled?: boolean; chi
   return <selectionContext.Provider value={value}>{children}</selectionContext.Provider>
 }
 
+// Covers Mesh/Line/Points subclasses too, unlike `.type`.
+function isSelectable(object: Object3D): boolean {
+  const o = object as Partial<Mesh & Line & Points>
+  return !!(o.isMesh || o.isLine || o.isPoints)
+}
+
 export function Select({ enabled = false, children, ...props }: SelectApi) {
   const group = useRef<Group>(null!)
-  const api = useContext(selectionContext)
+  // Stable, unlike the context value - avoids retriggering off our own write.
+  const select = use(selectionContext)?.select
+  const claimed = useRef<Object3D[]>([])
+
   useEffect(() => {
-    if (api && enabled) {
-      let changed = false
-      const current: Object3D[] = []
+    if (!select) return
+
+    const current: Object3D[] = []
+    if (enabled) {
       group.current.traverse((o) => {
-        o.type === 'Mesh' && current.push(o)
-        if (api.selected.indexOf(o) === -1) changed = true
+        if (isSelectable(o)) current.push(o)
       })
-      if (changed) {
-        api.select((state) => [...state, ...current])
-        return () => {
-          api.select((state) => state.filter((selected) => !current.includes(selected)))
-        }
-      }
     }
-  }, [enabled, children, api])
+
+    const previouslyClaimed = claimed.current
+    claimed.current = current
+
+    select((prev) => {
+      const prevSet = new Set(prev)
+      const currentSet = new Set(current)
+      const toAdd = current.filter((o) => !prevSet.has(o))
+      const toRemove = previouslyClaimed.filter((o) => !currentSet.has(o) && prevSet.has(o))
+      if (!toAdd.length && !toRemove.length) return prev
+      const toRemoveSet = toRemove.length ? new Set(toRemove) : null
+      const kept = toRemoveSet ? prev.filter((o) => !toRemoveSet.has(o)) : prev
+      return toAdd.length ? [...kept, ...toAdd] : kept
+    })
+  }, [enabled, children, select])
+
+  // Separate from the effect above so unmount cleanup doesn't fire on every enabled/children change.
+  useEffect(() => {
+    return () => {
+      if (!select || !claimed.current.length) return
+      const stillClaimed = new Set(claimed.current)
+      select((prev) => {
+        const next = prev.filter((o) => !stillClaimed.has(o))
+        return next.length !== prev.length ? next : prev
+      })
+    }
+  }, [select])
+
   return (
     <group ref={group} {...props}>
       {children}
