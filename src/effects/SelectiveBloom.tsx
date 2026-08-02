@@ -1,13 +1,12 @@
 import { useThree } from '@react-three/fiber'
 import type { BloomEffectOptions } from 'postprocessing'
 import { BlendFunction, SelectiveBloomEffect } from 'postprocessing'
-import { Ref, RefObject, useContext, useEffect, useMemo } from 'react'
+import { Ref, RefObject, use, useEffect, useMemo } from 'react'
 import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
-import { selectionContext } from '../Selection'
-import { resolveRef, useDispose } from '../util'
+import { EMPTY_ARRAY, resolveRef, useDispose, useSelectionSync } from '../util'
 
-type ObjectRef = RefObject<Object3D>
+type ObjectRef = RefObject<Object3D | null>
 
 export type SelectiveBloomProps = BloomEffectOptions &
   Partial<{
@@ -23,102 +22,93 @@ const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers
 const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.disable(effect.selection.layer)
 
 export function SelectiveBloom({
-  selection = [],
+  selection = EMPTY_ARRAY,
   selectionLayer = 10,
-  lights = [],
+  lights = EMPTY_ARRAY,
   inverted = false,
   ignoreBackground = false,
   luminanceThreshold,
   luminanceSmoothing,
+  mipmapBlur,
   intensity,
+  radius,
+  levels,
+  kernelSize,
+  resolutionScale,
   width,
   height,
-  kernelSize,
-  mipmapBlur,
+  resolutionX,
+  resolutionY,
   ref,
-  ...props
 }: SelectiveBloomProps) {
-  if (lights.length === 0) {
-    console.warn('SelectiveBloom requires lights to work.')
-  }
+  const { scene, camera } = use(EffectComposerContext)
 
   const invalidate = useThree((state) => state.invalidate)
-  const { scene, camera } = useContext(EffectComposerContext)
+
   const effect = useMemo(() => {
-    const effect = new SelectiveBloomEffect(scene, camera, {
+    const instance = new SelectiveBloomEffect(scene, camera, {
       blendFunction: BlendFunction.ADD,
       luminanceThreshold,
       luminanceSmoothing,
+      mipmapBlur,
       intensity,
+      radius,
+      levels,
+      kernelSize,
+      resolutionScale,
       width,
       height,
-      kernelSize,
-      mipmapBlur,
-      ...props,
+      resolutionX,
+      resolutionY,
     })
-    effect.inverted = inverted
-    effect.ignoreBackground = ignoreBackground
-    return effect
+    instance.inverted = inverted
+    instance.ignoreBackground = ignoreBackground
+    return instance
   }, [
     scene,
     camera,
     luminanceThreshold,
     luminanceSmoothing,
+    mipmapBlur,
     intensity,
+    radius,
+    levels,
+    kernelSize,
+    resolutionScale,
     width,
     height,
-    kernelSize,
-    mipmapBlur,
+    resolutionX,
+    resolutionY,
     inverted,
     ignoreBackground,
-    props,
   ])
 
-  const api = useContext(selectionContext)
+  // Must run before the lights effect below: addLight/removeLight read
+  // effect.selection.layer live, so it needs to already reflect the
+  // latest selectionLayer by the time lights get (re-)assigned to it.
+  useSelectionSync(effect, selection, selectionLayer)
 
   useEffect(() => {
-    // Do not allow array selection if declarative selection is active
-    // TODO: array selection should probably be deprecated altogether
-    if (!api && selection) {
-      effect.selection.set(
-        Array.isArray(selection) ? (selection as Object3D[]).map(resolveRef) : [resolveRef(selection) as Object3D]
-      )
-      invalidate()
-      return () => {
-        effect.selection.clear()
-        invalidate()
-      }
+    if (lights.length === 0) {
+      console.warn('SelectiveBloom requires lights to work.')
+      return
     }
-  }, [effect, selection, api, invalidate])
 
-  useEffect(() => {
-    effect.selection.layer = selectionLayer
+    // Refs may not have attached yet - resolve and drop nullish entries
+    // rather than crashing addLight/removeLight on a null object.
+    const resolvedLights = lights.map((light) => resolveRef(light)).filter((light): light is Object3D => light != null)
+    if (resolvedLights.length === 0) return
+
+    resolvedLights.forEach((light) => addLight(light, effect))
+
     invalidate()
-  }, [effect, invalidate, selectionLayer])
 
-  useEffect(() => {
-    if (lights && lights.length > 0) {
-      lights.forEach((light) => addLight(resolveRef(light), effect))
+    return () => {
+      resolvedLights.forEach((light) => removeLight(light, effect))
+
       invalidate()
-      return () => {
-        lights.forEach((light) => removeLight(resolveRef(light), effect))
-        invalidate()
-      }
     }
   }, [effect, invalidate, lights, selectionLayer])
-
-  useEffect(() => {
-    if (api && api.enabled) {
-      if (api.selected?.length) {
-        effect.selection.set(api.selected)
-        invalidate()
-        return () => {
-          effect.selection.clear()
-          invalidate()
-        }
-      }
-    }
-  }, [api, effect.selection, invalidate])
 
   useDispose(effect)
 

@@ -1,12 +1,10 @@
-import { useThree } from '@react-three/fiber'
 import { OutlineEffect } from 'postprocessing'
-import { Ref, RefObject, useContext, useEffect, useMemo } from 'react'
+import { Ref, RefObject, use, useMemo } from 'react'
 import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
-import { selectionContext } from '../Selection'
-import { resolveRef, useDispose } from '../util'
+import { EMPTY_ARRAY, useDispose, useSelectionSync } from '../util'
 
-type ObjectRef = RefObject<Object3D>
+type ObjectRef = RefObject<Object3D | null>
 
 export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   Partial<{
@@ -16,95 +14,71 @@ export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
   }>
 
 export function Outline({
-  selection = [],
+  selection = EMPTY_ARRAY,
   selectionLayer = 10,
   blendFunction,
   patternTexture,
+  patternScale,
   edgeStrength,
   pulseSpeed,
   visibleEdgeColor,
   hiddenEdgeColor,
+  multisampling,
+  resolutionScale,
+  resolutionX,
+  resolutionY,
   width,
   height,
   kernelSize,
   blur,
   xRay,
   ref,
-  ...props
 }: OutlineProps) {
-  const invalidate = useThree((state) => state.invalidate)
-  const { scene, camera } = useContext(EffectComposerContext)
+  const { scene, camera } = use(EffectComposerContext)
 
   const effect = useMemo(
     () =>
       new OutlineEffect(scene, camera, {
         blendFunction,
         patternTexture,
+        patternScale,
         edgeStrength,
         pulseSpeed,
         visibleEdgeColor,
         hiddenEdgeColor,
+        multisampling,
+        resolutionScale,
+        resolutionX,
+        resolutionY,
         width,
         height,
         kernelSize,
         blur,
         xRay,
-        ...props,
       }),
-    // NOTE: `props` is an unstable reference, so we can't memoize it
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       blendFunction,
-      blur,
-      camera,
-      edgeStrength,
-      height,
-      hiddenEdgeColor,
-      kernelSize,
       patternTexture,
+      patternScale,
+      edgeStrength,
       pulseSpeed,
-      scene,
       visibleEdgeColor,
+      hiddenEdgeColor,
+      multisampling,
+      resolutionScale,
+      resolutionX,
+      resolutionY,
       width,
+      height,
+      kernelSize,
+      blur,
       xRay,
+      camera,
+      scene,
     ]
   )
 
-  const api = useContext(selectionContext)
-
-  useEffect(() => {
-    // Do not allow array selection if declarative selection is active
-    // TODO: array selection should probably be deprecated altogether
-    if (!api && selection) {
-      effect.selection.set(
-        Array.isArray(selection) ? (selection as Object3D[]).map(resolveRef) : [resolveRef(selection) as Object3D]
-      )
-      invalidate()
-      return () => {
-        effect.selection.clear()
-        invalidate()
-      }
-    }
-  }, [effect, selection, api, invalidate])
-
-  useEffect(() => {
-    effect.selectionLayer = selectionLayer
-    invalidate()
-  }, [effect, invalidate, selectionLayer])
-
-  useEffect(() => {
-    if (api && api.enabled) {
-      if (api.selected?.length) {
-        effect.selection.set(api.selected)
-        invalidate()
-        return () => {
-          effect.selection.clear()
-          invalidate()
-        }
-      }
-    }
-  }, [api, effect.selection, invalidate])
-
+  useSelectionSync(effect, selection, selectionLayer)
   useDispose(effect)
 
   return <primitive ref={ref} object={effect} />
