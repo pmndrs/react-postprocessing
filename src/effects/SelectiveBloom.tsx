@@ -4,7 +4,7 @@ import { BlendFunction, SelectiveBloomEffect } from 'postprocessing'
 import { Ref, RefObject, use, useEffect, useMemo } from 'react'
 import { Object3D } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
-import { EMPTY_ARRAY, resolveRef, useDispose, useSelectionSync } from '../util'
+import { EMPTY_ARRAY, resolveRef, useDispose, useLiveDefaults, useSelectionSync } from '../util'
 
 type ObjectRef = RefObject<Object3D | null>
 
@@ -21,67 +21,49 @@ export type SelectiveBloomProps = BloomEffectOptions &
 const addLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.enable(effect.selection.layer)
 const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.layers.disable(effect.selection.layer)
 
+// BloomEffect (which SelectiveBloomEffect extends) only exposes real
+// setters for these - luminanceThreshold/luminanceSmoothing/mipmapBlur/
+// radius/levels/resolution* are construction-only in postprocessing itself.
+// scene/camera being required constructor args also rules out
+// createEffectComponent (needs `new Effect()` to work with zero args).
+const LIVE_KEYS = ['width', 'height', 'kernelSize', 'intensity', 'inverted', 'ignoreBackground']
+
 export function SelectiveBloom({
   selection = EMPTY_ARRAY,
   selectionLayer = 10,
   lights = EMPTY_ARRAY,
-  inverted = false,
-  ignoreBackground = false,
   luminanceThreshold,
   luminanceSmoothing,
   mipmapBlur,
-  intensity,
   radius,
   levels,
-  kernelSize,
   resolutionScale,
-  width,
-  height,
   resolutionX,
   resolutionY,
   ref,
+  ...liveProps
 }: SelectiveBloomProps) {
   const { scene, camera } = use(EffectComposerContext)
 
   const invalidate = useThree((state) => state.invalidate)
 
-  const effect = useMemo(() => {
-    const instance = new SelectiveBloomEffect(scene, camera, {
-      blendFunction: BlendFunction.ADD,
-      luminanceThreshold,
-      luminanceSmoothing,
-      mipmapBlur,
-      intensity,
-      radius,
-      levels,
-      kernelSize,
-      resolutionScale,
-      width,
-      height,
-      resolutionX,
-      resolutionY,
-    })
-    instance.inverted = inverted
-    instance.ignoreBackground = ignoreBackground
-    return instance
-  }, [
-    scene,
-    camera,
-    luminanceThreshold,
-    luminanceSmoothing,
-    mipmapBlur,
-    intensity,
-    radius,
-    levels,
-    kernelSize,
-    resolutionScale,
-    width,
-    height,
-    resolutionX,
-    resolutionY,
-    inverted,
-    ignoreBackground,
-  ])
+  const effect = useMemo(
+    () =>
+      new SelectiveBloomEffect(scene, camera, {
+        blendFunction: BlendFunction.ADD,
+        luminanceThreshold,
+        luminanceSmoothing,
+        mipmapBlur,
+        radius,
+        levels,
+        resolutionScale,
+        resolutionX,
+        resolutionY,
+      }),
+    [scene, camera, luminanceThreshold, luminanceSmoothing, mipmapBlur, radius, levels, resolutionScale, resolutionX, resolutionY]
+  )
+
+  useLiveDefaults(effect, liveProps as Record<string, unknown>, LIVE_KEYS)
 
   // Must run before the lights effect below: addLight/removeLight read
   // effect.selection.layer live, so it needs to already reflect the
