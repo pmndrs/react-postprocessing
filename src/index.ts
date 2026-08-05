@@ -1,3 +1,4 @@
+export * from './createEffectComponent'
 export * from './EffectComposer'
 export * from './Selection'
 export * from './util'
