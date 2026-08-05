@@ -1,4 +1,7 @@
 import { BrightnessContrastEffect } from 'postprocessing'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export const BrightnessContrast = /* @__PURE__ */ wrapEffect(BrightnessContrastEffect)
+export const BrightnessContrast = /* @__PURE__ */ createEffectComponent<
+  typeof BrightnessContrastEffect,
+  EffectOptions<typeof BrightnessContrastEffect>
+>(BrightnessContrastEffect)

@@ -583,14 +583,71 @@ describe('EffectComposer', () => {
       disposeSpy.mockRestore()
     })
 
-    // NOTE for PR3 (simple effects migration): re-add these two once
-    // ColorAverage.tsx moves to createEffectComponent -
-    // "keeps a single ColorAverage instance across repeated blendFunction
-    // changes and disposes it exactly once (blendFunction is live, not
-    // construction-only)" and a disposes-every-seen-instance StrictMode
-    // check - both require ColorAverage's blendFunction to be a live prop,
-    // which is still construction-only (wrapEffect-based) at this point in
-    // the stack.
+    it('keeps a single ColorAverage instance across repeated blendFunction changes and disposes it exactly once (blendFunction is live, not construction-only)', async () => {
+      const disposeSpy = vi.spyOn(ColorAverageEffect.prototype, 'dispose')
+      const ref = React.createRef<ColorAverageEffect>()
+      const seenInstances = new Set<ColorAverageEffect>()
+      const cycles = 20
+
+      try {
+        for (let i = 0; i < cycles; i++) {
+          await React.act(async () =>
+            root.render(
+              <EffectComposer>
+                <ColorAverage ref={ref} blendFunction={i % 2 === 0 ? BlendFunction.NORMAL : BlendFunction.ADD} />
+              </EffectComposer>
+            )
+          )
+          await flush()
+          if (ref.current) seenInstances.add(ref.current)
+        }
+
+        await React.act(async () => root.render(null))
+
+        expect(seenInstances.size).toBe(1)
+        expect(disposeSpy).toHaveBeenCalledTimes(1)
+      } finally {
+        disposeSpy.mockRestore()
+      }
+    })
+
+    it('disposes every ColorAverage instance seen, even across StrictMode\'s mount/cleanup/mount cycle', async () => {
+      const disposedNodes: ColorAverageEffect[] = []
+      const seenInstances = new Set<ColorAverageEffect>()
+      const disposeSpy = vi.spyOn(ColorAverageEffect.prototype, 'dispose').mockImplementation(function (
+        this: ColorAverageEffect
+      ) {
+        disposedNodes.push(this)
+      })
+
+      try {
+        const ref = React.createRef<ColorAverageEffect>()
+        for (let i = 0; i < 20; i++) {
+          await React.act(async () =>
+            root.render(
+              strict(
+                <EffectComposer>
+                  <ColorAverage ref={ref} blendFunction={i % 2 === 0 ? BlendFunction.NORMAL : BlendFunction.ADD} />
+                </EffectComposer>
+              )
+            )
+          )
+          await flush()
+          if (ref.current) seenInstances.add(ref.current)
+        }
+        await React.act(async () => root.render(null))
+
+        // dispose() is idempotent (just event-firing / shallow property
+        // disposal, no internal state), so StrictMode calling it more than
+        // once per instance is fine - this only checks nothing leaked.
+        const disposedSet = new Set(disposedNodes)
+        for (const instance of seenInstances) {
+          expect(disposedSet.has(instance)).toBe(true)
+        }
+      } finally {
+        disposeSpy.mockRestore()
+      }
+    })
   })
 
   describe('renderer state restoration', () => {
