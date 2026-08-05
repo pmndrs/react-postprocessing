@@ -64,11 +64,6 @@ export function createEffectComponent<T extends EffectConstructor, P extends obj
     // otherwise it stores and calls that instead - never re-invoking this
     // function with null. So localRef must be cleared from inside that same
     // returned cleanup, not left for a null call that will never come.
-    // Forwards ref's own return value: r3f's setFiberRef (React 19-style ref
-    // cleanup) calls the ref function again only if it *didn't* return one,
-    // otherwise it stores and calls that instead - never re-invoking this
-    // function with null. So localRef must be cleared from inside that same
-    // returned cleanup, not left for a null call that will never come.
     const setRef = useCallback(
       (instance: InstanceType<T> | null) => {
         localRef.current = instance
