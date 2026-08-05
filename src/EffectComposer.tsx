@@ -59,11 +59,8 @@ type ComposerState = {
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
-/**
- * autoClear/toneMapping get force-set and never restored by whoever sets
- * them. Ref-counted per (renderer, property) since composers can share a
- * renderer; skips restoring if the value already changed since acquire.
- */
+// autoClear/toneMapping get force-set and never restored. Ref-counted per
+// (renderer, property) since composers can share a renderer.
 function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(property: K) {
   const refs = new WeakMap<
     WebGLRenderer,
@@ -97,11 +94,21 @@ function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(prop
 const autoClearGuard = /* @__PURE__ */ createRendererPropertyGuard('autoClear')
 const toneMappingGuard = /* @__PURE__ */ createRendererPropertyGuard('toneMapping')
 
-/**
- * Groups a flat, ordered list of Effect/Pass instances into actual composer
- * passes, merging consecutive non-convolution Effects into a single
- * EffectPass.
- */
+// Only passes buildPasses itself constructs - not a user's own EffectPass
+// rendered directly as a child (still just `Pass`-instanceof passthrough
+// below), which owns its own lifecycle.
+const generatedPasses = /* @__PURE__ */ new WeakSet<Pass>()
+
+// Not pass.dispose() - EffectPass.dispose() also disposes the effects it
+// wraps, which are owned/reused elsewhere. setEffects([]) detaches their
+// listeners first.
+function disposeGeneratedPass(pass: Pass): void {
+  if (!generatedPasses.has(pass)) return
+  ;(pass as unknown as { setEffects(effects: never[]): void }).setEffects([])
+  Pass.prototype.dispose.call(pass)
+}
+
+// Consecutive non-convolution Effects share one EffectPass; Pass/convolution nodes get their own.
 function buildPasses(nodes: Array<Effect | Pass>, camera: Camera): Pass[] {
   const passes: Pass[] = []
 
@@ -120,7 +127,9 @@ function buildPasses(nodes: Array<Effect | Pass>, camera: Camera): Pass[] {
         }
       }
 
-      passes.push(new EffectPass(camera, ...effects))
+      const pass = new EffectPass(camera, ...effects)
+      generatedPasses.add(pass)
+      passes.push(pass)
     } else if (node instanceof Pass) {
       passes.push(node)
     }
@@ -148,9 +157,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   const scene = _scene || defaultScene
   const camera = _camera || defaultCamera
 
-  // EffectComposer owns WebGL resources, so it must be created and
-  // disposed inside an effect lifecycle. useMemo is not suitable here
-  // because React may discard memoized values without running cleanup.
+  // useMemo can't own WebGL resources - React may discard it without cleanup.
   const [composerState, setComposerState] = useState<ComposerState | null>(null)
 
   useEffect(() => {
@@ -179,6 +186,10 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     setComposerState({ composer: effectComposer, normalPass, downSamplingPass })
 
     return () => {
+      // The rebuild effect below may not have detached its passes yet
+      // (composerState only updates next render) - without this, dispose()
+      // would kill effects the new composer is about to reuse.
+      for (const pass of effectComposer.passes) disposeGeneratedPass(pass)
       effectComposer.dispose()
       autoClearGuard.release(gl)
     }
@@ -204,25 +215,38 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     enabled ? renderPriority : 0
   )
 
-  // Passes are derived from the actual r3f scene graph rather than tracked
-  // incrementally, so the list always matches current JSX order — including
-  // through wrapper components — even after a reorder or a remount.
+  // Derived from the r3f scene graph (not tracked incrementally) so order
+  // always matches JSX, even through wrapper components or a reorder.
   const group = useRef<Group>(null!)
+  const nodesRef = useRef<Array<Effect | Pass>>([])
+  const [nodesVersion, setNodesVersion] = useState(0)
 
+  // Runs every render (children has no stable identity) but only touches
+  // nodesRef/nodesVersion, never the composer - the rebuild below only
+  // fires when the resolved node list actually changes.
+  useLayoutEffect(() => {
+    if (!composerState) return
+    const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
+    const nodes = groupInstance
+      ? groupInstance.children
+          .map((child) => child.object)
+          .filter((object): object is Effect | Pass => object instanceof Effect || object instanceof Pass)
+      : []
+
+    const previous = nodesRef.current
+    const unchanged = nodes.length === previous.length && nodes.every((node, i) => node === previous[i])
+    if (unchanged) return
+    nodesRef.current = nodes
+    setNodesVersion((v) => v + 1)
+  })
+
+  // Only re-runs when nodesVersion/composerState/camera change - React's
+  // own dependency bailout, so create/cleanup pairing stays correct.
   useLayoutEffect(() => {
     if (!composerState) return
     const { composer, normalPass, downSamplingPass } = composerState
 
-    const passes: Pass[] = []
-    const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
-
-    if (groupInstance) {
-      const nodes = groupInstance.children.map((child) => child.object).filter(
-        (object): object is Effect | Pass => object instanceof Effect || object instanceof Pass
-      )
-
-      passes.push(...buildPasses(nodes, camera))
-    }
+    const passes = buildPasses(nodesRef.current, camera)
 
     for (const pass of passes) composer.addPass(pass)
 
@@ -232,11 +256,14 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     }
 
     return () => {
-      for (const pass of passes) composer.removePass(pass)
+      for (const pass of passes) {
+        composer.removePass(pass)
+        disposeGeneratedPass(pass)
+      }
       if (normalPass) normalPass.enabled = false
       if (downSamplingPass) downSamplingPass.enabled = false
     }
-  }, [composerState, children, camera])
+  }, [composerState, nodesVersion, camera])
 
   // Disable tone mapping because threejs disallows tonemapping on render targets
   useEffect(() => {
