@@ -1,30 +1,22 @@
 import type { ReactThreeFiber } from '@react-three/fiber'
 import { ChromaticAberrationEffect } from 'postprocessing'
 import type { Ref } from 'react'
-import { useMemo } from 'react'
-import { useDispose, useVector2 } from '../util'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
+// radialModulation/modulationOffset are typed as required by postprocessing's
+// own .d.ts, but its JSDoc confirms both are optional with defaults - an
+// upstream declaration bug, not a real constraint.
 export type ChromaticAberrationProps = Omit<
-  Partial<ConstructorParameters<typeof ChromaticAberrationEffect>[0]>,
-  'offset'
+  EffectOptions<typeof ChromaticAberrationEffect>,
+  'offset' | 'radialModulation' | 'modulationOffset'
 > & {
-  ref?: Ref<ChromaticAberrationEffect>
   offset?: ReactThreeFiber.Vector2
+  radialModulation?: boolean
+  modulationOffset?: number
+  ref?: Ref<ChromaticAberrationEffect>
 }
 
-export function ChromaticAberration({ ref, ...props }: ChromaticAberrationProps) {
-  const offset = useVector2(props, 'offset')
-
-  const effect = useMemo(
-    () =>
-      new ChromaticAberrationEffect({
-        ...props,
-        offset,
-      } as ConstructorParameters<typeof ChromaticAberrationEffect>[0]),
-    [offset, props]
-  )
-
-  useDispose(effect)
-
-  return <primitive object={effect} ref={ref} />
-}
+export const ChromaticAberration = /* @__PURE__ */ createEffectComponent<
+  typeof ChromaticAberrationEffect,
+  ChromaticAberrationProps
+>(ChromaticAberrationEffect)

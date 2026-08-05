@@ -1,4 +1,6 @@
 import { SepiaEffect } from 'postprocessing'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export const Sepia = /* @__PURE__ */ wrapEffect(SepiaEffect)
+export const Sepia = /* @__PURE__ */ createEffectComponent<typeof SepiaEffect, EffectOptions<typeof SepiaEffect>>(
+  SepiaEffect
+)
