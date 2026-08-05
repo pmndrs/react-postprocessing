@@ -1,4 +1,6 @@
 import { DepthEffect } from 'postprocessing'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export const Depth = /* @__PURE__ */ wrapEffect(DepthEffect)
+export const Depth = /* @__PURE__ */ createEffectComponent<typeof DepthEffect, EffectOptions<typeof DepthEffect>>(
+  DepthEffect
+)

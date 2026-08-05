@@ -1,7 +1,7 @@
-import { BlendFunction, ScanlineEffect } from 'postprocessing'
-import { wrapEffect } from '../wrapEffect'
+import { ScanlineEffect } from 'postprocessing'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export const Scanline = /* @__PURE__ */ wrapEffect(ScanlineEffect, {
-  blendFunction: BlendFunction.OVERLAY,
-  density: 1.25,
-})
+export const Scanline = /* @__PURE__ */ createEffectComponent<
+  typeof ScanlineEffect,
+  EffectOptions<typeof ScanlineEffect>
+>(ScanlineEffect)

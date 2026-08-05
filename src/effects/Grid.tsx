@@ -1,28 +1,27 @@
 import { useThree } from '@react-three/fiber'
 import { GridEffect } from 'postprocessing'
-import { Ref, useLayoutEffect, useMemo } from 'react'
-import { useDispose } from '../util'
+import { type Ref, useImperativeHandle, useLayoutEffect, useRef } from 'react'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-type GridProps = ConstructorParameters<typeof GridEffect>[0] &
-  Partial<{
-    size: {
-      width: number
-      height: number
-    }
-    ref: Ref<GridEffect>
-  }>
+const GridImpl = /* @__PURE__ */ createEffectComponent<typeof GridEffect, EffectOptions<typeof GridEffect>>(GridEffect)
+
+export type GridProps = EffectOptions<typeof GridEffect> & {
+  size?: { width: number; height: number }
+  opacity?: number
+  ref?: Ref<GridEffect>
+}
 
 export function Grid({ size, ref, ...props }: GridProps) {
   const invalidate = useThree((state) => state.invalidate)
-
-  const effect = useMemo(() => new GridEffect(props), [props])
+  const localRef = useRef<GridEffect>(null)
+  useImperativeHandle(ref, () => localRef.current!, [])
 
   useLayoutEffect(() => {
-    if (size) effect.setSize(size.width, size.height)
-    invalidate()
-  }, [effect, size, invalidate])
+    if (size) {
+      localRef.current?.setSize(size.width, size.height)
+      invalidate()
+    }
+  }, [size, invalidate])
 
-  useDispose(effect)
-
-  return <primitive ref={ref} object={effect} />
+  return <GridImpl ref={localRef} {...props} />
 }

@@ -1,4 +1,7 @@
 import { VignetteEffect } from 'postprocessing'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export const Vignette = /* @__PURE__ */ wrapEffect(VignetteEffect)
+export const Vignette = /* @__PURE__ */ createEffectComponent<
+  typeof VignetteEffect,
+  EffectOptions<typeof VignetteEffect>
+>(VignetteEffect)

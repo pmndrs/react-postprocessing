@@ -1,17 +1,4 @@
-import { BlendFunction, ColorAverageEffect } from 'postprocessing'
-import type { Ref } from 'react'
-import { useMemo } from 'react'
-import { useDispose } from '../util'
+import { ColorAverageEffect } from 'postprocessing'
+import { createEffectComponent } from '../createEffectComponent'
 
-export type ColorAverageProps = {
-  blendFunction?: BlendFunction
-  ref?: Ref<ColorAverageEffect>
-}
-
-export function ColorAverage({ blendFunction = BlendFunction.NORMAL, ref }: ColorAverageProps) {
-  const effect = useMemo(() => new ColorAverageEffect(blendFunction), [blendFunction])
-
-  useDispose(effect)
-
-  return <primitive object={effect} ref={ref} />
-}
+export const ColorAverage = /* @__PURE__ */ createEffectComponent<typeof ColorAverageEffect, object>(ColorAverageEffect)

@@ -4,11 +4,11 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import { easing } from 'maath'
 import { BlendFunction, Effect } from 'postprocessing'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState, type Ref } from 'react'
 import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three'
 
+import { createEffectComponent } from '../createEffectComponent'
 import { EffectComposerContext } from '../EffectComposer'
-import { wrapEffect } from '../wrapEffect'
 
 const LensFlareShader = {
   fragmentShader: /* glsl */ `
@@ -441,26 +441,26 @@ type LensFlareEffectOptions = {
 
 export class LensFlareEffect extends Effect {
   constructor({
-    blendFunction,
-    enabled,
-    glareSize,
-    lensPosition,
-    screenRes,
-    starPoints,
-    flareSize,
-    flareSpeed,
-    flareShape,
-    animated,
-    anamorphic,
-    colorGain,
-    lensDirtTexture,
-    haloScale,
-    secondaryGhosts,
-    aditionalStreaks,
-    ghostScale,
-    opacity,
-    starBurst,
-  }: LensFlareEffectOptions) {
+    blendFunction = BlendFunction.NORMAL,
+    enabled = true,
+    glareSize = 0.2,
+    lensPosition = new Vector3(-25, 6, -60),
+    screenRes = new Vector2(0, 0),
+    starPoints = 6,
+    flareSize = 0.01,
+    flareSpeed = 0.01,
+    flareShape = 0.01,
+    animated = true,
+    anamorphic = false,
+    colorGain = new Color(20, 20, 20),
+    lensDirtTexture = null,
+    haloScale = 0.5,
+    secondaryGhosts = true,
+    aditionalStreaks = true,
+    ghostScale = 0.0,
+    opacity = 1.0,
+    starBurst = false,
+  }: Partial<LensFlareEffectOptions> = {}) {
     super('LensFlareEffect', LensFlareShader.fragmentShader, {
       blendFunction,
       uniforms: new Map<string, Uniform>([
@@ -493,6 +493,140 @@ export class LensFlareEffect extends Effect {
       time.value += deltaTime
     }
   }
+
+  private u<T>(name: string): T {
+    return this.uniforms.get(name)!.value
+  }
+
+  private setU(name: string, value: unknown): void {
+    this.uniforms.get(name)!.value = value
+  }
+
+  get enabled(): boolean {
+    return this.u('enabled')
+  }
+  set enabled(value: boolean) {
+    this.setU('enabled', value)
+  }
+
+  get glareSize(): number {
+    return this.u('glareSize')
+  }
+  set glareSize(value: number) {
+    this.setU('glareSize', value)
+  }
+
+  get lensPosition(): Vector3 {
+    return this.u('lensPosition')
+  }
+  set lensPosition(value: Vector3) {
+    this.setU('lensPosition', value)
+  }
+
+  get screenRes(): Vector2 {
+    return this.u('screenRes')
+  }
+  set screenRes(value: Vector2) {
+    this.setU('screenRes', value)
+  }
+
+  get starPoints(): number {
+    return this.u('starPoints')
+  }
+  set starPoints(value: number) {
+    this.setU('starPoints', value)
+  }
+
+  get flareSize(): number {
+    return this.u('flareSize')
+  }
+  set flareSize(value: number) {
+    this.setU('flareSize', value)
+  }
+
+  get flareSpeed(): number {
+    return this.u('flareSpeed')
+  }
+  set flareSpeed(value: number) {
+    this.setU('flareSpeed', value)
+  }
+
+  get flareShape(): number {
+    return this.u('flareShape')
+  }
+  set flareShape(value: number) {
+    this.setU('flareShape', value)
+  }
+
+  get animated(): boolean {
+    return this.u('animated')
+  }
+  set animated(value: boolean) {
+    this.setU('animated', value)
+  }
+
+  get anamorphic(): boolean {
+    return this.u('anamorphic')
+  }
+  set anamorphic(value: boolean) {
+    this.setU('anamorphic', value)
+  }
+
+  get colorGain(): Color {
+    return this.u('colorGain')
+  }
+  set colorGain(value: Color) {
+    this.setU('colorGain', value)
+  }
+
+  get lensDirtTexture(): Texture | null {
+    return this.u('lensDirtTexture')
+  }
+  set lensDirtTexture(value: Texture | null) {
+    this.setU('lensDirtTexture', value)
+  }
+
+  get haloScale(): number {
+    return this.u('haloScale')
+  }
+  set haloScale(value: number) {
+    this.setU('haloScale', value)
+  }
+
+  get secondaryGhosts(): boolean {
+    return this.u('secondaryGhosts')
+  }
+  set secondaryGhosts(value: boolean) {
+    this.setU('secondaryGhosts', value)
+  }
+
+  get aditionalStreaks(): boolean {
+    return this.u('aditionalStreaks')
+  }
+  set aditionalStreaks(value: boolean) {
+    this.setU('aditionalStreaks', value)
+  }
+
+  get ghostScale(): number {
+    return this.u('ghostScale')
+  }
+  set ghostScale(value: number) {
+    this.setU('ghostScale', value)
+  }
+
+  get starBurst(): boolean {
+    return this.u('starBurst')
+  }
+  set starBurst(value: boolean) {
+    this.setU('starBurst', value)
+  }
+
+  get opacity(): number {
+    return this.u('opacity')
+  }
+  set opacity(value: number) {
+    this.setU('opacity', value)
+  }
 }
 
 type LensFlareProps = {
@@ -502,7 +636,10 @@ type LensFlareProps = {
   smoothTime?: number
 } & Partial<LensFlareEffectOptions>
 
-const LensFlareWrapped = /* @__PURE__ */ wrapEffect(LensFlareEffect)
+const LensFlareWrapped = /* @__PURE__ */ createEffectComponent<
+  typeof LensFlareEffect,
+  Partial<LensFlareEffectOptions> & { ref?: Ref<LensFlareEffect> }
+>(LensFlareEffect)
 
 export const LensFlare = ({
   smoothTime = 0.07,
