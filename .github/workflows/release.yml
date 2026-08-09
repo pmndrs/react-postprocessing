@@ -1,0 +1,77 @@
+name: Release to npm
+run-name: Release v${{ inputs.version }} to npm (${{ inputs.npm_tag }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version already set in package.json (for example, 3.0.5)
+        required: true
+        type: string
+      npm_tag:
+        description: npm distribution tag
+        required: true
+        default: latest
+        type: choice
+        options:
+          - latest
+          - next
+
+# Before the first run, configure @react-three/postprocessing's npm trusted
+# publisher for pmndrs/react-postprocessing, release.yml, and the npm environment.
+# GitHub's short-lived OIDC token then replaces a long-lived NPM_TOKEN secret.
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: npm-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish from master
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@react-three/postprocessing
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+
+      - name: Verify release version
+        env:
+          EXPECTED_VERSION: ${{ inputs.version }}
+        run: |
+          ACTUAL_VERSION="$(node --print "require('./package.json').version")"
+          if [ "$ACTUAL_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "::error::package.json contains version $ACTUAL_VERSION, not $EXPECTED_VERSION"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn eslint:ci
+
+      - name: Test
+        run: yarn test
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish package
+        env:
+          NPM_TAG: ${{ inputs.npm_tag }}
+        run: npm publish --access public --tag "$NPM_TAG"
