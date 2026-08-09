@@ -38,7 +38,7 @@ export function N8AO({
   renderMode = 0,
   ref,
 }: N8AOProps) {
-  const { camera, scene } = useThree()
+  const { camera, scene, invalidate } = useThree()
   const effect = useMemo(() => new N8AOPostPass(scene, camera), [camera, scene])
 
   // TODO: implement dispose upstream; this effect has memory leaks without
@@ -58,6 +58,9 @@ export function N8AO({
       halfRes,
       depthAwareUpsampling,
     })
+    // effect.configuration is a plain object, never r3f-managed - applyProps'
+    // own invalidate (gated behind object.__r3f) never fires for it.
+    invalidate()
   }, [
     screenSpaceRadius,
     color,
@@ -71,11 +74,15 @@ export function N8AO({
     halfRes,
     depthAwareUpsampling,
     effect,
+    invalidate,
   ])
 
   useLayoutEffect(() => {
-    if (quality) effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
-  }, [effect, quality])
+    if (quality) {
+      effect.setQualityMode(quality.charAt(0).toUpperCase() + quality.slice(1))
+      invalidate()
+    }
+  }, [effect, quality, invalidate])
 
   return <primitive ref={ref} object={effect} />
 }
