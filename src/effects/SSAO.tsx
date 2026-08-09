@@ -32,8 +32,8 @@ const LIVE_KEYS = [
   'ssaoMaterial-worldDistanceFalloff',
   'rangeThreshold',
   'rangeFalloff',
-  'worldProximityThreshold',
-  'worldProximityFalloff',
+  'ssaoMaterial-worldProximityThreshold',
+  'ssaoMaterial-worldProximityFalloff',
 ]
 
 function get(effect: SSAOEffect, key: string): unknown {
@@ -138,8 +138,8 @@ export function SSAO({
       'ssaoMaterial-worldDistanceFalloff': worldDistanceFalloff,
       rangeThreshold,
       rangeFalloff,
-      worldProximityThreshold,
-      worldProximityFalloff,
+      'ssaoMaterial-worldProximityThreshold': worldProximityThreshold,
+      'ssaoMaterial-worldProximityFalloff': worldProximityFalloff,
     },
     LIVE_KEYS,
     get,

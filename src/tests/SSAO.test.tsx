@@ -88,6 +88,32 @@ describe('SSAO', () => {
     await React.act(async () => root.render(null))
   })
 
+  it('applies worldProximityThreshold live via the nested ssaoMaterial, without reconstructing the effect', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const ref = React.createRef<SSAOEffect>()
+
+    const render = (worldProximityThreshold: number) =>
+      root.render(
+        <EffectComposer ref={composerRef} enableNormalPass>
+          <SSAO ref={ref} worldProximityThreshold={worldProximityThreshold} />
+        </EffectComposer>
+      )
+
+    await React.act(async () => render(0.5))
+    await waitForComposer(composerRef)
+    await flush()
+    const first = ref.current
+    expect(first!.ssaoMaterial.worldProximityThreshold).toBeCloseTo(0.5)
+
+    await React.act(async () => render(0.8))
+    await flush()
+
+    expect(ref.current).toBe(first)
+    expect(ref.current!.ssaoMaterial.worldProximityThreshold).toBeCloseTo(0.8)
+
+    await React.act(async () => root.render(null))
+  })
+
   it('still reconstructs when resolutionScale (construction-only) changes', async () => {
     const composerRef = React.createRef<EffectComposerImpl>()
     const ref = React.createRef<SSAOEffect>()
