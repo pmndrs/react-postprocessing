@@ -1,8 +1,9 @@
 import { extend, useThree } from '@react-three/fiber'
-import type { BlendFunction, Effect, Pass } from 'postprocessing'
+import type { BlendFunction } from 'postprocessing'
 import { useMemo, type ExoticComponent, type JSX, type Ref } from 'react'
+import type { EffectConstructor } from './createEffectComponent'
 
-export type EffectConstructor = new (...args: any[]) => Effect | Pass
+export type { EffectConstructor }
 
 // Handles three ConstructorParameters<T> shapes: required first param
 // (P), optional first param (Partial<P> — some effects in postprocessing
