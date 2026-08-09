@@ -42,8 +42,8 @@ class MyCustomEffectImpl extends Effect {
 }
 
 // Effect component
-export const MyCustomEffect = forwardRef(({ param }, ref) => {
+export const MyCustomEffect = ({ ref, param }) => {
   const effect = useMemo(() => new MyCustomEffectImpl(param), [param])
   return <primitive ref={ref} object={effect} dispose={null} />
-})
+}
 ```
