@@ -1,4 +1,7 @@
 import { HueSaturationEffect } from 'postprocessing'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export const HueSaturation = /* @__PURE__ */ wrapEffect(HueSaturationEffect)
+export const HueSaturation = /* @__PURE__ */ createEffectComponent<
+  typeof HueSaturationEffect,
+  EffectOptions<typeof HueSaturationEffect>
+>(HueSaturationEffect)

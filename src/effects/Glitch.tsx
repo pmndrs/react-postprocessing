@@ -1,37 +1,32 @@
-import { ReactThreeFiber, useThree } from '@react-three/fiber'
+import type { ReactThreeFiber } from '@react-three/fiber'
 import { GlitchEffect, GlitchMode } from 'postprocessing'
-import { Ref, useLayoutEffect, useMemo } from 'react'
-import { useDispose, useVector2 } from '../util'
+import type { Ref } from 'react'
+import { useMemo } from 'react'
+import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-export type GlitchProps = ConstructorParameters<typeof GlitchEffect>[0] &
-  Partial<{
-    mode: GlitchMode
-    active: boolean
-    delay: ReactThreeFiber.Vector2
-    duration: ReactThreeFiber.Vector2
-    chromaticAberrationOffset: ReactThreeFiber.Vector2
-    strength: ReactThreeFiber.Vector2
-    ref?: Ref<GlitchEffect>
-  }>
+type GlitchOptions = Omit<
+  EffectOptions<typeof GlitchEffect>,
+  'delay' | 'duration' | 'strength' | 'chromaticAberrationOffset'
+> & {
+  delay?: ReactThreeFiber.Vector2
+  duration?: ReactThreeFiber.Vector2
+  strength?: ReactThreeFiber.Vector2
+  chromaticAberrationOffset?: ReactThreeFiber.Vector2
+  mode?: GlitchMode
+}
 
-export function Glitch({ active = true, ref, ...props }: GlitchProps) {
-  const invalidate = useThree((state) => state.invalidate)
-  const delay = useVector2(props, 'delay')
-  const duration = useVector2(props, 'duration')
-  const strength = useVector2(props, 'strength')
-  const chromaticAberrationOffset = useVector2(props, 'chromaticAberrationOffset')
+const GlitchImpl = /* @__PURE__ */ createEffectComponent<typeof GlitchEffect, GlitchOptions>(GlitchEffect)
 
-  const effect = useMemo(
-    () => new GlitchEffect({ ...props, delay, duration, strength, chromaticAberrationOffset }),
-    [delay, duration, props, strength, chromaticAberrationOffset]
-  )
+export type GlitchProps = GlitchOptions & {
+  active?: boolean
+  opacity?: number
+  ref?: Ref<GlitchEffect>
+}
 
-  useLayoutEffect(() => {
-    effect.mode = active ? props.mode || GlitchMode.SPORADIC : GlitchMode.DISABLED
-    invalidate()
-  }, [active, effect, invalidate, props.mode])
-
-  useDispose(effect)
-
-  return <primitive ref={ref} object={effect} />
+// dtSize only seeds the auto-generated perturbation map at construction time
+// (skipped entirely once a perturbationMap is provided) - routed through
+// args so it still works as a plain prop.
+export function Glitch({ active = true, mode = GlitchMode.SPORADIC, dtSize, ...props }: GlitchProps) {
+  const args = useMemo<[EffectOptions<typeof GlitchEffect>]>(() => [{ dtSize }], [dtSize])
+  return <GlitchImpl args={args} mode={active ? mode : GlitchMode.DISABLED} {...props} />
 }
