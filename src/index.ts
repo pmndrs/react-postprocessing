@@ -1,5 +1,6 @@
 export * from './createEffectComponent'
 export * from './EffectComposer'
+export * from './EffectGroup'
 export * from './Selection'
 export * from './util'
 export * from './wrapEffect'

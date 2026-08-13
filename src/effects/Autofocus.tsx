@@ -1,6 +1,6 @@
 import { createPortal, useFrame, useThree, type Vector3 as R3FVector3 } from '@react-three/fiber'
 import { easing } from 'maath'
-import { CopyPass, DepthOfFieldEffect, DepthPickingPass } from 'postprocessing'
+import { DepthOfFieldEffect, DepthPickingPass } from 'postprocessing'
 import {
   Ref,
   useCallback,
@@ -55,22 +55,22 @@ export function Autofocus({
   const { composer, camera } = useContext(EffectComposerContext)
 
   const [depthPickingPass] = useState(() => new DepthPickingPass())
-  const [copyPass] = useState(() => new CopyPass())
   useEffect(() => {
-    composer.addPass(depthPickingPass)
-    composer.addPass(copyPass)
+    // Fixed early index (right after RenderPass, which is always index 0),
+    // not appended - so this never risks becoming the structurally-last
+    // pass and silently stealing renderToScreen from whatever the real
+    // last pass is, regardless of what else adds/removes passes and when.
+    composer.addPass(depthPickingPass, 1)
     return () => {
       composer.removePass(depthPickingPass)
-      composer.removePass(copyPass)
     }
-  }, [composer, depthPickingPass, copyPass])
+  }, [composer, depthPickingPass])
 
   useEffect(() => {
     return () => {
       depthPickingPass.dispose()
-      copyPass.dispose()
     }
-  }, [depthPickingPass, copyPass])
+  }, [depthPickingPass])
 
   const [hitpoint] = useState(() => new Vector3(0, 0, 0))
 

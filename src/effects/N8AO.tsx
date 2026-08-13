@@ -5,9 +5,11 @@ import { ReactThreeFiber, applyProps, useThree } from '@react-three/fiber'
 import { Ref, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
 import { N8AOPostPass } from 'n8ao'
+import { groupPasses } from '../EffectComposer'
 import { useDispose } from '../util'
 
 export type N8AOProps = {
+  enabled?: boolean
   aoRadius?: number
   distanceFalloff?: number
   intensity?: number
@@ -24,6 +26,7 @@ export type N8AOProps = {
 }
 
 export function N8AO({
+  enabled = true,
   halfRes,
   screenSpaceRadius,
   quality,
@@ -39,10 +42,24 @@ export function N8AO({
   ref,
 }: N8AOProps) {
   const { camera, scene, invalidate } = useThree()
-  const effect = useMemo(() => new N8AOPostPass(scene, camera), [camera, scene])
+  const effect = useMemo(() => {
+    const instance = new N8AOPostPass(scene, camera)
+    // N8AOPostPass isn't a postprocessing Effect, so it's not mergeable via
+    // EffectGroup - it's already a standalone Pass, hence its own `enabled`
+    // prop below instead. Registering it here still gets it the shared
+    // trailing CopyPass safety net (see EffectComposer.tsx) so disabling it
+    // while it's the last pass in the chain doesn't blank the canvas.
+    groupPasses.add(instance)
+    return instance
+  }, [camera, scene])
 
   // TODO: implement dispose upstream; this effect has memory leaks without
   useDispose(effect)
+
+  useLayoutEffect(() => {
+    effect.enabled = enabled
+    invalidate()
+  }, [effect, enabled, invalidate])
 
   useLayoutEffect(() => {
     applyProps(effect.configuration, {

@@ -1,7 +1,7 @@
-import { useThree, type ReactThreeFiber } from '@react-three/fiber'
+import { useThree, type Instance, type ReactThreeFiber } from '@react-three/fiber'
 import type { Selection as PPSelection } from 'postprocessing'
 import { use, useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from 'react'
-import { Object3D, Vector2, type Vector2Tuple } from 'three'
+import { Group, Object3D, Vector2, type Vector2Tuple } from 'three'
 import { selectionContext } from './Selection'
 
 // Stable reference for array-typed props defaulting to "nothing" - `= []`
@@ -11,6 +11,22 @@ export const EMPTY_ARRAY: never[] = []
 
 export const resolveRef = <T,>(ref: T | RefObject<T>) =>
   typeof ref === 'object' && ref != null && 'current' in ref ? ref.current : ref
+
+// Reads a <group>'s direct r3f children, filtered by type - transparent to
+// non-host wrapper components, since r3f's instance tree already is.
+export function readGroupChildren<T>(group: Group, filter: (object: unknown) => object is T): T[] {
+  const groupInstance = (group as Group & { __r3f: Instance<Group> }).__r3f
+  return groupInstance ? groupInstance.children.map((child) => child.object).filter(filter) : []
+}
+
+// Diffs `next` against what's stored in `ref`, updating it only when the
+// contents actually changed. Returns whether it changed.
+export function updateIfChanged<T>(ref: RefObject<T[]>, next: T[]): boolean {
+  const previous = ref.current
+  if (next.length === previous.length && next.every((item, i) => item === previous[i])) return false
+  ref.current = next
+  return true
+}
 
 // Keeps `selection` synced with whichever mode is active: the manual
 // `selection` prop, or the declarative Selection/Select API (context wins).

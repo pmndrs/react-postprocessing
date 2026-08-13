@@ -1,5 +1,6 @@
-import { useFrame, useThree, type Instance } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import {
+  CopyPass,
   DepthDownsamplingPass,
   Effect,
   EffectAttribute,
@@ -16,6 +17,7 @@ import {
   useImperativeHandle,
   useLayoutEffect,
   useMemo,
+  useReducer,
   useRef,
   useState,
   type ReactNode,
@@ -23,6 +25,7 @@ import {
 } from 'react'
 import type { Camera, Group, Scene, TextureDataType, WebGLRenderer } from 'three'
 import { HalfFloatType, NoToneMapping } from 'three'
+import { readGroupChildren, updateIfChanged } from './util'
 
 export const EffectComposerContext = /* @__PURE__ */ createContext<{
   composer: EffectComposerImpl
@@ -31,6 +34,10 @@ export const EffectComposerContext = /* @__PURE__ */ createContext<{
   camera: Camera
   scene: Scene
   resolutionScale?: number
+  // A child's local state update doesn't re-render its parent - descendants
+  // that add/remove a bare Pass of their own (e.g. EffectGroup) call this
+  // to make the tree walk below notice.
+  requestRebuild: () => void
 }>(null!)
 
 export type EffectComposerProps = {
@@ -94,18 +101,26 @@ function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(prop
 const autoClearGuard = /* @__PURE__ */ createRendererPropertyGuard('autoClear')
 const toneMappingGuard = /* @__PURE__ */ createRendererPropertyGuard('toneMapping')
 
-// Only passes buildPasses itself constructs - not a user's own EffectPass
-// rendered directly as a child (still just `Pass`-instanceof passthrough
-// below), which owns its own lifecycle.
+// Only passes buildPasses itself constructs - not a user's own bare Pass,
+// which owns its own lifecycle.
 const generatedPasses = /* @__PURE__ */ new WeakSet<Pass>()
 
+// EffectGroup registers its pass here (see EffectGroup.tsx) so the rebuild
+// effect below knows to add a shared trailing CopyPass.
+export const groupPasses = /* @__PURE__ */ new WeakSet<Pass>()
+
 // Not pass.dispose() - EffectPass.dispose() also disposes the effects it
-// wraps, which are owned/reused elsewhere. setEffects([]) detaches their
-// listeners first.
+// wraps, which have their own lifecycle. setEffects([]) detaches them first.
+export function disposePassWithoutEffects(pass: Pass): void {
+  if (pass instanceof EffectPass) {
+    ;(pass as unknown as { setEffects(effects: never[]): void }).setEffects([])
+  }
+  Pass.prototype.dispose.call(pass)
+}
+
 function disposeGeneratedPass(pass: Pass): void {
   if (!generatedPasses.has(pass)) return
-  ;(pass as unknown as { setEffects(effects: never[]): void }).setEffects([])
-  Pass.prototype.dispose.call(pass)
+  disposePassWithoutEffects(pass)
 }
 
 // Consecutive non-convolution Effects share one EffectPass; Pass/convolution nodes get their own.
@@ -159,6 +174,9 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
 
   // useMemo can't own WebGL resources - React may discard it without cleanup.
   const [composerState, setComposerState] = useState<ComposerState | null>(null)
+
+  // Dispatch is stable across renders, so it never destabilizes `state` below.
+  const [, requestRebuild] = useReducer((c: number) => c + 1, 0)
 
   useEffect(() => {
     autoClearGuard.acquire(gl, false)
@@ -221,23 +239,15 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   const nodesRef = useRef<Array<Effect | Pass>>([])
   const [nodesVersion, setNodesVersion] = useState(0)
 
-  // Runs every render (children has no stable identity) but only touches
-  // nodesRef/nodesVersion, never the composer - the rebuild below only
-  // fires when the resolved node list actually changes.
+  // Runs every render, but only bumps nodesVersion (triggering the rebuild
+  // below) when the resolved node list actually changed.
   useLayoutEffect(() => {
     if (!composerState) return
-    const groupInstance = (group.current as Group & { __r3f: Instance<Group> }).__r3f
-    const nodes = groupInstance
-      ? groupInstance.children
-          .map((child) => child.object)
-          .filter((object): object is Effect | Pass => object instanceof Effect || object instanceof Pass)
-      : []
-
-    const previous = nodesRef.current
-    const unchanged = nodes.length === previous.length && nodes.every((node, i) => node === previous[i])
-    if (unchanged) return
-    nodesRef.current = nodes
-    setNodesVersion((v) => v + 1)
+    const nodes = readGroupChildren(
+      group.current,
+      (object): object is Effect | Pass => object instanceof Effect || object instanceof Pass
+    )
+    if (updateIfChanged(nodesRef, nodes)) setNodesVersion((v) => v + 1)
   })
 
   // Only re-runs when nodesVersion/composerState/camera change - React's
@@ -247,6 +257,16 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     const { composer, normalPass, downSamplingPass } = composerState
 
     const passes = buildPasses(nodesRef.current, camera)
+
+    // A toggleable pass (EffectGroup) sitting last would leave nothing on
+    // screen once disabled - postprocessing assigns renderToScreen by
+    // structural position, not `.enabled`. A shared trailing CopyPass
+    // (always enabled, always added last) fixes that for the whole chain.
+    if (passes.some((pass) => groupPasses.has(pass))) {
+      const trailingCopyPass = new CopyPass()
+      generatedPasses.add(trailingCopyPass)
+      passes.push(trailingCopyPass)
+    }
 
     for (const pass of passes) composer.addPass(pass)
 
@@ -285,9 +305,10 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
             resolutionScale,
             camera,
             scene,
+            requestRebuild,
           }
         : null,
-    [composerState, resolutionScale, camera, scene]
+    [composerState, resolutionScale, camera, scene, requestRebuild]
   )
 
   // Expose the composer
