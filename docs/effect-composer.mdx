@@ -23,6 +23,8 @@ The `EffectComposer` must wrap all your effects. It will manage them for you.
   scene?: THREE.Scene
   /** Constructs the initial pass that renders the scene - override to substitute your own RenderPass-like implementation. Defaults to `(scene, camera) => new RenderPass(scene, camera)`. */
   renderPass?: (scene: THREE.Scene, camera: THREE.Camera) => Pass
+  /** Controls how effects are merged into EffectPass instances. `'auto'` (default) merges consecutive effects into one pass, keeping at most one convolution effect (e.g. DepthOfField) per pass - matching what postprocessing actually supports. `'all'` merges without that limit - only enable it if you've verified your specific combination works, since multiple convolution effects sharing a pass throws at render time. `'none'` disables merging entirely, giving every effect its own pass. */
+  mergeMode?: 'auto' | 'all' | 'none'
 >
 {/* your effects go here */}
 </EffectComposer>

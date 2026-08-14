@@ -56,6 +56,7 @@ export type EffectComposerProps = {
   camera?: Camera
   scene?: Scene
   renderPass?: (scene: Scene, camera: Camera) => Pass
+  mergeMode?: 'auto' | 'all' | 'none'
   ref?: Ref<EffectComposerImpl>
 }
 
@@ -137,8 +138,14 @@ function disposeGeneratedPass(pass: Pass): void {
   disposePassWithoutEffects(pass)
 }
 
-// Consecutive non-convolution Effects share one EffectPass; Pass/convolution nodes get their own.
-function buildPasses(nodes: Array<Effect | Pass>, camera: Camera): Pass[] {
+// 'auto' (default): consecutive Effects share one EffectPass, same as vanilla
+// postprocessing allows by hand - a run may contain at most one convolution
+// Effect (e.g. DepthOfField), since the library throws if two land in the
+// same pass. 'all' merges through that limit too, same no-guardrail
+// treatment EffectGroup already gives its own children - multiple
+// convolution Effects in one run will throw at render time. 'none' gives
+// every Effect its own EffectPass.
+function buildPasses(nodes: Array<Effect | Pass>, camera: Camera, mergeMode: 'auto' | 'all' | 'none'): Pass[] {
   const passes: Pass[] = []
 
   for (let i = 0; i < nodes.length; i++) {
@@ -146,12 +153,15 @@ function buildPasses(nodes: Array<Effect | Pass>, camera: Camera): Pass[] {
 
     if (node instanceof Effect) {
       const effects: Effect[] = [node]
+      let hasConvolution = isConvolution(node)
 
-      if (!isConvolution(node)) {
+      if (mergeMode !== 'none') {
         let next: Effect | Pass | undefined
         while ((next = nodes[i + 1]) instanceof Effect) {
-          if (isConvolution(next)) break
+          const nextIsConvolution = isConvolution(next)
+          if (mergeMode === 'auto' && hasConvolution && nextIsConvolution) break
           effects.push(next)
+          hasConvolution ||= nextIsConvolution
           i++
         }
       }
@@ -182,6 +192,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   multisampling = 8,
   frameBufferType = HalfFloatType,
   renderPass = defaultRenderPass,
+  mergeMode = 'auto',
   ref,
 }: EffectComposerProps) {
   const { gl, scene: defaultScene, camera: defaultCamera } = useThree()
@@ -296,7 +307,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     if (!composerState) return
     const { composer, normalPass, downSamplingPass } = composerState
 
-    const passes = buildPasses(nodesRef.current, camera)
+    const passes = buildPasses(nodesRef.current, camera, mergeMode)
 
     // A toggleable pass (EffectGroup) sitting last would leave nothing on
     // screen once disabled - postprocessing assigns renderToScreen by
@@ -323,7 +334,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
       if (normalPass) normalPass.enabled = false
       if (downSamplingPass) downSamplingPass.enabled = false
     }
-  }, [composerState, nodesVersion, camera])
+  }, [composerState, nodesVersion, camera, mergeMode])
 
   // Disable tone mapping because threejs disallows tonemapping on render targets
   useEffect(() => {

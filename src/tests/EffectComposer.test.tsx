@@ -3,6 +3,7 @@ import {
   ColorAverageEffect,
   DepthDownsamplingPass,
   Effect,
+  EffectAttribute,
   EffectComposer as EffectComposerImpl,
   EffectPass,
   NormalPass,
@@ -34,9 +35,23 @@ class EffectC extends Effect {
   }
 }
 
+class ConvolutionEffect extends Effect {
+  constructor() {
+    super('ConvolutionEffect', EFFECT_SHADER, { attributes: EffectAttribute.CONVOLUTION })
+  }
+}
+
+class ConvolutionEffectTwo extends Effect {
+  constructor() {
+    super('ConvolutionEffectTwo', EFFECT_SHADER, { attributes: EffectAttribute.CONVOLUTION })
+  }
+}
+
 const WrappedEffectA = wrapEffect(EffectA)
 const WrappedEffectB = wrapEffect(EffectB)
 const WrappedEffectC = wrapEffect(EffectC)
+const WrappedConvolutionEffect = wrapEffect(ConvolutionEffect)
+const WrappedConvolutionEffectTwo = wrapEffect(ConvolutionEffectTwo)
 
 afterEach(async () => {
   await React.act(async () => {
@@ -437,6 +452,144 @@ describe('EffectComposer', () => {
 
       const second = await waitForNewComposer(ref, first)
       expect(second.passes[0]).toBeInstanceOf(CustomRenderPass)
+    })
+  })
+
+  describe('mergeMode', () => {
+    it("'auto' (default) merges a convolution effect with its non-convolution neighbors into one EffectPass", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+            <WrappedConvolutionEffect />
+            <WrappedEffectB />
+            <WrappedEffectC />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      const effectPasses = composer.passes.filter((pass) => pass instanceof EffectPass)
+      expect(effectPasses).toHaveLength(1)
+      // @ts-expect-error - `effects` isn't part of the public Pass typing
+      expect(effectPasses[0].effects).toHaveLength(4)
+    })
+
+    it("'auto' still splits into separate passes rather than merging two convolution effects together", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+            <WrappedConvolutionEffect />
+            <WrappedConvolutionEffectTwo />
+            <WrappedEffectB />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      const effectPasses = composer.passes.filter((pass) => pass instanceof EffectPass)
+      // [A, ConvolutionEffect] | [ConvolutionEffectTwo, B] - never both convolutions in one pass
+      expect(effectPasses).toHaveLength(2)
+      // @ts-expect-error - `effects` isn't part of the public Pass typing
+      const firstEffects = effectPasses[0].effects as Effect[]
+      // @ts-expect-error - `effects` isn't part of the public Pass typing
+      const secondEffects = effectPasses[1].effects as Effect[]
+      expect(firstEffects.filter((e) => e instanceof ConvolutionEffect || e instanceof ConvolutionEffectTwo)).toHaveLength(1)
+      expect(secondEffects.filter((e) => e instanceof ConvolutionEffect || e instanceof ConvolutionEffectTwo)).toHaveLength(1)
+    })
+
+    it("'all' merges even a single convolution effect with neighbors, same as 'auto'", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} mergeMode="all">
+            <WrappedEffectA />
+            <WrappedConvolutionEffect />
+            <WrappedEffectB />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      const effectPasses = composer.passes.filter((pass) => pass instanceof EffectPass)
+      expect(effectPasses).toHaveLength(1)
+      // @ts-expect-error - `effects` isn't part of the public Pass typing
+      expect(effectPasses[0].effects).toHaveLength(3)
+    })
+
+    // postprocessing itself throws when two convolution effects share a
+    // pass - 'all' doesn't guard against that (same no-guardrail contract as
+    // EffectGroup), unlike 'auto' which keeps them apart specifically to
+    // avoid this.
+    it("'all' throws at render time if that removes 'auto'-only protection against merging two convolution effects", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await expect(
+        React.act(async () =>
+          root.render(
+            <EffectComposer ref={ref} mergeMode="all">
+              <WrappedEffectA />
+              <WrappedConvolutionEffect />
+              <WrappedConvolutionEffectTwo />
+              <WrappedEffectB />
+            </EffectComposer>
+          )
+        )
+      ).rejects.toThrow('Convolution effects cannot be merged')
+    })
+
+    it("'none' gives every effect its own EffectPass, even non-convolution ones", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} mergeMode="none">
+            <WrappedEffectA />
+            <WrappedEffectB />
+            <WrappedEffectC />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.passes.filter((pass) => pass instanceof EffectPass)).toHaveLength(3)
+    })
+
+    it('rebuilds passes (without recreating the composer) when mergeMode changes', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} mergeMode="none">
+            <WrappedEffectA />
+            <WrappedConvolutionEffect />
+            <WrappedEffectB />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.passes.filter((pass) => pass instanceof EffectPass)).toHaveLength(3)
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} mergeMode="auto">
+            <WrappedEffectA />
+            <WrappedConvolutionEffect />
+            <WrappedEffectB />
+          </EffectComposer>
+        )
+      )
+      await flush()
+
+      expect(await waitForComposer(ref)).toBe(composer)
+      expect(composer.passes.filter((pass) => pass instanceof EffectPass)).toHaveLength(1)
     })
   })
 
