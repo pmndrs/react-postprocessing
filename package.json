@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/pmndrs/react-postprocessing#readme",
   "scripts": {
-    "build": "vite build && tsc",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "eslint": "eslint . --fix",
     "eslint:ci": "eslint .",
     "test": "vitest run",

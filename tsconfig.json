@@ -17,6 +17,5 @@
       "@react-three/postprocessing": ["./src"]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.*"]
+  "include": ["src/**/*"]
 }
