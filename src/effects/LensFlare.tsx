@@ -641,6 +641,13 @@ const LensFlareWrapped = /* @__PURE__ */ createEffectComponent<
   Partial<LensFlareEffectOptions> & { ref?: Ref<LensFlareEffect> }
 >(LensFlareEffect)
 
+// Stable identity so a parent re-render (e.g. a Leva control) doesn't hand
+// r3f a brand-new Vector2 every time - r3f would then `.copy()` it onto the
+// uniform in place, stomping the viewport-driven value the effect below
+// maintains and leaving screenRes at (0, 0) until the next resize. Never
+// mutated (only ever copied *from*), so it's safe to share across instances.
+const DEFAULT_SCREEN_RES = /* @__PURE__ */ new Vector2(0, 0)
+
 export const LensFlare = ({
   smoothTime = 0.07,
   //
@@ -648,7 +655,7 @@ export const LensFlare = ({
   enabled = true,
   glareSize = 0.2,
   lensPosition = new Vector3(-25, 6, -60),
-  screenRes = new Vector2(0, 0),
+  screenRes,
   starPoints = 6,
   flareSize = 0.01,
   flareSpeed = 0.01,
@@ -728,7 +735,7 @@ export const LensFlare = ({
       enabled={enabled}
       glareSize={glareSize}
       lensPosition={lensPosition}
-      screenRes={screenRes}
+      screenRes={screenRes ?? DEFAULT_SCREEN_RES}
       starPoints={starPoints}
       flareSize={flareSize}
       flareSpeed={flareSpeed}
