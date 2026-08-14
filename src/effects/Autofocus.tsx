@@ -18,7 +18,7 @@ import { Mesh, Vector3 } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { DepthOfField } from './DepthOfField'
 
-export type AutofocusProps = ComponentProps<typeof DepthOfField> & {
+export type AutofocusProps = Omit<ComponentProps<typeof DepthOfField>, 'ref'> & {
   target?: R3FVector3
   /** should the target follow the pointer */
   mouse?: boolean
