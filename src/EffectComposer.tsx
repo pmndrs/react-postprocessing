@@ -24,7 +24,7 @@ import {
   type Ref,
 } from 'react'
 import type { Camera, Group, Scene, TextureDataType, WebGLRenderer } from 'three'
-import { HalfFloatType, NoToneMapping } from 'three'
+import { HalfFloatType, NoToneMapping, Vector2 } from 'three'
 import { readGroupChildren, updateIfChanged } from './util'
 
 export const EffectComposerContext = /* @__PURE__ */ createContext<{
@@ -101,6 +101,12 @@ function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(prop
 const autoClearGuard = /* @__PURE__ */ createRendererPropertyGuard('autoClear')
 const toneMappingGuard = /* @__PURE__ */ createRendererPropertyGuard('toneMapping')
 
+// Scratch vector for gl.getSize() below - written then read synchronously
+// within the same call, never held onto across a render/frame, so sharing
+// one instance across every <EffectComposer> is safe (same reasoning as
+// DEFAULT_SCREEN_RES in LensFlare.tsx: safe because nothing ever aliases it).
+const glSize = /* @__PURE__ */ new Vector2()
+
 // Only passes buildPasses itself constructs - not a user's own bare Pass,
 // which owns its own lifecycle.
 const generatedPasses = /* @__PURE__ */ new WeakSet<Pass>()
@@ -168,9 +174,11 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   frameBufferType = HalfFloatType,
   ref,
 }: EffectComposerProps) {
-  const { gl, scene: defaultScene, camera: defaultCamera, size } = useThree()
+  const { gl, scene: defaultScene, camera: defaultCamera } = useThree()
   const scene = _scene || defaultScene
   const camera = _camera || defaultCamera
+
+  gl.getSize(glSize)
 
   // useMemo can't own WebGL resources - React may discard it without cleanup.
   const [composerState, setComposerState] = useState<ComposerState | null>(null)
@@ -199,7 +207,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
       }
     }
 
-    effectComposer.setSize(size.width, size.height)
+    effectComposer.setSize(glSize.width, glSize.height)
 
     setComposerState({ composer: effectComposer, normalPass, downSamplingPass })
 
@@ -211,19 +219,27 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
       effectComposer.dispose()
       autoClearGuard.release(gl)
     }
-    // `size` intentionally excluded: it's applied via the composer.setSize
+    // `glSize` intentionally excluded: it's applied via the composer.setSize
     // effect below, and shouldn't tear down/recreate the whole composer.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene, enableNormalPass, resolutionScale])
 
-  useEffect(() => {
-    composerState?.composer.setSize(size.width, size.height)
-  }, [composerState, size])
+  // Last size actually applied to the composer, so the check below is a
+  // cheap no-op on frames where nothing changed.
+  const appliedSizeRef = useRef({ width: -1, height: -1 })
 
   useFrame(
     (_, delta) => {
       if (!enabled || !composerState) return
       const { composer } = composerState
+
+      gl.getSize(glSize)
+      if (glSize.width !== appliedSizeRef.current.width || glSize.height !== appliedSizeRef.current.height) {
+        composer.setSize(glSize.width, glSize.height)
+        appliedSizeRef.current.width = glSize.width
+        appliedSizeRef.current.height = glSize.height
+      }
+
       const currentAutoClear = gl.autoClear
       gl.autoClear = autoClear
       if (stencilBuffer && !autoClear) gl.clearStencil()
