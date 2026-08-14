@@ -1,15 +1,19 @@
 import { OutlineEffect } from 'postprocessing'
 import { Ref, RefObject, use, useMemo } from 'react'
-import { Color, Object3D } from 'three'
+import { Color, Object3D, type ColorRepresentation } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { applyPierced, EMPTY_ARRAY, readPierced, useDispose, useLiveDefaults, useSelectionSync } from '../util'
 
 type ObjectRef = RefObject<Object3D | null>
 
-export type OutlineProps = ConstructorParameters<typeof OutlineEffect>[2] &
+type OutlineEffectOptions = NonNullable<ConstructorParameters<typeof OutlineEffect>[2]>
+
+export type OutlineProps = Omit<OutlineEffectOptions, 'visibleEdgeColor' | 'hiddenEdgeColor'> &
   Partial<{
     selection: Object3D | Object3D[] | ObjectRef | ObjectRef[]
     selectionLayer: number
+    visibleEdgeColor: ColorRepresentation
+    hiddenEdgeColor: ColorRepresentation
     ref?: Ref<OutlineEffect>
   }>
 

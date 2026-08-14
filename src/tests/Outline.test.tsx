@@ -112,6 +112,24 @@ describe('Outline', () => {
     expect(effectRef.current!.visibleEdgeColor.getHex()).toBe(0x00ff00)
   })
 
+  it('accepts a CSS color string for visibleEdgeColor/hiddenEdgeColor, not just a numeric hex (#187, #182)', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const effectRef = React.createRef<OutlineEffect>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <Outline ref={effectRef} visibleEdgeColor="red" hiddenEdgeColor="blue" />
+        </EffectComposer>
+      )
+    )
+    await waitForComposer(composerRef)
+    await flush()
+
+    expect(effectRef.current!.visibleEdgeColor.getHex()).toBe(0xff0000)
+    expect(effectRef.current!.hiddenEdgeColor.getHex()).toBe(0x0000ff)
+  })
+
   it('resets edgeStrength to its constructor default when the prop is removed', async () => {
     const composerRef = React.createRef<EffectComposerImpl>()
     const effectRef = React.createRef<OutlineEffect>()
