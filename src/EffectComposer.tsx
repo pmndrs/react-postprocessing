@@ -55,6 +55,7 @@ export type EffectComposerProps = {
   renderPriority?: number
   camera?: Camera
   scene?: Scene
+  renderPass?: (scene: Scene, camera: Camera) => Pass
   ref?: Ref<EffectComposerImpl>
 }
 
@@ -107,6 +108,12 @@ const toneMappingGuard = /* @__PURE__ */ createRendererPropertyGuard('toneMappin
 // one instance across every <EffectComposer> is safe (same reasoning as
 // DEFAULT_SCREEN_RES in LensFlare.tsx: safe because nothing ever aliases it).
 const glSize = /* @__PURE__ */ new Vector2()
+
+// Stable identity for the `renderPass` default - it's in the creation
+// effect's dependency array below (changing it recreates the composer,
+// same as depthBuffer/multisampling), so a fresh arrow function every
+// render here would recreate the composer on every render too.
+const defaultRenderPass = (scene: Scene, camera: Camera): Pass => new RenderPass(scene, camera)
 
 // Only passes buildPasses itself constructs - not a user's own bare Pass,
 // which owns its own lifecycle.
@@ -174,6 +181,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   stencilBuffer,
   multisampling = 8,
   frameBufferType = HalfFloatType,
+  renderPass = defaultRenderPass,
   ref,
 }: EffectComposerProps) {
   const { gl, scene: defaultScene, camera: defaultCamera } = useThree()
@@ -194,7 +202,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     const effectComposer = new EffectComposerImpl(gl, { depthBuffer, stencilBuffer, multisampling, frameBufferType })
 
     effectComposer.autoRenderToScreen = autoRenderToScreen
-    effectComposer.addPass(new RenderPass(scene, camera))
+    effectComposer.addPass(renderPass(scene, camera))
 
     let normalPass: NormalPass | null = null
     let downSamplingPass: DepthDownsamplingPass | null = null
@@ -234,6 +242,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     multisampling,
     frameBufferType,
     autoRenderToScreen,
+    renderPass,
     scene,
     enableNormalPass,
     resolutionScale,

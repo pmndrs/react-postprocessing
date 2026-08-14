@@ -372,6 +372,74 @@ describe('EffectComposer', () => {
     })
   })
 
+  describe('renderPass', () => {
+    it('adds a plain RenderPass as the first pass by default', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.passes[0]).toBeInstanceOf(RenderPass)
+    })
+
+    it('uses a custom factory instead of the default RenderPass, called with the resolved scene/camera', async () => {
+      class CustomRenderPass extends RenderPass {}
+      const scene = new THREE.Scene()
+      const camera = new THREE.PerspectiveCamera()
+      const factory = vi.fn((s: THREE.Scene, c: THREE.Camera) => new CustomRenderPass(s, c))
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} scene={scene} camera={camera} renderPass={factory}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.passes[0]).toBeInstanceOf(CustomRenderPass)
+      expect(factory).toHaveBeenCalledWith(scene, camera)
+    })
+
+    // Not a postprocessing constructor option (it's this library's own prop),
+    // but the pass it produces is only ever added once, at construction -
+    // same treatment as depthBuffer/multisampling/autoRenderToScreen above.
+    it('recreates the composer when renderPass changes', async () => {
+      class CustomRenderPass extends RenderPass {}
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const first = await waitForComposer(ref)
+      expect(first.passes[0]).toBeInstanceOf(RenderPass)
+      expect(first.passes[0]).not.toBeInstanceOf(CustomRenderPass)
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} renderPass={(s, c) => new CustomRenderPass(s, c)}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const second = await waitForNewComposer(ref, first)
+      expect(second.passes[0]).toBeInstanceOf(CustomRenderPass)
+    })
+  })
+
   describe('cleanup and disposal', () => {
     it('unregisters effects and clears the ref on full unmount', async () => {
       const ref = React.createRef<EffectComposerImpl>()
