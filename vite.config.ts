@@ -10,6 +10,7 @@ export default defineConfig({
   },
   build: {
     sourcemap: true,
+    minify: false,
     lib: {
       formats: ['es'],
       entry: 'src/index.ts',
