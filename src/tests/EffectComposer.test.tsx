@@ -299,6 +299,79 @@ describe('EffectComposer', () => {
     })
   })
 
+  describe('autoRenderToScreen', () => {
+    it('defaults to true, with the last pass rendering to screen', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.autoRenderToScreen).toBe(true)
+      expect(composer.passes.at(-1)?.renderToScreen).toBe(true)
+    })
+
+    it('applies false at mount, with no pass rendering to screen', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} autoRenderToScreen={false}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.autoRenderToScreen).toBe(false)
+      expect(composer.passes.at(-1)?.renderToScreen).toBe(false)
+    })
+
+    // Not a constructor option in postprocessing itself, but the only place
+    // it's actually read is inside addPass() - deciding whether *that* call
+    // also assigns renderToScreen to the pass going in. Setting it after
+    // passes already exist doesn't revisit them, so treating this as a
+    // live/reactive prop (mutate the flag, leave existing passes alone)
+    // would leave a composer that was built with autoRenderToScreen: false
+    // permanently unable to render to screen again, even after the prop
+    // flips back to true - every existing pass already has renderToScreen:
+    // false baked in from when it was added, and nothing revisits it.
+    // Recreating the composer (same treatment as depthBuffer/multisampling/
+    // etc. above) sidesteps that entirely: every pass is freshly added
+    // through addPass() with the current flag already in effect.
+    it('recreates the composer when autoRenderToScreen changes, with the new last pass matching it', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} autoRenderToScreen={false}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const first = await waitForComposer(ref)
+      expect(first.passes.at(-1)?.renderToScreen).toBe(false)
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} autoRenderToScreen={true}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+
+      const second = await waitForNewComposer(ref, first)
+      expect(second.autoRenderToScreen).toBe(true)
+      expect(second.passes.at(-1)?.renderToScreen).toBe(true)
+    })
+  })
+
   describe('cleanup and disposal', () => {
     it('unregisters effects and clears the ref on full unmount', async () => {
       const ref = React.createRef<EffectComposerImpl>()

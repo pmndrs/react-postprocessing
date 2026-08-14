@@ -48,6 +48,7 @@ export type EffectComposerProps = {
   enableNormalPass?: boolean
   stencilBuffer?: boolean
   autoClear?: boolean
+  autoRenderToScreen?: boolean
   resolutionScale?: number
   multisampling?: number
   frameBufferType?: TextureDataType
@@ -167,6 +168,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   enabled = true,
   renderPriority = 1,
   autoClear = true,
+  autoRenderToScreen = true,
   depthBuffer,
   enableNormalPass,
   stencilBuffer,
@@ -190,6 +192,8 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     autoClearGuard.acquire(gl, false)
 
     const effectComposer = new EffectComposerImpl(gl, { depthBuffer, stencilBuffer, multisampling, frameBufferType })
+
+    effectComposer.autoRenderToScreen = autoRenderToScreen
     effectComposer.addPass(new RenderPass(scene, camera))
 
     let normalPass: NormalPass | null = null
@@ -222,7 +226,18 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     // `glSize` intentionally excluded: it's applied via the composer.setSize
     // effect below, and shouldn't tear down/recreate the whole composer.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [camera, gl, depthBuffer, stencilBuffer, multisampling, frameBufferType, scene, enableNormalPass, resolutionScale])
+  }, [
+    camera,
+    gl,
+    depthBuffer,
+    stencilBuffer,
+    multisampling,
+    frameBufferType,
+    autoRenderToScreen,
+    scene,
+    enableNormalPass,
+    resolutionScale,
+  ])
 
   // Last size actually applied to the composer, so the check below is a
   // cheap no-op on frames where nothing changed.
