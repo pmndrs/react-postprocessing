@@ -1,0 +1,73 @@
+---
+title: DepthPicking
+nav: 1
+---
+
+Mounts a `postprocessing` `DepthPickingPass` and exposes its `readDepth` via ref - nothing else. Renders nothing, updates nothing automatically. Pair it with `useDepthPicking` for a world-space position instead of raw depth.
+
+`<Autofocus>` is built on both of these - use them directly when you want a picked position for something other than `<DepthOfField>`'s own focus target.
+
+```tsx
+<EffectComposer>
+  <DepthPicking ref={pickRef} />
+</EffectComposer>
+```
+
+Ref-api:
+
+```tsx
+type DepthPickingApi = {
+  readDepth: (ndc: THREE.Vector2 | THREE.Vector3) => Promise<number>
+}
+```
+
+## `useDepthPicking`
+
+```tsx
+function useDepthPicking(
+  pass: RefObject<DepthPickingApi | null>,
+  camera?: THREE.Camera, // defaults to the composer's camera, then r3f's own
+): (x: number, y: number) => Promise<THREE.Vector3 | false>
+```
+
+A hook that turns a screen position into a world-space point, using a mounted `<DepthPicking>`'s `readDepth`. Returns `false` if nothing was hit. Call it whenever you want - on click, on hover, every frame - nothing runs on its own. It only needs a ref to the mounted pass, not the `<EffectComposer>` context itself, so it works anywhere under `<Canvas>`:
+
+```tsx
+const pickRef = useRef<DepthPickingApi>(null)
+
+function Cursor() {
+  const getHit = useDepthPicking(pickRef)
+  const meshRef = useRef<THREE.Mesh>(null)
+  useFrame(async ({ pointer }) => {
+    const hit = await getHit(pointer.x, pointer.y)
+    if (hit) meshRef.current?.position.copy(hit)
+  })
+  return (
+    <mesh ref={meshRef}>
+      <sphereGeometry args={[0.1, 16, 16]} />
+      {/* depthWrite false - see the warning below */}
+      <meshBasicMaterial color="white" depthWrite={false} />
+    </mesh>
+  )
+}
+
+return (
+  <>
+    <EffectComposer>
+      <DepthPicking ref={pickRef} />
+    </EffectComposer>
+    <Cursor />
+  </>
+)
+```
+
+It unprojects using the `<EffectComposer>`'s own camera when called from inside it - the same one the pass renders depth from - falling back to r3f's own camera otherwise. Called from outside that `<EffectComposer>` (like `Cursor` above) with a non-default camera, pass that same camera as the second argument explicitly.
+
+**If you render something at the picked position** (a cursor, a placement preview, ...), give its material `depthWrite={false}`. Depth is read from the same buffer everything else renders into - without this, your own marker sits at the last hitpoint, gets sampled by the *next* pick as the closest surface there, and the marker creeps toward the camera every frame, faster as it gets closer, until it resets and repeats. (`Autofocus`'s own debug markers already do this.)
+
+Click-to-pick instead of every frame:
+
+```tsx
+const hit = await getHit(pointerNdcX, pointerNdcY)
+if (hit) character.moveTo(hit)
+```
