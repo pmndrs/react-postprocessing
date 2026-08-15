@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   resolve: {
     alias: {
-      '@react-three/postprocessing': path.resolve(__dirname, 'src/index.ts'),
+      '@react-three/postprocessing': path.resolve(import.meta.dirname, 'src/index.ts'),
     },
   },
   build: {
