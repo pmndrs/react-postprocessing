@@ -42,12 +42,14 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
-          package-manager-cache: false
+          cache: 'pnpm'
 
       - name: Verify release version
         env:
@@ -60,16 +62,16 @@ jobs:
           fi
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: yarn eslint:ci
+        run: pnpm eslint:ci
 
       - name: Test
-        run: yarn test
+        run: pnpm test
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Publish package
         env:

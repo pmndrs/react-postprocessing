@@ -11,6 +11,7 @@
     "3d"
   ],
   "license": "MIT",
+  "packageManager": "pnpm@11.15.1",
   "files": [
     "dist",
     "src"
