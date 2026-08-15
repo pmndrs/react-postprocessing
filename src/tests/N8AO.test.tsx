@@ -2,7 +2,7 @@ import { CopyPass, EffectComposer as EffectComposerImpl } from 'postprocessing'
 import * as React from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
-import { N8AO } from '../effects/N8AO'
+import { N8AO } from '../passes/N8AO'
 import { flush, root, waitForComposer } from './test-utils'
 
 describe('N8AO', () => {
