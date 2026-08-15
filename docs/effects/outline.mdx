@@ -7,7 +7,7 @@ An outline effect.
 
 ```jsx
 import { Outline } from '@react-three/postprocessing'
-import { BlendFunction, Resizer, KernelSize } from 'postprocessing'
+import { BlendFunction, Resolution, KernelSize } from 'postprocessing'
 
 return (
   <Outline
@@ -15,33 +15,45 @@ return (
     selectionLayer={10} // selection layer
     blendFunction={BlendFunction.SCREEN} // set this to BlendFunction.ALPHA for dark outlines
     patternTexture={null} // a pattern texture
-    edgeStrength={2.5} // the edge strength
+    patternScale={1.0} // the pattern texture scale
+    edgeStrength={1.0} // the edge strength
     pulseSpeed={0.0} // a pulse speed. A value of zero disables the pulse effect
     visibleEdgeColor={0xffffff} // the color of visible edges
     hiddenEdgeColor={0x22090a} // the color of hidden edges
-    width={Resizer.AUTO_SIZE} // render width
-    height={Resizer.AUTO_SIZE} // render height
-    kernelSize={KernelSize.LARGE} // blur kernel size
+    multisampling={0} // the number of samples used for multisample antialiasing, requires WebGL 2
+    resolutionScale={0.5} // render resolution scale
+    resolutionX={Resolution.AUTO_SIZE} // render width
+    resolutionY={Resolution.AUTO_SIZE} // render height
+    kernelSize={KernelSize.VERY_SMALL} // blur kernel size
     blur={false} // whether the outline should be blurred
     xRay={true} // indicates whether X-Ray outlines are enabled
   />
 )
 ```
 
+## Example
+
+[![Outline demo](https://pmndrs.github.io/examples/react-pp-outlines/thumbnail.webp)](https://pmndrs.github.io/examples/react-pp-outlines/)
+
 ## Props
 
-| Name             | Type          | Default               | Description                                                   |
-| ---------------- | ------------- | --------------------- | ------------------------------------------------------------- |
-| selection        | Objects       |                       | Selection of objects that will be outlined                    |
-| blendFunction    | BlendFunction | BlendFunction.SCREEN  | The blend function of this effect.                            |
-| width            | Number        | Resizer.AUTO_SIZE     | The render width.                                             |
-| height           | Number        | Resizer.AUTO_SIZE     | The render height.                                            |
-| selectionLayer   | Number        |                       | The selection layer                                           |
-| patternTexture   | THREE.Texture | null                  | A pattern texture                                             |
-| edgeStrength     | Number        | 1                     | The edge strength                                             |
-| pulseSpeed       | Number        | 0                     | The pulse speed. A value of zero disables the pulse effect.   |
-| visibleEdgeColor | ColorRepresentation | 0xffffff        | The color of visible edges.                                   |
-| hiddenEdgeColor  | ColorRepresentation | 0x22090a        | The color of hidden edges.                                    |
-| kernelSize       | KernelSize    | KernelSize.VERY_SMALL | The blur kernel size.                                         |
-| blur             | Boolean       | false                 | Whether the outline should be blurred.                        |
-| xray             | Boolean       | true                  | Whether occluded parts of selected objects should be visible. |
+| Name             | Type                 | Default                | Description                                                                          |
+| ---------------- | -------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
+| selection        | Objects              |                        | Selection of objects that will be outlined                                            |
+| selectionLayer   | Number               | 10                     | The selection layer                                                                   |
+| blendFunction    | BlendFunction        | BlendFunction.SCREEN   | The blend function of this effect.                                                    |
+| patternTexture   | THREE.Texture        | null                   | A pattern texture.                                                                    |
+| patternScale     | Number               | 1.0                    | The pattern texture scale.                                                            |
+| edgeStrength     | Number               | 1.0                    | The edge strength.                                                                    |
+| pulseSpeed       | Number               | 0                      | The pulse speed. A value of zero disables the pulse effect.                           |
+| visibleEdgeColor | ColorRepresentation  | 0xffffff               | The color of visible edges.                                                           |
+| hiddenEdgeColor  | ColorRepresentation  | 0x22090a               | The color of hidden edges.                                                            |
+| multisampling    | Number               | 0                      | The number of samples used for multisample antialiasing. Requires WebGL 2.            |
+| resolutionScale  | Number               | 0.5                    | The render resolution scale. Applied at construction only.                            |
+| resolutionX      | Number               | Resolution.AUTO_SIZE   | The render width. Applied at construction only.                                       |
+| resolutionY      | Number               | Resolution.AUTO_SIZE   | The render height. Applied at construction only.                                      |
+| width            | Number               | Resizer.AUTO_SIZE      | The render width. Unlike `resolutionX`, updates live without reconstructing the effect. |
+| height           | Number               | Resizer.AUTO_SIZE      | The render height. Unlike `resolutionY`, updates live without reconstructing the effect. |
+| kernelSize       | KernelSize           | KernelSize.VERY_SMALL  | The blur kernel size.                                                                 |
+| blur             | Boolean              | false                  | Whether the outline should be blurred.                                                |
+| xRay             | Boolean              | true                   | Whether occluded parts of selected objects should be visible.                         |

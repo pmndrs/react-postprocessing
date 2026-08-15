@@ -11,36 +11,46 @@ Attention: If you don't need to limit bloom to a subset of objects, consider usi
 
 ```jsx
 import { SelectiveBloom } from '@react-three/postprocessing'
-import { BlurPass, Resizer, KernelSize } from 'postprocessing'
+import { BlendFunction, Resolution, KernelSize } from 'postprocessing'
 
 return (
   <SelectiveBloom
     lights={[lightRef1, lightRef2]} // ⚠️ REQUIRED! all relevant lights
-    selection={[meshRef1, meshRef2]} // selection of objects that will have bloom effect
+    selection={[meshRef1, meshRef2]} // selection of objects that will have the bloom effect
     selectionLayer={10} // selection layer
-    intensity={1.0} // The bloom intensity.
-    blurPass={undefined} // A blur pass.
-    width={Resizer.AUTO_SIZE} // render width
-    height={Resizer.AUTO_SIZE} // render height
-    kernelSize={KernelSize.LARGE} // blur kernel size
-    luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
-    luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
+    inverted={false} // consider the selection inverted
+    ignoreBackground={false} // discard the background of the selection
+    luminanceThreshold={1.0} // luminance threshold. Raise this value to mask out darker elements in the scene.
+    luminanceSmoothing={0.03} // smoothness of the luminance threshold. Range is [0, 1]
+    mipmapBlur={true} // enables/disables mipmap blur
+    intensity={1.0} // the bloom intensity
+    radius={0.85} // the blur radius, only applies to mipmap blur
+    levels={8} // the amount of MIP levels, only applies to mipmap blur
+    kernelSize={KernelSize.LARGE} // blur kernel size, ignored if mipmapBlur is enabled
+    resolutionScale={0.5} // render resolution scale, ignored if mipmapBlur is enabled
+    resolutionX={Resolution.AUTO_SIZE} // render width, ignored if mipmapBlur is enabled
+    resolutionY={Resolution.AUTO_SIZE} // render height, ignored if mipmapBlur is enabled
   />
 )
 ```
 
 ## Props
 
-| Name               | Type                                                                                                         | Default              | Description                                                                                          |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------- |
-| selection          | Objects                                                                                                      |                      | Selection of objects that will be outlined                                                           |
-| lights             | Lights                                                                                                       |                      | All lights that will affect the effect                                                               |
-| blendFunction      | BlendFunction                                                                                                | BlendFunction.SCREEN | The blend function of this effect.                                                                   |
-| width              | Number                                                                                                       | Resizer.AUTO_SIZE    | The render width.                                                                                    |
-| height             | Number                                                                                                       | Resizer.AUTO_SIZE    | The render height.                                                                                   |
-| selectionLayer     | Number                                                                                                       |                      | The selection layer                                                                                  |
-| blurPass           | [BlurPass](https://vanruesc.github.io/postprocessing/public/docs/class/src/passes/BlurPass.js~BlurPass.html) | null                 | An efficient, incremental blur pass.                                                                 |
-| kernelSize         | KernelSize                                                                                                   | KernelSize.LARGE     | The blur kernel size.                                                                                |
-| luminanceThreshold | Number                                                                                                       | 0.9                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
-| luminanceSmoothing | Number                                                                                                       | 0.025                | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
-| intensity          | Number                                                                                                       | 1                    | Intensity of the effect                                                                              |
+| Name               | Type          | Default              | Description                                                                                          |
+| ------------------ | ------------- | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| selection          | Objects       |                      | Selection of objects that will have the bloom effect                                                 |
+| lights             | Lights        |                      | All lights that will affect the effect - required                                                    |
+| selectionLayer     | Number        | 10                   | The selection layer                                                                                  |
+| inverted           | Boolean       | false                | Consider the selection inverted.                                                                     |
+| ignoreBackground   | Boolean       | false                | Discard the background of the selection.                                                             |
+| blendFunction      | BlendFunction | BlendFunction.SCREEN | The blend function of this effect.                                                                   |
+| luminanceThreshold | Number        | 1.0                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
+| luminanceSmoothing | Number        | 0.03                 | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
+| mipmapBlur         | Boolean       | true                 | Enables or disables mipmap blur.                                                                     |
+| intensity          | Number        | 1.0                  | The bloom intensity.                                                                                 |
+| radius             | Number        | 0.85                 | The blur radius. Only applies to mipmap blur.                                                        |
+| levels             | Number        | 8                    | The amount of MIP levels. Only applies to mipmap blur.                                               |
+| kernelSize         | KernelSize    | KernelSize.LARGE     | The blur kernel size. Ignored if `mipmapBlur` is enabled.                                            |
+| resolutionScale    | Number        | 0.5                  | The render resolution scale. Ignored if `mipmapBlur` is enabled.                                     |
+| resolutionX        | Number        | Resolution.AUTO_SIZE | The render width. Ignored if `mipmapBlur` is enabled.                                                |
+| resolutionY        | Number        | Resolution.AUTO_SIZE | The render height. Ignored if `mipmapBlur` is enabled.                                               |

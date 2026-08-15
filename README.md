@@ -1,7 +1,7 @@
 # react-postprocessing
 
 [![Version](https://img.shields.io/npm/v/@react-three/postprocessing?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
-[![Storybook](https://img.shields.io/static/v1?message=Storybook&style=flat&colorA=000000&colorB=000000&label=&logo=storybook&logoColor=ffffff)](https://pmndrs.github.io/react-postprocessing)
+[![Docs](https://img.shields.io/static/v1?message=Docs&style=flat&colorA=000000&colorB=000000&label=&logo=googledocs&logoColor=ffffff)](https://pmndrs.github.io/react-postprocessing)
 [![Downloads](https://img.shields.io/npm/dt/@react-three/postprocessing.svg?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@react-three/postprocessing)
 [![Discord Shield](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/ZZjjNvJ)
 [![Open in GitHub Codespaces](https://img.shields.io/static/v1?&message=Open%20in%20%20Codespaces&style=flat&colorA=000000&colorB=000000&label=GitHub&logo=github&logoColor=ffffff)](https://github.com/codespaces/new?template_repository=pmndrs%2Freact-postprocessing)
@@ -18,8 +18,8 @@ npm install @react-three/postprocessing
 ```
 
 <p align="center">
-  <a href="https://pqrpl.csb.app" target="_blank"><img width="274" src="bubbles.jpg" alt="Bubbles" /></a>
-  <a href="https://5jgjz.csb.app" target="_blank"><img width="274" src="control.jpg" alt="Take Control" /></a>
+  <a href="https://pmndrs.github.io/examples/bubbles" target="_blank"><img width="274" src="https://pmndrs.github.io/examples/bubbles/thumbnail.webp" alt="Bubbles" /></a>
+  <a href="https://pmndrs.github.io/examples/take-control" target="_blank"><img width="274" src="https://pmndrs.github.io/examples/take-control/thumbnail.webp" alt="Take Control" /></a>
 </p>
 <p align="middle">
   <i>These demos are real, you can click them! They contain the full code, too. 📦</i>
@@ -49,14 +49,13 @@ get high performance crisp results w/o jagged edges.
 #### What does it look like?
 
 Here's an example combining a couple of effects
-([live demo](https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?)).
+([live demo](https://pmndrs.github.io/examples/bubbles)).
 
-<a href="https://codesandbox.io/s/react-postprocessing-dof-blob-pqrpl?" target="_blank" rel="noopener">
-<img src="bubbles.jpg" alt="Bubbles Demo" />
+<a href="https://pmndrs.github.io/examples/bubbles" target="_blank" rel="noopener">
+<img src="https://pmndrs.github.io/examples/bubbles/thumbnail.webp" alt="Bubbles Demo" />
 </a>
 
 ```jsx
-import React from 'react'
 import { Bloom, DepthOfField, EffectComposer, Noise, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
 
