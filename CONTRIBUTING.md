@@ -14,13 +14,3 @@ You can also just [![Open in GitHub Codespaces](https://img.shields.io/static/v1
 ## Commit Guidelines
 
 Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
-
-## Publishing
-
-We use `semantic-release` to deploy the package. Because of this only certain commits will trigger the action of creating a release:
-
-- `fix:` will create a `0.0.x` version
-- `feat:` will create a `0.x.0` version
-- `BREAKING CHANGE:` will create a `x.0.0` version
-
-We release on `master` branch. Any other commits will not fire a release.
