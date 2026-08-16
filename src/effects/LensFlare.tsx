@@ -1,7 +1,7 @@
 // Created by Anderson Mancini 2023
 // From https://github.com/ektogamat/R3F-Ultimate-Lens-Flare
 
-import { useFrame, useThree } from '@react-three/fiber'
+import { useFrame, useThree, type ReactThreeFiber } from '@react-three/fiber'
 import { easing } from 'maath'
 import { BlendFunction, Effect } from 'postprocessing'
 import { useContext, useEffect, useRef, useState, type Ref } from 'react'
@@ -9,6 +9,7 @@ import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three'
 
 import { createEffectComponent } from '../createEffectComponent'
 import { EffectComposerContext } from '../EffectComposer'
+import { useVector3 } from '../util'
 
 const LensFlareShader = {
   fragmentShader: /* glsl */ `
@@ -629,12 +630,12 @@ export class LensFlareEffect extends Effect {
   }
 }
 
-type LensFlareProps = {
+type LensFlareProps = Omit<Partial<LensFlareEffectOptions>, 'lensPosition'> & {
   /** Position of the effect */
-  lensPosition?: Vector3
+  lensPosition?: ReactThreeFiber.Vector3
   /** The time that it takes to fade the occlusion */
   smoothTime?: number
-} & Partial<LensFlareEffectOptions>
+}
 
 const LensFlareWrapped = /* @__PURE__ */ createEffectComponent<
   typeof LensFlareEffect,
@@ -648,29 +649,34 @@ const LensFlareWrapped = /* @__PURE__ */ createEffectComponent<
 // mutated (only ever copied *from*), so it's safe to share across instances.
 const DEFAULT_SCREEN_RES = /* @__PURE__ */ new Vector2(0, 0)
 
-export const LensFlare = ({
-  smoothTime = 0.07,
-  //
-  blendFunction = BlendFunction.NORMAL,
-  enabled = true,
-  glareSize = 0.2,
-  lensPosition = new Vector3(-25, 6, -60),
-  screenRes,
-  starPoints = 6,
-  flareSize = 0.01,
-  flareSpeed = 0.01,
-  flareShape = 0.01,
-  animated = true,
-  anamorphic = false,
-  colorGain = new Color(20, 20, 20),
-  lensDirtTexture = null,
-  haloScale = 0.5,
-  secondaryGhosts = true,
-  aditionalStreaks = true,
-  ghostScale = 0.0,
-  opacity = 1.0,
-  starBurst = false,
-}: LensFlareProps) => {
+// Same reasoning as DEFAULT_SCREEN_RES above - shared, read-only default.
+const DEFAULT_LENS_POSITION = /* @__PURE__ */ new Vector3(-25, 6, -60)
+
+export const LensFlare = (props: LensFlareProps) => {
+  const {
+    smoothTime = 0.07,
+    blendFunction = BlendFunction.NORMAL,
+    enabled = true,
+    glareSize = 0.2,
+    screenRes,
+    starPoints = 6,
+    flareSize = 0.01,
+    flareSpeed = 0.01,
+    flareShape = 0.01,
+    animated = true,
+    anamorphic = false,
+    colorGain = new Color(20, 20, 20),
+    lensDirtTexture = null,
+    haloScale = 0.5,
+    secondaryGhosts = true,
+    aditionalStreaks = true,
+    ghostScale = 0.0,
+    opacity = 1.0,
+    starBurst = false,
+  } = props
+
+  const lensPosition = useVector3({ lensPosition: props.lensPosition ?? DEFAULT_LENS_POSITION }, 'lensPosition')
+
   const viewport = useThree(({ viewport }) => viewport)
   const raycaster = useThree(({ raycaster }) => raycaster)
   const { scene, camera } = useContext(EffectComposerContext)
@@ -685,7 +691,7 @@ export const LensFlare = ({
     const uOpacity = ref.current.uniforms.get('opacity')
     if (!uLensPosition || !uOpacity) return
 
-    let target = 1
+    let target = 0
 
     projectedPosition.copy(lensPosition).project(camera)
     if (projectedPosition.z > 1) return
@@ -699,6 +705,7 @@ export const LensFlare = ({
     const intersects = raycaster.intersectObjects(scene.children, true)
     const { object } = intersects[0] || {}
     if (object) {
+      target = 1
       if (object.userData?.lensflare === 'no-occlusion') {
         target = 0
       } else if (object instanceof Mesh) {

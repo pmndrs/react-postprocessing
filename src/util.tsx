@@ -1,7 +1,7 @@
 import { useThree, type Instance, type ReactThreeFiber } from '@react-three/fiber'
 import type { Selection as PPSelection } from 'postprocessing'
 import { use, useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from 'react'
-import { Group, Object3D, Vector2, type Vector2Tuple } from 'three'
+import { Group, Object3D, Vector2, Vector3, type Vector2Tuple, type Vector3Tuple } from 'three'
 import { selectionContext } from './Selection'
 
 // Stable reference for array-typed props defaulting to "nothing" - `= []`
@@ -118,7 +118,9 @@ export function useLiveDefaults<T extends object>(
   get: (instance: T, key: string) => unknown = readPierced,
   set: (instance: T, key: string, value: unknown) => void = applyPierced
 ): void {
-  const snapshotRef = useRef<{ instance: T; defaults: Map<string, unknown>; applied: Map<string, unknown> } | null>(null)
+  const snapshotRef = useRef<{ instance: T; defaults: Map<string, unknown>; applied: Map<string, unknown> } | null>(
+    null
+  )
   const invalidate = useThree((state) => state.invalidate)
 
   useLayoutEffect(() => {
@@ -161,10 +163,34 @@ export const useVector2 = (props: Record<string, unknown>, key: string): Vector2
       return new Vector2(value, value)
     }
 
+    if (value instanceof Vector2) {
+      return value
+    }
+
     if (value) {
       return new Vector2(...(value as Vector2Tuple))
     }
 
     return new Vector2()
+  }, [value])
+}
+
+export const useVector3 = (props: Record<string, unknown>, key: string): Vector3 => {
+  const value = props[key] as ReactThreeFiber.Vector3 | undefined
+
+  return useMemo(() => {
+    if (typeof value === 'number') {
+      return new Vector3(value, value, value)
+    }
+
+    if (value instanceof Vector3) {
+      return value
+    }
+
+    if (value) {
+      return new Vector3(...(value as Vector3Tuple))
+    }
+
+    return new Vector3()
   }, [value])
 }

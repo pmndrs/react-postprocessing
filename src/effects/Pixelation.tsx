@@ -1,4 +1,3 @@
-import type { BlendFunction } from 'postprocessing'
 import { PixelationEffect } from 'postprocessing'
 import type { Ref } from 'react'
 import { createEffectComponent } from '../createEffectComponent'
@@ -13,11 +12,9 @@ const PixelationImpl = /* @__PURE__ */ createEffectComponent<typeof PixelationEf
 
 export type PixelationProps = {
   granularity?: number
-  blendFunction?: BlendFunction
-  opacity?: number
   ref?: Ref<PixelationEffect>
 }
 
-export function Pixelation({ granularity = 5, blendFunction, opacity, ref }: PixelationProps) {
-  return <PixelationImpl granularity={granularity} blendFunction={blendFunction} opacity={opacity} ref={ref} />
+export function Pixelation({ granularity = 5, ref }: PixelationProps) {
+  return <PixelationImpl granularity={granularity} ref={ref} />
 }
