@@ -1,6 +1,6 @@
 import { useThree, type Instance, type ReactThreeFiber } from '@react-three/fiber'
 import type { Selection as PPSelection } from 'postprocessing'
-import { use, useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from 'react'
+import { use, useCallback, useEffect, useLayoutEffect, useMemo, useRef, type Ref, type RefObject } from 'react'
 import { Group, Object3D, Vector2, Vector3, type Vector2Tuple, type Vector3Tuple } from 'three'
 import { selectionContext } from './Selection'
 
@@ -11,6 +11,31 @@ export const EMPTY_ARRAY: never[] = []
 
 export const resolveRef = <T,>(ref: T | RefObject<T>) =>
   typeof ref === 'object' && ref != null && 'current' in ref ? ref.current : ref
+
+// Merges a local ref with a caller-supplied ref (object or callback form).
+// Clears localRef inside the callback ref's own returned cleanup, since
+// React 19 never re-invokes it with null once it returns one.
+export function useMergeRefs<T>(
+  localRef: RefObject<T | null>,
+  outerRef: Ref<T> | undefined
+): (instance: T | null) => void | (() => void) {
+  return useCallback(
+    (instance: T | null) => {
+      localRef.current = instance
+      if (typeof outerRef !== 'function') {
+        if (outerRef) outerRef.current = instance
+        return
+      }
+      const cleanup = outerRef(instance)
+      if (typeof cleanup !== 'function') return
+      return () => {
+        localRef.current = null
+        cleanup()
+      }
+    },
+    [localRef, outerRef]
+  )
+}
 
 // Reads a <group>'s direct r3f children, filtered by type - transparent to
 // non-host wrapper components, since r3f's instance tree already is.

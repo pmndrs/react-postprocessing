@@ -70,7 +70,7 @@ type SmokeCase = {
   composerProps?: Record<string, unknown>
   /** Extra scene content the effect needs (e.g. a sun mesh for GodRays). */
   extras?: React.ReactNode
-  /** Renders the effect element. `ref` may be ignored by effects that don't forward one (e.g. LensFlare). */
+  /** Renders the effect element. */
   effect: (ref: React.Ref<any>) => React.ReactElement
 }
 
@@ -98,8 +98,7 @@ const SMOKE_CASES: SmokeCase[] = [
   },
   { file: 'Grid.tsx', label: 'Grid', effect: (ref) => <Grid ref={ref} /> },
   { file: 'HueSaturation.tsx', label: 'HueSaturation', effect: (ref) => <HueSaturation ref={ref} /> },
-  // LensFlare manages its own internal ref and doesn't accept one as a prop.
-  { file: 'LensFlare.tsx', label: 'LensFlare', effect: () => <LensFlare /> },
+  { file: 'LensFlare.tsx', label: 'LensFlare', effect: (ref) => <LensFlare ref={ref} /> },
   { file: 'LUT.tsx', label: 'LUT', effect: (ref) => <LUT ref={ref} lut={lutTexture} /> },
   { file: 'N8AO.tsx', label: 'N8AO', effect: (ref) => <N8AO ref={ref} /> },
   { file: 'Noise.tsx', label: 'Noise', effect: (ref) => <Noise ref={ref} /> },

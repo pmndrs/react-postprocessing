@@ -9,7 +9,7 @@ import { Color, Mesh, Texture, Uniform, Vector2, Vector3 } from 'three'
 
 import { createEffectComponent } from '../createEffectComponent'
 import { EffectComposerContext } from '../EffectComposer'
-import { useVector3 } from '../util'
+import { useMergeRefs, useVector3 } from '../util'
 
 const LensFlareShader = {
   fragmentShader: /* glsl */ `
@@ -635,6 +635,7 @@ type LensFlareProps = Omit<Partial<LensFlareEffectOptions>, 'lensPosition'> & {
   lensPosition?: ReactThreeFiber.Vector3
   /** The time that it takes to fade the occlusion */
   smoothTime?: number
+  ref?: Ref<LensFlareEffect>
 }
 
 const LensFlareWrapped = /* @__PURE__ */ createEffectComponent<
@@ -654,6 +655,7 @@ const DEFAULT_LENS_POSITION = /* @__PURE__ */ new Vector3(-25, 6, -60)
 
 export const LensFlare = (props: LensFlareProps) => {
   const {
+    ref: forwardedRef,
     smoothTime = 0.07,
     blendFunction = BlendFunction.NORMAL,
     enabled = true,
@@ -684,6 +686,7 @@ export const LensFlare = (props: LensFlareProps) => {
   const [projectedPosition] = useState(() => new Vector3())
 
   const ref = useRef<LensFlareEffect>(null)
+  const setRef = useMergeRefs(ref, forwardedRef)
 
   useFrame((_, delta) => {
     if (!ref?.current) return
@@ -737,7 +740,7 @@ export const LensFlare = (props: LensFlareProps) => {
 
   return (
     <LensFlareWrapped
-      ref={ref}
+      ref={setRef}
       blendFunction={blendFunction}
       enabled={enabled}
       glareSize={glareSize}

@@ -1,8 +1,8 @@
 import { extend, useThree } from '@react-three/fiber'
 import type { BlendFunction, Effect, Pass } from 'postprocessing'
 import type { ExoticComponent, JSX, Ref } from 'react'
-import { useCallback, useRef } from 'react'
-import { useLiveDefaults } from './util'
+import { useRef } from 'react'
+import { useLiveDefaults, useMergeRefs } from './util'
 
 export type EffectConstructor = new (...args: any[]) => Effect | Pass
 
@@ -58,28 +58,7 @@ export function createEffectComponent<T extends EffectConstructor, P extends obj
 
     const camera = useThree((state) => state.camera)
     const localRef = useRef<InstanceType<T>>(null)
-
-    // Forwards ref's own return value: r3f's setFiberRef (React 19-style ref
-    // cleanup) calls the ref function again only if it *didn't* return one,
-    // otherwise it stores and calls that instead - never re-invoking this
-    // function with null. So localRef must be cleared from inside that same
-    // returned cleanup, not left for a null call that will never come.
-    const setRef = useCallback(
-      (instance: InstanceType<T> | null) => {
-        localRef.current = instance
-        if (typeof ref !== 'function') {
-          if (ref) ref.current = instance
-          return
-        }
-        const cleanup = ref(instance)
-        if (typeof cleanup !== 'function') return
-        return () => {
-          localRef.current = null
-          cleanup()
-        }
-      },
-      [ref]
-    )
+    const setRef = useMergeRefs(localRef, ref)
 
     useLiveDefaults(
       localRef,
