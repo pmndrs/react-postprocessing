@@ -1,0 +1,28 @@
+---
+title: Texture
+nav: 1
+---
+
+Blends a texture over the scene. Give it a URL via `textureSrc` and it loads (and suspends on) the texture itself - pass an already-loaded `THREE.Texture` via `texture` instead if you're loading it yourself.
+
+```jsx
+import { Texture } from '@react-three/postprocessing'
+
+return (
+  <Texture
+    textureSrc="/texture.png" // loads the texture for you
+    opacity={1} // opacity of the texture
+    aspectCorrection={false} // deprecated - adjust the texture's offset/repeat/center instead
+  />
+)
+```
+
+## Props
+
+| Name             | Type    | Default | Description                                                                        |
+| ----------------- | ------- | -------- | ------------------------------------------------------------------------------------- |
+| textureSrc        | String  |          | URL of the texture to load.                                                        |
+| texture           | Texture |          | An already-loaded texture - alternative to `textureSrc`.                           |
+| blendFunction     | BlendFunction |    | The blend function of this effect.                                                 |
+| opacity           | Number  | 1        | The opacity of the texture.                                                        |
+| aspectCorrection  | Boolean | false    | Deprecated. Adjust the texture's offset, repeat and center instead.                |

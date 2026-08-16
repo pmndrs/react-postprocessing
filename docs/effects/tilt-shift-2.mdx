@@ -1,0 +1,35 @@
+---
+title: TiltShift2
+nav: 1
+---
+
+An alternate tilt-shift implementation with direct control over the blurred band's start/end points and blur direction, instead of a single centered focus-area size. For the simpler, centered version, see [TiltShift](/effects/tilt-shift).
+
+```jsx
+import { TiltShift2 } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <TiltShift2
+    blendFunction={BlendFunction.NORMAL} // the blend function of this effect
+    blur={0.15} // the blur intensity, [0, 1] (can go beyond 1)
+    taper={0.5} // the size of the sharp/in-focus area, [0, 1] (can go beyond 1)
+    start={[0.5, 0.0]} // start point of the blur band, in screen-space percent [0, 1]
+    end={[0.5, 1.0]} // end point of the blur band, in screen-space percent [0, 1]
+    samples={10} // number of blur samples
+    direction={[1, 1]} // direction of the blur
+  />
+)
+```
+
+## Props
+
+| Name          | Type          | Default          | Description                                              |
+| ------------- | ------------- | ------------------ | ------------------------------------------------------------ |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                      |
+| blur          | Number        | 0.15                | The blur intensity. Range [0, 1] (can exceed 1 for extra). |
+| taper         | Number        | 0.5                 | The size of the sharp/in-focus area. Range [0, 1] (can exceed 1). |
+| start         | [Number, Number] | [0.5, 0.0]        | Start point of the blur band, in screen-space percent.  |
+| end           | [Number, Number] | [0.5, 1.0]        | End point of the blur band, in screen-space percent.    |
+| samples       | Number        | 10                   | The number of blur samples.                              |
+| direction     | [Number, Number] | [1, 1]            | The direction of the blur.                                |
