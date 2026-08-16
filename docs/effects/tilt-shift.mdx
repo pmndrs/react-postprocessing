@@ -1,0 +1,37 @@
+---
+title: TiltShift
+nav: 1
+---
+
+A tilt-shift blur effect, simulating a shallow depth of field along a band across the screen - the classic "miniature model" look. For a version with more direct control over the band's start/end/direction, see [TiltShift2](/effects/tilt-shift-2).
+
+```jsx
+import { TiltShift } from '@react-three/postprocessing'
+import { BlendFunction, KernelSize } from 'postprocessing'
+
+return (
+  <TiltShift
+    blendFunction={BlendFunction.ADD} // the blend function of this effect
+    offset={0.0} // the relative offset of the focus area
+    rotation={0.0} // the rotation of the focus area, in radians
+    focusArea={0.4} // the relative size of the focus area
+    feather={0.3} // the softness of the focus area edges
+    kernelSize={KernelSize.MEDIUM} // the blur kernel size
+    resolutionScale={0.5} // the resolution scale
+  />
+)
+```
+
+## Props
+
+| Name            | Type          | Default              | Description                             |
+| ---------------- | ------------- | ---------------------- | ------------------------------------------ |
+| blendFunction    | BlendFunction | BlendFunction.ADD      | The blend function of this effect.       |
+| offset           | Number        | 0.0                     | The relative offset of the focus area.   |
+| rotation         | Number        | 0.0                     | The rotation of the focus area, in radians. |
+| focusArea        | Number        | 0.4                     | The relative size of the focus area.     |
+| feather          | Number        | 0.3                     | The softness of the focus area edges.    |
+| kernelSize       | KernelSize    | KernelSize.MEDIUM       | The blur kernel size.                    |
+| resolutionScale  | Number        | 0.5                     | The resolution scale.                    |
+| resolutionX      | Number        | Resolution.AUTO_SIZE    | The horizontal resolution.               |
+| resolutionY      | Number        | Resolution.AUTO_SIZE    | The vertical resolution.                 |

@@ -1,0 +1,31 @@
+---
+title: FXAA
+nav: 1
+---
+
+Fast Approximate Anti-Aliasing - a cheap, single-pass alternative to [SMAA](/effects/smaa) with lower visual quality but better performance.
+
+```jsx
+import { FXAA } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <FXAA
+    blendFunction={BlendFunction.SRC} // the blend function of this effect
+    minEdgeThreshold={0.0312} // the minimum edge detection threshold
+    maxEdgeThreshold={0.125} // the maximum edge detection threshold
+    subpixelQuality={0.75} // the subpixel blend quality
+    samples={12} // the maximum amount of edge detection samples
+  />
+)
+```
+
+## Props
+
+| Name              | Type          | Default            | Description                                            |
+| ----------------- | ------------- | -------------------- | -------------------------------------------------------- |
+| blendFunction     | BlendFunction | BlendFunction.SRC    | The blend function of this effect.                      |
+| minEdgeThreshold  | Number        | 0.0312               | The minimum edge detection threshold. Range [0.0, 1.0]. |
+| maxEdgeThreshold  | Number        | 0.125                 | The maximum edge detection threshold. Range [0.0, 1.0]. |
+| subpixelQuality   | Number        | 0.75                  | The subpixel blend quality. Range [0.0, 1.0].           |
+| samples           | Number        | 12                     | The maximum amount of edge detection samples.           |

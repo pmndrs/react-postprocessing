@@ -1,0 +1,25 @@
+---
+title: Water
+nav: 1
+---
+
+A screen-space water/heat-haze style distortion, animated over time.
+
+```jsx
+import { WaterEffect } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <WaterEffect
+    blendFunction={BlendFunction.NORMAL} // the blend function of this effect
+    factor={0} // the distortion strength
+  />
+)
+```
+
+## Props
+
+| Name          | Type          | Default              | Description                          |
+| ------------- | ------------- | ---------------------- | ---------------------------------------- |
+| blendFunction | BlendFunction | BlendFunction.NORMAL    | The blend function of this effect.   |
+| factor        | Number        | 0                       | The distortion strength.             |
