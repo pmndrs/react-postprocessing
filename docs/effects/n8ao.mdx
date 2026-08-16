@@ -1,0 +1,44 @@
+---
+title: N8AO
+nav: 1
+---
+
+A fast, high quality ambient occlusion effect, wrapping [N8python/n8ao](https://github.com/N8python/n8ao). Self-contained - unlike [SSAO](/effects/ssao), it does not need `enableNormalPass` on `<EffectComposer>`.
+
+```jsx
+import { N8AO } from '@react-three/postprocessing'
+
+return (
+  <N8AO
+    aoRadius={5} // ambient occlusion sampling radius
+    distanceFalloff={1} // distance falloff
+    intensity={1} // effect intensity
+    quality="performance" // 'performance' | 'low' | 'medium' | 'high' | 'ultra'
+    aoSamples={16} // amount of ambient occlusion samples per frame
+    denoiseSamples={4} // amount of denoise samples per frame
+    denoiseRadius={12} // denoise sampling radius
+    color={undefined} // tints the occlusion, defaults to black
+    halfRes={false} // renders the effect at half resolution
+    depthAwareUpsampling={true} // enables or disables depth-aware upsampling
+    screenSpaceRadius={false} // scales the sampling radius with distance from the camera
+    renderMode={0} // 0: Combined, 1: AO only, 2: No AO, 3: Split, 4: Split AO
+  />
+)
+```
+
+## Props
+
+| Name                 | Type                                                    | Default       | Description                                               |
+| -------------------- | ------------------------------------------------------- | ------------- | --------------------------------------------------------- |
+| aoRadius             | Number                                                  | 5             | The ambient occlusion sampling radius.                    |
+| distanceFalloff      | Number                                                  | 1             | The distance falloff.                                     |
+| intensity            | Number                                                  | 1             | The effect intensity.                                     |
+| quality              | 'performance' \| 'low' \| 'medium' \| 'high' \| 'ultra' | 'performance' | The quality preset.                                       |
+| aoSamples            | Number                                                  | 16            | The amount of ambient occlusion samples per frame.        |
+| denoiseSamples       | Number                                                  | 4             | The amount of denoise samples per frame.                  |
+| denoiseRadius        | Number                                                  | 12            | The denoise sampling radius.                              |
+| color                | Color                                                   | undefined     | Tints the occlusion. Defaults to black.                   |
+| halfRes              | Boolean                                                 | false         | Renders the effect at half resolution.                    |
+| depthAwareUpsampling | Boolean                                                 | true          | Enables or disables depth-aware upsampling.               |
+| screenSpaceRadius    | Boolean                                                 | false         | Scales the sampling radius with distance from the camera. |
+| renderMode           | 0 \| 1 \| 2 \| 3 \| 4                                   | 0             | 0: Combined, 1: AO only, 2: No AO, 3: Split, 4: Split AO. |

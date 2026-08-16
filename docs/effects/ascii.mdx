@@ -1,0 +1,32 @@
+---
+title: ASCII
+nav: 1
+---
+
+Renders the scene as ASCII art, mapping pixel luminance to characters drawn onto a canvas-based character atlas. Adapted from [emilwidlund/ASCII](https://github.com/emilwidlund/ASCII).
+
+```jsx
+import { ASCII } from '@react-three/postprocessing'
+
+return (
+  <ASCII
+    font="arial" // font family used to draw the character atlas
+    characters=" .:,'-^=*+?!|0#X%WM@" // characters to sample from, in order of increasing "weight"
+    fontSize={54} // font size used to draw the character atlas
+    cellSize={16} // size of each character cell, in pixels
+    color="#ffffff" // character color
+    invert={false} // inverts which characters map to bright vs dark pixels
+  />
+)
+```
+
+## Props
+
+| Name       | Type    | Default                | Description                                                       |
+| ---------- | ------- | ----------------------- | ------------------------------------------------------------------ |
+| font       | String  | 'arial'                 | The font family used to draw the character atlas.                  |
+| characters | String  | ` .:,'-^=*+?!\|0#X%WM@` | The characters to sample from, ordered from "empty" to "dense".    |
+| fontSize   | Number  | 54                       | The font size used to draw the character atlas.                    |
+| cellSize   | Number  | 16                       | The size of each character cell, in pixels.                        |
+| color      | String  | '#ffffff'                | The color of the characters.                                       |
+| invert     | Boolean | false                    | Inverts which characters map to bright vs dark pixels.              |

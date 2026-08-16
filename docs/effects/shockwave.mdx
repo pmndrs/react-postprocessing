@@ -1,0 +1,38 @@
+---
+title: ShockWave
+nav: 1
+---
+
+An animated shockwave/distortion effect emanating from a point in 3D space. It doesn't trigger itself - call `explode()` on the effect's ref whenever you want the wave to fire.
+
+```jsx
+import { useRef } from 'react'
+import { ShockWave } from '@react-three/postprocessing'
+import type { ShockWaveEffect } from 'postprocessing'
+
+const ref = useRef<ShockWaveEffect>(null)
+
+return (
+  <>
+    <ShockWave
+      ref={ref}
+      position={[0, 0, 0]} // the world position of the shockwave
+      speed={2.0} // the animation speed
+      maxRadius={1.0} // the extent of the shockwave
+      waveSize={0.2} // the wave size
+      amplitude={0.05} // the distortion amplitude
+    />
+    <button onClick={() => ref.current?.explode()}>Explode</button>
+  </>
+)
+```
+
+## Props
+
+| Name      | Type    | Default | Description                        |
+| --------- | ------- | -------- | ------------------------------------- |
+| position  | Vector3 | (0,0,0)  | The world position of the shockwave. |
+| speed     | Number  | 2.0      | The animation speed.                 |
+| maxRadius | Number  | 1.0      | The extent of the shockwave.         |
+| waveSize  | Number  | 0.2      | The wave size.                       |
+| amplitude | Number  | 0.05     | The distortion amplitude.            |

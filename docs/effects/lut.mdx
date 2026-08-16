@@ -1,0 +1,27 @@
+---
+title: LUT
+nav: 1
+---
+
+Applies 3D LUT-based color grading using a lookup texture (a `THREE.Texture` built from e.g. a `.cube` file or a data texture you construct yourself).
+
+```jsx
+import { LUT } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <LUT
+    lut={lutTexture} // the lookup texture
+    blendFunction={BlendFunction.SRC} // the blend function of this effect
+    tetrahedralInterpolation={false} // enables or disables tetrahedral interpolation
+  />
+)
+```
+
+## Props
+
+| Name                     | Type          | Default            | Description                                        |
+| ------------------------ | ------------- | -------------------- | ----------------------------------------------------- |
+| lut                      | Texture       |                       | The lookup texture. Required.                       |
+| blendFunction            | BlendFunction | BlendFunction.SRC    | The blend function of this effect.                  |
+| tetrahedralInterpolation | Boolean       | false                 | Enables or disables tetrahedral interpolation.      |

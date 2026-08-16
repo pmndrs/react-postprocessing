@@ -1,0 +1,23 @@
+---
+title: ColorDepth
+nav: 1
+---
+
+Reduces the color depth of the scene, uniformly across all color channels - a posterize-like effect.
+
+```jsx
+import { ColorDepth } from '@react-three/postprocessing'
+
+return (
+  <ColorDepth
+    bits={16} // the virtual color bit depth
+  />
+)
+```
+
+## Props
+
+| Name          | Type           | Default | Description                                                                                             |
+| ------------- | -------------- | -------- | --------------------------------------------------------------------------------------------------------- |
+| blendFunction | BlendFunction  |          | The blend function of this effect.                                                                       |
+| bits          | Number         | 16       | The virtual amount of color bits. Each color channel effectively uses a fourth of this total; alpha is unaffected. |
