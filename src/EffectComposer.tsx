@@ -38,6 +38,7 @@ export const EffectComposerContext = /* @__PURE__ */ createContext<{
   // that add/remove a bare Pass of their own (e.g. EffectGroup) call this
   // to make the tree walk below notice.
   requestRebuild: () => void
+  autoClear: boolean
 }>(null!)
 
 export type EffectComposerProps = {
@@ -357,9 +358,10 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
             camera,
             scene,
             requestRebuild,
+            autoClear,
           }
         : null,
-    [composerState, resolutionScale, camera, scene, requestRebuild]
+    [composerState, resolutionScale, camera, scene, requestRebuild, autoClear]
   )
 
   // Expose the composer

@@ -1,6 +1,6 @@
 import { useThree } from '@react-three/fiber'
 import { GodRaysEffect } from 'postprocessing'
-import { Ref, RefObject, use, useLayoutEffect, useMemo } from 'react'
+import { Ref, RefObject, use, useEffect, useLayoutEffect, useMemo } from 'react'
 import { Mesh, Points } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { applyPierced, readPierced, resolveRef, useDispose, useLiveDefaults } from '../util'
@@ -57,13 +57,21 @@ export function GodRays({
   resolutionY,
   ref,
 }: GodRaysProps) {
-  const { camera } = use(EffectComposerContext)
+  const { camera, autoClear } = use(EffectComposerContext)
   const invalidate = useThree((state) => state.invalidate)
 
   const effect = useMemo(
     () => new GodRaysEffect(camera, resolveRef(sun), { resolutionScale, resolutionX, resolutionY }),
     [camera, resolutionScale, resolutionX, resolutionY]
   )
+
+  useEffect(() => {
+    if (autoClear !== false) {
+      console.warn(
+        'GodRays renders an internal extra pass that needs <EffectComposer autoClear={false}> - without it, occlusion by other objects will look wrong.'
+      )
+    }
+  }, [autoClear])
 
   useLayoutEffect(() => {
     effect.lightSource = resolveRef(sun)

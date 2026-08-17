@@ -1,5 +1,5 @@
 import { OutlineEffect } from 'postprocessing'
-import { Ref, RefObject, use, useMemo } from 'react'
+import { Ref, RefObject, use, useEffect, useMemo } from 'react'
 import { Color, Object3D, type ColorRepresentation } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { applyPierced, EMPTY_ARRAY, readPierced, useDispose, useLiveDefaults, useSelectionSync } from '../util'
@@ -57,12 +57,18 @@ export function Outline({
   ref,
   ...liveProps
 }: OutlineProps) {
-  const { scene, camera } = use(EffectComposerContext)
+  const { scene, camera, autoClear } = use(EffectComposerContext)
 
   const effect = useMemo(
     () => new OutlineEffect(scene, camera, { resolutionScale, resolutionX, resolutionY }),
     [scene, camera, resolutionScale, resolutionX, resolutionY]
   )
+
+  useEffect(() => {
+    if (autoClear !== false) {
+      console.warn('Outline requires <EffectComposer autoClear={false}> to render correctly.')
+    }
+  }, [autoClear])
 
   useLiveDefaults(
     effect,
