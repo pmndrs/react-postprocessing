@@ -1,0 +1,85 @@
+---
+title: Custom effects
+description: Wrapping your own effects, or postprocessing's, as components
+nav: 0
+---
+
+Most effects from `postprocessing` are already wrapped by this library, but if you need one that isn't, or want to write your own, there are three ways to do it depending on what the effect's constructor needs.
+
+## Zero-arg effects (recommended)
+
+If the effect's constructor works with zero arguments (`new SomeEffect()`), `createEffectComponent` gives you a component with live-updating props for free - no `useMemo`/`useDispose` needed, and no reconstruction on every prop change. This is exactly how this library's own simple effects (`BrightnessContrast`, `ChromaticAberration`, `Noise`, ...) are built:
+
+```jsx
+import { SomeEffect } from 'postprocessing'
+import { createEffectComponent } from '@react-three/postprocessing'
+
+export const SomeEffectComponent = createEffectComponent(SomeEffect)
+```
+
+Every constructor option becomes a live prop that updates the existing instance in place, and `blendFunction`/`opacity` are supported automatically. `ref` resolves to the effect instance. Disposal is handled for you - unlike `<primitive>`, r3f disposes elements it constructed itself.
+
+### Custom defaults
+
+If you want different defaults than the class's own, or the constructor takes a positional argument instead of an options object, wrap it in a thin component - this is how this library's own `Pixelation` is built (its default `granularity` is `5`, not the class's own `30`):
+
+```jsx
+import { PixelationEffect } from 'postprocessing'
+import { createEffectComponent } from '@react-three/postprocessing'
+
+const PixelationImpl = createEffectComponent(PixelationEffect)
+
+export function Pixelation({ granularity = 5, ...props }) {
+  return <PixelationImpl granularity={granularity} {...props} />
+}
+```
+
+## Effects that need real constructor arguments
+
+Effects whose constructor needs more than zero arguments - e.g. `OutlineEffect(scene, camera, options)` - can't use `createEffectComponent`: it relies on r3f's `extend()`, which always constructs via `new Effect()`. Build these by hand instead: `useMemo`/`useDispose` for construction, `useLiveDefaults` for props that should update the existing instance rather than reconstruct it.
+
+```jsx
+import { useMemo } from 'react'
+import { SomeEffect } from 'postprocessing'
+import { useDispose, useLiveDefaults } from '@react-three/postprocessing'
+
+const LIVE_KEYS = ['someProp', 'anotherProp']
+
+export function SomeEffectComponent({ requiredArg, someProp, anotherProp, ref }) {
+  const effect = useMemo(() => new SomeEffect(requiredArg), [requiredArg])
+
+  useLiveDefaults(effect, { someProp, anotherProp }, LIVE_KEYS)
+  useDispose(effect)
+
+  return <primitive ref={ref} object={effect} />
+}
+```
+
+`LIVE_KEYS` should only list options that have a real setter on the class - check the effect's own source. `useLiveDefaults` resets a prop to the effect's constructor-time default when it's removed, and only calls the setter when the resolved value actually changed (some setters have side effects beyond storing the value). See `Outline.tsx` in this repo for a real example, including piercing into a nested property like `blendMode.blendFunction`.
+
+## Writing a brand new effect
+
+For effects that don't exist in `postprocessing` at all, extend `Effect` and wrap the result the same way as any other zero-arg effect:
+
+```jsx
+import { Effect } from 'postprocessing'
+import { Uniform } from 'three'
+import { createEffectComponent } from '@react-three/postprocessing'
+
+const fragmentShader = `some_shader_code`
+
+class MyCustomEffect extends Effect {
+  constructor({ param = 0.1 } = {}) {
+    super('MyCustomEffect', fragmentShader, {
+      uniforms: new Map([['param', new Uniform(param)]]),
+    })
+  }
+
+  update(renderer, inputBuffer, deltaTime) {
+    // read/write per-frame state on `this` (e.g. this.uniforms.get('param').value = ...),
+    // never on a module-level variable - that would be shared across every instance
+  }
+}
+
+export const MyCustomEffectComponent = createEffectComponent(MyCustomEffect)
+```

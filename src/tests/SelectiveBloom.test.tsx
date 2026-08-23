@@ -115,4 +115,52 @@ describe('SelectiveBloom', () => {
     await waitForComposer(composerRef)
     await expect(flush()).resolves.not.toThrow()
   })
+
+  it('applies intensity live, without reconstructing the effect', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const effectRef = React.createRef<SelectiveBloomEffect>()
+    const light = new PointLight()
+
+    const render = (intensity: number) =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <SelectiveBloom ref={effectRef} lights={[light]} intensity={intensity} />
+        </EffectComposer>
+      )
+
+    await React.act(async () => render(1))
+    await waitForComposer(composerRef)
+    await flush()
+    const first = effectRef.current
+    expect(first!.intensity).toBe(1)
+
+    await React.act(async () => render(3))
+    await flush()
+
+    expect(effectRef.current).toBe(first)
+    expect(effectRef.current!.intensity).toBe(3)
+  })
+
+  it('still reconstructs when luminanceThreshold changes (no live setter in postprocessing)', async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const effectRef = React.createRef<SelectiveBloomEffect>()
+    const light = new PointLight()
+
+    const render = (luminanceThreshold: number) =>
+      root.render(
+        <EffectComposer ref={composerRef}>
+          <SelectiveBloom ref={effectRef} lights={[light]} luminanceThreshold={luminanceThreshold} />
+        </EffectComposer>
+      )
+
+    await React.act(async () => render(0.5))
+    await waitForComposer(composerRef)
+    await flush()
+    const first = effectRef.current
+
+    await React.act(async () => render(0.8))
+    await flush()
+
+    expect(effectRef.current).not.toBe(first)
+  })
 })

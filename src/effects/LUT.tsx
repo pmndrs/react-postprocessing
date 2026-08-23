@@ -1,8 +1,7 @@
-import { useThree } from '@react-three/fiber'
 import { BlendFunction, LUT3DEffect } from 'postprocessing'
-import { Ref, useLayoutEffect, useMemo } from 'react'
+import { Ref, useMemo } from 'react'
 import type { Texture } from 'three'
-import { useDispose } from '../util'
+import { useDispose, useLiveDefaults } from '../util'
 
 export type LUTProps = {
   lut: Texture
@@ -11,16 +10,15 @@ export type LUTProps = {
   ref?: Ref<LUT3DEffect>
 }
 
-export function LUT({ lut, tetrahedralInterpolation, ref, ...props }: LUTProps) {
-  const effect = useMemo(() => new LUT3DEffect(lut, props), [lut, props])
-  const invalidate = useThree((state) => state.invalidate)
+const LIVE_KEYS = ['blendMode-blendFunction', 'lut', 'tetrahedralInterpolation']
 
-  useLayoutEffect(() => {
-    if (tetrahedralInterpolation) effect.tetrahedralInterpolation = tetrahedralInterpolation
-    if (lut) effect.lut = lut
-    invalidate()
-  }, [effect, invalidate, lut, tetrahedralInterpolation])
+// lut is LUT3DEffect's required constructor arg (no default) - only used
+// for the initial instance, later changes go through its own live setter
+// (via useLiveDefaults below) instead of reconstructing.
+export function LUT({ lut, blendFunction, tetrahedralInterpolation, ref }: LUTProps) {
+  const effect = useMemo(() => new LUT3DEffect(lut), [])
 
+  useLiveDefaults(effect, { 'blendMode-blendFunction': blendFunction, lut, tetrahedralInterpolation }, LIVE_KEYS)
   useDispose(effect)
 
   return <primitive ref={ref} object={effect} />

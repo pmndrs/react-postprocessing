@@ -5,6 +5,8 @@ nav: 1
 
 An outline effect.
 
+Requires `<EffectComposer autoClear={false}>` - without it, outlines don't render at all.
+
 ```jsx
 import { Outline } from '@react-three/postprocessing'
 import { BlendFunction, Resolution, KernelSize } from 'postprocessing'
@@ -37,21 +39,23 @@ return (
 
 ## Props
 
-| Name             | Type          | Default               | Description                                                                |
-| ---------------- | ------------- | --------------------- | -------------------------------------------------------------------------- |
-| selection        | Objects       |                       | Selection of objects that will be outlined                                 |
-| selectionLayer   | Number        | 10                    | The selection layer                                                        |
-| blendFunction    | BlendFunction | BlendFunction.SCREEN  | The blend function of this effect.                                         |
-| patternTexture   | Texture       | null                  | A pattern texture.                                                         |
-| patternScale     | Number        | 1.0                   | The pattern texture scale.                                                 |
-| edgeStrength     | Number        | 1.0                   | The edge strength.                                                         |
-| pulseSpeed       | Number        | 0                     | The pulse speed. A value of zero disables the pulse effect.                |
-| visibleEdgeColor | Number        | 0xffffff              | The color of visible edges.                                                |
-| hiddenEdgeColor  | Number        | 0x22090a              | The color of hidden edges.                                                 |
-| multisampling    | Number        | 0                     | The number of samples used for multisample antialiasing. Requires WebGL 2. |
-| resolutionScale  | Number        | 0.5                   | The render resolution scale.                                               |
-| resolutionX      | Number        | Resolution.AUTO_SIZE  | The render width.                                                          |
-| resolutionY      | Number        | Resolution.AUTO_SIZE  | The render height.                                                         |
-| kernelSize       | KernelSize    | KernelSize.VERY_SMALL | The blur kernel size.                                                      |
-| blur             | Boolean       | false                 | Whether the outline should be blurred.                                     |
-| xRay             | Boolean       | true                  | Whether occluded parts of selected objects should be visible.              |
+| Name             | Type                 | Default                | Description                                                                          |
+| ---------------- | -------------------- | ----------------------- | ------------------------------------------------------------------------------------- |
+| selection        | Objects              |                        | Selection of objects that will be outlined                                            |
+| selectionLayer   | Number               | 10                     | The selection layer                                                                   |
+| blendFunction    | BlendFunction        | BlendFunction.SCREEN   | The blend function of this effect.                                                    |
+| patternTexture   | THREE.Texture        | null                   | A pattern texture.                                                                    |
+| patternScale     | Number               | 1.0                    | The pattern texture scale.                                                            |
+| edgeStrength     | Number               | 1.0                    | The edge strength.                                                                    |
+| pulseSpeed       | Number               | 0                      | The pulse speed. A value of zero disables the pulse effect.                           |
+| visibleEdgeColor | ColorRepresentation  | 0xffffff               | The color of visible edges.                                                           |
+| hiddenEdgeColor  | ColorRepresentation  | 0x22090a               | The color of hidden edges.                                                            |
+| multisampling    | Number               | 0                      | The number of samples used for multisample antialiasing. Requires WebGL 2.            |
+| resolutionScale  | Number               | 0.5                    | The render resolution scale. Applied at construction only.                            |
+| resolutionX      | Number               | Resolution.AUTO_SIZE   | The render width. Applied at construction only.                                       |
+| resolutionY      | Number               | Resolution.AUTO_SIZE   | The render height. Applied at construction only.                                      |
+| width            | Number               | Resizer.AUTO_SIZE      | The render width. Unlike `resolutionX`, updates live without reconstructing the effect. |
+| height           | Number               | Resizer.AUTO_SIZE      | The render height. Unlike `resolutionY`, updates live without reconstructing the effect. |
+| kernelSize       | KernelSize           | KernelSize.VERY_SMALL  | The blur kernel size.                                                                 |
+| blur             | Boolean              | false                  | Whether the outline should be blurred.                                                |
+| xRay             | Boolean              | true                   | Whether occluded parts of selected objects should be visible.                         |

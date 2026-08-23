@@ -1,6 +1,6 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "3.0.5",
+  "version": "3.1.0",
   "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
@@ -11,6 +11,7 @@
     "3d"
   ],
   "license": "MIT",
+  "packageManager": "pnpm@11.15.1",
   "files": [
     "dist",
     "src"
@@ -28,7 +29,7 @@
   },
   "homepage": "https://github.com/pmndrs/react-postprocessing#readme",
   "scripts": {
-    "build": "vite build && tsc",
+    "build": "vite build && tsc -p tsconfig.build.json",
     "eslint": "eslint . --fix",
     "eslint:ci": "eslint .",
     "test": "vitest run",

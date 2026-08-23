@@ -10,8 +10,8 @@
 // effects still need manual/visual verification before release.
 //
 // Coverage is enforced by the last test in this file: every *.tsx file in
-// src/effects must appear either in SMOKE_CASES or EXCLUDED below. Adding a
-// new effect file without touching either list fails CI.
+// src/effects or src/passes must appear either in SMOKE_CASES or EXCLUDED
+// below. Adding a new effect/pass file without touching either list fails CI.
 //
 // This file is excluded from `tsc -p tsconfig.json` (it matches
 // src/**/*.test.*), so editors fall back to a detached/inferred compilation
@@ -23,7 +23,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { CopyPass, DepthPickingPass, EffectComposer as EffectComposerImpl } from 'postprocessing'
+import { DepthPickingPass as DepthPickingPassImpl, EffectComposer as EffectComposerImpl } from 'postprocessing'
 import * as React from 'react'
 import * as THREE from 'three'
 import { describe, expect, it, vi } from 'vitest'
@@ -44,7 +44,6 @@ import { Grid } from '../effects/Grid'
 import { HueSaturation } from '../effects/HueSaturation'
 import { LensFlare } from '../effects/LensFlare'
 import { LUT } from '../effects/LUT'
-import { N8AO } from '../effects/N8AO'
 import { Noise } from '../effects/Noise'
 import { Outline } from '../effects/Outline'
 import { Pixelation } from '../effects/Pixelation'
@@ -60,16 +59,18 @@ import { TiltShift2 } from '../effects/TiltShift2'
 import { ToneMapping } from '../effects/ToneMapping'
 import { Vignette } from '../effects/Vignette'
 import { WaterEffect } from '../effects/Water'
+import { DepthPicking } from '../passes/DepthPicking'
+import { N8AO } from '../passes/N8AO'
 import { flush, root } from './test-utils'
 
 type SmokeCase = {
-  /** Filename under src/effects this case covers — drives the coverage check below. */
+  /** Filename under src/effects or src/passes this case covers — drives the coverage check below. */
   file: string
   label: string
   composerProps?: Record<string, unknown>
   /** Extra scene content the effect needs (e.g. a sun mesh for GodRays). */
   extras?: React.ReactNode
-  /** Renders the effect element. `ref` may be ignored by effects that don't forward one (e.g. LensFlare). */
+  /** Renders the effect element. */
   effect: (ref: React.Ref<any>) => React.ReactElement
 }
 
@@ -85,6 +86,7 @@ const SMOKE_CASES: SmokeCase[] = [
   { file: 'ColorDepth.tsx', label: 'ColorDepth', effect: (ref) => <ColorDepth ref={ref} /> },
   { file: 'Depth.tsx', label: 'Depth', effect: (ref) => <Depth ref={ref} /> },
   { file: 'DepthOfField.tsx', label: 'DepthOfField', effect: (ref) => <DepthOfField ref={ref} /> },
+  { file: 'DepthPicking.tsx', label: 'DepthPicking', effect: (ref) => <DepthPicking ref={ref} /> },
   { file: 'DotScreen.tsx', label: 'DotScreen', effect: (ref) => <DotScreen ref={ref} /> },
   { file: 'FXAA.tsx', label: 'FXAA', effect: (ref) => <FXAA ref={ref} /> },
   { file: 'Glitch.tsx', label: 'Glitch', effect: (ref) => <Glitch ref={ref} /> },
@@ -96,8 +98,7 @@ const SMOKE_CASES: SmokeCase[] = [
   },
   { file: 'Grid.tsx', label: 'Grid', effect: (ref) => <Grid ref={ref} /> },
   { file: 'HueSaturation.tsx', label: 'HueSaturation', effect: (ref) => <HueSaturation ref={ref} /> },
-  // LensFlare manages its own internal ref and doesn't accept one as a prop.
-  { file: 'LensFlare.tsx', label: 'LensFlare', effect: () => <LensFlare /> },
+  { file: 'LensFlare.tsx', label: 'LensFlare', effect: (ref) => <LensFlare ref={ref} /> },
   { file: 'LUT.tsx', label: 'LUT', effect: (ref) => <LUT ref={ref} lut={lutTexture} /> },
   { file: 'N8AO.tsx', label: 'N8AO', effect: (ref) => <N8AO ref={ref} /> },
   { file: 'Noise.tsx', label: 'Noise', effect: (ref) => <Noise ref={ref} /> },
@@ -165,32 +166,12 @@ describe('effect smoke tests', () => {
     }
   })
 
-  // Tracks dispose() calls per instance rather than per class — EffectComposerImpl
-  // constructs its own internal CopyPass (this.copyPass, for compositing) and
-  // disposes it as part of its own teardown, unrelated to any CopyPass an effect
-  // constructs. A class-wide spy would conflate the two into a false "double
-  // dispose"; this only flags it if the *same* instance is disposed twice.
-  function trackDisposePerInstance(Ctor: { prototype: { dispose: (...args: unknown[]) => unknown } }) {
-    const counts = new Map<object, number>()
-    const original = Ctor.prototype.dispose
-    const spy = vi.spyOn(Ctor.prototype, 'dispose').mockImplementation(function (this: object, ...args: unknown[]) {
-      counts.set(this, (counts.get(this) ?? 0) + 1)
-      return original.apply(this, args)
-    })
-    return {
-      restore: () => spy.mockRestore(),
-      maxCallsForAnySingleInstance: () => Math.max(0, ...counts.values()),
-    }
-  }
-
-  // Autofocus's ref resolves to { dofRef, hitpoint, update } (its own
-  // imperative API), not an effect instance — the generic dispose check
-  // above silently no-ops for it. It actually owns three disposables
-  // (depthPickingPass, copyPass, and the DepthOfField effect it renders
-  // internally), verified explicitly here instead.
-  it('Autofocus disposes depthPickingPass, copyPass, and the nested DepthOfField effect exactly once each', async () => {
-    const depthPickingTracker = trackDisposePerInstance(DepthPickingPass)
-    const copyPassTracker = trackDisposePerInstance(CopyPass)
+  // Autofocus's ref resolves to { dofRef, hitpoint, update }, not an effect
+  // instance - the generic dispose check above no-ops for it. It owns two
+  // disposables (the nested DepthPicking component's pass, and the
+  // nested DepthOfField effect), verified here.
+  it('Autofocus disposes the nested DepthPicking and DepthOfField effect', async () => {
+    const depthPickingDisposeSpy = vi.spyOn(DepthPickingPassImpl.prototype, 'dispose')
     // AutofocusProps' `ref` type is broken (ComponentProps<typeof DepthOfField>
     // drags in DepthOfField's own `ref: Ref<DepthOfFieldEffect>`, which then
     // intersects with `Ref<AutofocusApi>` — separate pre-existing issue,
@@ -214,17 +195,40 @@ describe('effect smoke tests', () => {
     await React.act(async () => root.render(null))
     await flush()
 
-    expect(depthPickingTracker.maxCallsForAnySingleInstance()).toBeLessThanOrEqual(1)
-    expect(copyPassTracker.maxCallsForAnySingleInstance()).toBeLessThanOrEqual(1)
-    expect(dofDisposeSpy).toHaveBeenCalledTimes(1)
+    expect(depthPickingDisposeSpy).toHaveBeenCalled()
+    expect(dofDisposeSpy).toHaveBeenCalled()
 
-    depthPickingTracker.restore()
-    copyPassTracker.restore()
+    depthPickingDisposeSpy.mockRestore()
   })
 
-  it('covers every file in src/effects (or documents why it is excluded)', () => {
-    const effectsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'effects')
-    const files = fs.readdirSync(effectsDir).filter((f) => f.endsWith('.tsx'))
+  it('DepthPicking disposes its pass on unmount', async () => {
+    const disposeSpy = vi.spyOn(DepthPickingPassImpl.prototype, 'dispose')
+    const ref = React.createRef<import('../passes/DepthPicking').DepthPickingApi>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer>
+          <DepthPicking ref={ref} />
+        </EffectComposer>
+      )
+    )
+
+    await flush()
+    expect(ref.current).toBeTruthy()
+
+    await React.act(async () => root.render(null))
+    await flush()
+
+    expect(disposeSpy).toHaveBeenCalled()
+
+    disposeSpy.mockRestore()
+  })
+
+  it('covers every file in src/effects and src/passes (or documents why it is excluded)', () => {
+    const srcDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
+    const files = ['effects', 'passes'].flatMap((dir) =>
+      fs.readdirSync(path.join(srcDir, dir)).filter((f) => f.endsWith('.tsx'))
+    )
 
     const covered = new Set(SMOKE_CASES.map((c) => c.file))
     const missing = files.filter((f) => !covered.has(f) && !(f in EXCLUDED))

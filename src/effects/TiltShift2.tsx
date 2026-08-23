@@ -1,6 +1,7 @@
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing'
+import type { Ref } from 'react'
 import { Uniform } from 'three'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent } from '../createEffectComponent'
 
 const TiltShiftShader = {
   fragmentShader: /* glsl */ `
@@ -62,20 +63,22 @@ const TiltShiftShader = {
     `,
 }
 
+type Vec2Tuple = [number, number]
+
 export class TiltShiftEffect extends Effect {
   constructor({
     blendFunction = BlendFunction.NORMAL,
     blur = 0.15, // [0, 1], can go beyond 1 for extra
     taper = 0.5, // [0, 1], can go beyond 1 for extra
-    start = [0.5, 0.0], // [0,1] percentage x,y of screenspace
-    end = [0.5, 1.0], // [0,1] percentage x,y of screenspace
+    start = [0.5, 0.0] as Vec2Tuple, // [0,1] percentage x,y of screenspace
+    end = [0.5, 1.0] as Vec2Tuple, // [0,1] percentage x,y of screenspace
     samples = 10.0, // number of blur samples
-    direction = [1, 1], // direction of blur
+    direction = [1, 1] as Vec2Tuple, // direction of blur
   } = {}) {
     super('TiltShiftEffect', TiltShiftShader.fragmentShader, {
       blendFunction,
       attributes: EffectAttribute.CONVOLUTION,
-      uniforms: new Map<string, Uniform<number | number[]>>([
+      uniforms: new Map<string, Uniform<number | Vec2Tuple>>([
         ['blur', new Uniform(blur)],
         ['taper', new Uniform(taper)],
         ['start', new Uniform(start)],
@@ -85,6 +88,69 @@ export class TiltShiftEffect extends Effect {
       ]),
     })
   }
+
+  private u<T>(name: string): T {
+    return this.uniforms.get(name)!.value
+  }
+
+  private setU(name: string, value: unknown): void {
+    this.uniforms.get(name)!.value = value
+  }
+
+  get blur(): number {
+    return this.u('blur')
+  }
+  set blur(value: number) {
+    this.setU('blur', value)
+  }
+
+  get taper(): number {
+    return this.u('taper')
+  }
+  set taper(value: number) {
+    this.setU('taper', value)
+  }
+
+  get start(): Vec2Tuple {
+    return this.u('start')
+  }
+  set start(value: Vec2Tuple) {
+    this.setU('start', value)
+  }
+
+  get end(): Vec2Tuple {
+    return this.u('end')
+  }
+  set end(value: Vec2Tuple) {
+    this.setU('end', value)
+  }
+
+  get samples(): number {
+    return this.u('samples')
+  }
+  set samples(value: number) {
+    this.setU('samples', value)
+  }
+
+  get direction(): Vec2Tuple {
+    return this.u('direction')
+  }
+  set direction(value: Vec2Tuple) {
+    this.setU('direction', value)
+  }
 }
 
-export const TiltShift2 = /* @__PURE__ */ wrapEffect(TiltShiftEffect, { blendFunction: BlendFunction.NORMAL })
+export type TiltShift2Props = {
+  blendFunction?: BlendFunction
+  blur?: number
+  taper?: number
+  start?: Vec2Tuple
+  end?: Vec2Tuple
+  samples?: number
+  direction?: Vec2Tuple
+  ref?: Ref<TiltShiftEffect>
+}
+
+export const TiltShift2 = /* @__PURE__ */ createEffectComponent<typeof TiltShiftEffect, TiltShift2Props>(
+  TiltShiftEffect
+)

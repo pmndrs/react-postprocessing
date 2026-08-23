@@ -16,7 +16,6 @@ yarn-error.log
 .size-snapshot.json
 pnpm-debug.log
 .parcel-cache
-pnpm-lock.yaml
 storybook-static
 
 *.tgz

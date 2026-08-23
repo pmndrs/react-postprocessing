@@ -3,16 +3,17 @@ title: N8AO
 nav: 1
 ---
 
-A fast, high quality ambient occlusion effect, wrapping [N8python/n8ao](https://github.com/N8python/n8ao). Self-contained - unlike [SSAO](/effects/ssao), it does not need `enableNormalPass` on `<EffectComposer>`.
+A fast, high quality ambient occlusion pass, wrapping [N8python/n8ao](https://github.com/N8python/n8ao). Self-contained - unlike [SSAO](/effects/ssao), it does not need `enableNormalPass` on `<EffectComposer>`.
 
 ```jsx
 import { N8AO } from '@react-three/postprocessing'
 
 return (
   <N8AO
+    enabled={true} // toggle the pass without unmounting it
     aoRadius={5} // ambient occlusion sampling radius
     distanceFalloff={1} // distance falloff
-    intensity={1} // effect intensity
+    intensity={1} // AO intensity
     quality="performance" // 'performance' | 'low' | 'medium' | 'high' | 'ultra'
     aoSamples={16} // amount of ambient occlusion samples per frame
     denoiseSamples={4} // amount of denoise samples per frame
@@ -30,9 +31,10 @@ return (
 
 | Name                 | Type                                                    | Default       | Description                                               |
 | -------------------- | ------------------------------------------------------- | ------------- | --------------------------------------------------------- |
+| enabled              | Boolean                                                 | true          | Toggles the pass without unmounting it.                   |
 | aoRadius             | Number                                                  | 5             | The ambient occlusion sampling radius.                    |
 | distanceFalloff      | Number                                                  | 1             | The distance falloff.                                     |
-| intensity            | Number                                                  | 1             | The effect intensity.                                     |
+| intensity            | Number                                                  | 1             | The AO intensity.                                          |
 | quality              | 'performance' \| 'low' \| 'medium' \| 'high' \| 'ultra' | 'performance' | The quality preset.                                       |
 | aoSamples            | Number                                                  | 16            | The amount of ambient occlusion samples per frame.        |
 | denoiseSamples       | Number                                                  | 4             | The amount of denoise samples per frame.                  |

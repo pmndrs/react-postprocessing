@@ -2,9 +2,9 @@
 // https://twitter.com/emilwidlund/status/1652386482420609024
 
 import { Effect } from 'postprocessing'
-import { Ref, useMemo } from 'react'
-import { CanvasTexture, Color, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three'
-import { useDispose } from '../util'
+import type { Ref } from 'react'
+import { CanvasTexture, Color, type ColorRepresentation, NearestFilter, RepeatWrapping, Texture, Uniform } from 'three'
+import { createEffectComponent } from '../createEffectComponent'
 
 const fragment = /* glsl */ `
   uniform sampler2D uCharacters;
@@ -47,17 +47,21 @@ const fragment = /* glsl */ `
   }
 `
 
-interface IASCIIEffectProps {
+export type ASCIIProps = {
   font?: string
   characters?: string
   fontSize?: number
   cellSize?: number
-  color?: string
+  color?: ColorRepresentation
   invert?: boolean
   ref?: Ref<ASCIIEffect>
 }
 
 class ASCIIEffect extends Effect {
+  private _font: string
+  private _characters: string
+  private _fontSize: number
+
   constructor({
     font = 'arial',
     characters = ` .:,'-^=*+?!|0#X%WM@`,
@@ -65,7 +69,7 @@ class ASCIIEffect extends Effect {
     cellSize = 16,
     color = '#ffffff',
     invert = false,
-  }: Omit<IASCIIEffectProps, 'ref'> = {}) {
+  }: Omit<ASCIIProps, 'ref'> = {}) {
     const uniforms = new Map<string, Uniform>([
       ['uCharacters', new Uniform(new Texture())],
       ['uCellSize', new Uniform(cellSize)],
@@ -76,11 +80,71 @@ class ASCIIEffect extends Effect {
 
     super('ASCIIEffect', fragment, { uniforms })
 
-    const charactersTextureUniform = this.uniforms.get('uCharacters')
+    this._font = font
+    this._characters = characters
+    this._fontSize = fontSize
+    this.updateCharactersTexture()
+  }
 
-    if (charactersTextureUniform) {
-      charactersTextureUniform.value = this.createCharactersTexture(characters, font, fontSize)
-    }
+  get cellSize(): number {
+    return this.uniforms.get('uCellSize')!.value
+  }
+
+  set cellSize(value: number) {
+    this.uniforms.get('uCellSize')!.value = value
+  }
+
+  get invert(): boolean {
+    return this.uniforms.get('uInvert')!.value
+  }
+
+  set invert(value: boolean) {
+    this.uniforms.get('uInvert')!.value = value
+  }
+
+  get color(): Color {
+    return this.uniforms.get('uColor')!.value
+  }
+
+  set color(value: ColorRepresentation) {
+    this.uniforms.get('uColor')!.value.set(value)
+  }
+
+  get font(): string {
+    return this._font
+  }
+
+  set font(value: string) {
+    this._font = value
+    this.updateCharactersTexture()
+  }
+
+  get characters(): string {
+    return this._characters
+  }
+
+  set characters(value: string) {
+    this._characters = value
+    this.uniforms.get('uCharactersCount')!.value = value.length
+    this.updateCharactersTexture()
+  }
+
+  get fontSize(): number {
+    return this._fontSize
+  }
+
+  set fontSize(value: number) {
+    this._fontSize = value
+    this.updateCharactersTexture()
+  }
+
+  // Regenerates the character atlas texture - characters/font/fontSize have
+  // no cheaper live update path, unlike the plain-uniform props above.
+  private updateCharactersTexture(): void {
+    const uniform = this.uniforms.get('uCharacters')!
+    const previous = uniform.value as Texture
+    uniform.value = this.createCharactersTexture(this._characters, this._font, this._fontSize)
+    previous.dispose()
   }
 
   /** Draws the characters on a Canvas and returns a texture */
@@ -116,21 +180,4 @@ class ASCIIEffect extends Effect {
   }
 }
 
-export function ASCII({
-  font = 'arial',
-  characters = ` .:,'-^=*+?!|0#X%WM@`,
-  fontSize = 54,
-  cellSize = 16,
-  color = '#ffffff',
-  invert = false,
-  ref,
-}: IASCIIEffectProps) {
-  const effect = useMemo(
-    () => new ASCIIEffect({ characters, font, fontSize, cellSize, color, invert }),
-    [characters, fontSize, cellSize, color, invert, font]
-  )
-
-  useDispose(effect)
-
-  return <primitive ref={ref} object={effect} />
-}
+export const ASCII = /* @__PURE__ */ createEffectComponent<typeof ASCIIEffect, ASCIIProps>(ASCIIEffect)

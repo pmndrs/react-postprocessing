@@ -1,4 +1,6 @@
+export * from './createEffectComponent'
 export * from './EffectComposer'
+export * from './EffectGroup'
 export * from './Selection'
 export * from './util'
 export * from './wrapEffect'
@@ -37,5 +39,5 @@ export * from './effects/ToneMapping'
 export * from './effects/Vignette'
 export * from './effects/Water'
 
-// These are not effect passes
-export * from './effects/N8AO'
+export * from './passes/DepthPicking'
+export * from './passes/N8AO'

@@ -9,17 +9,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v3
         with:
-          cache: 'yarn'
+          cache: 'pnpm'
       - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Check build health
-        run: yarn build
+        run: pnpm build
 
       - name: Check for regressions
-        run: yarn eslint:ci
+        run: pnpm eslint:ci
 
       - name: Run tests
-        run: yarn test
+        run: pnpm test

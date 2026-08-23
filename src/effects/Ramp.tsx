@@ -1,6 +1,7 @@
-import { Effect } from 'postprocessing'
+import { BlendFunction, Effect } from 'postprocessing'
+import type { Ref } from 'react'
 import { Uniform } from 'three'
-import { wrapEffect } from '../wrapEffect'
+import { createEffectComponent } from '../createEffectComponent'
 
 const RampShader = {
   fragmentShader: /* glsl */ `
@@ -72,6 +73,9 @@ export enum RampType {
   MirroredLinear,
 }
 
+type RampTuple2 = [number, number]
+type RampTuple4 = [number, number, number, number]
+
 export class RampEffect extends Effect {
   constructor({
     /**
@@ -83,25 +87,25 @@ export class RampEffect extends Effect {
      *
      * Ranges from `[0 - 1]` as `[x, y]`. Default is `[0.5, 0.5]`.
      */
-    rampStart = [0.5, 0.5],
+    rampStart = [0.5, 0.5] as RampTuple2,
     /**
      * Ending point of the ramp gradient in normalized coordinates.
      *
      * Ranges from `[0 - 1]` as `[x, y]`. Default is `[1, 1]`
      */
-    rampEnd = [1, 1],
+    rampEnd = [1, 1] as RampTuple2,
     /**
      * Color at the starting point of the gradient.
      *
      * Default is black: `[0, 0, 0, 1]`
      */
-    startColor = [0, 0, 0, 1],
+    startColor = [0, 0, 0, 1] as RampTuple4,
     /**
      * Color at the ending point of the gradient.
      *
      * Default is white: `[1, 1, 1, 1]`
      */
-    endColor = [1, 1, 1, 1],
+    endColor = [1, 1, 1, 1] as RampTuple4,
     /**
      * Bias for the interpolation curve when both bias and gain are 0.5.
      *
@@ -145,6 +149,91 @@ export class RampEffect extends Effect {
       ]),
     })
   }
+
+  private u<T>(name: string): T {
+    return this.uniforms.get(name)!.value
+  }
+
+  private setU(name: string, value: unknown): void {
+    this.uniforms.get(name)!.value = value
+  }
+
+  get rampType(): RampType {
+    return this.u('rampType')
+  }
+  set rampType(value: RampType) {
+    this.setU('rampType', value)
+  }
+
+  get rampStart(): RampTuple2 {
+    return this.u('rampStart')
+  }
+  set rampStart(value: RampTuple2) {
+    this.setU('rampStart', value)
+  }
+
+  get rampEnd(): RampTuple2 {
+    return this.u('rampEnd')
+  }
+  set rampEnd(value: RampTuple2) {
+    this.setU('rampEnd', value)
+  }
+
+  get startColor(): RampTuple4 {
+    return this.u('startColor')
+  }
+  set startColor(value: RampTuple4) {
+    this.setU('startColor', value)
+  }
+
+  get endColor(): RampTuple4 {
+    return this.u('endColor')
+  }
+  set endColor(value: RampTuple4) {
+    this.setU('endColor', value)
+  }
+
+  get rampBias(): number {
+    return this.u('rampBias')
+  }
+  set rampBias(value: number) {
+    this.setU('rampBias', value)
+  }
+
+  get rampGain(): number {
+    return this.u('rampGain')
+  }
+  set rampGain(value: number) {
+    this.setU('rampGain', value)
+  }
+
+  get rampMask(): boolean {
+    return this.u('rampMask')
+  }
+  set rampMask(value: boolean) {
+    this.setU('rampMask', value)
+  }
+
+  get rampInvert(): boolean {
+    return this.u('rampInvert')
+  }
+  set rampInvert(value: boolean) {
+    this.setU('rampInvert', value)
+  }
 }
 
-export const Ramp = /* @__PURE__ */ wrapEffect(RampEffect)
+export type RampProps = {
+  blendFunction?: BlendFunction
+  rampType?: RampType
+  rampStart?: RampTuple2
+  rampEnd?: RampTuple2
+  startColor?: RampTuple4
+  endColor?: RampTuple4
+  rampBias?: number
+  rampGain?: number
+  rampMask?: boolean
+  rampInvert?: boolean
+  ref?: Ref<RampEffect>
+}
+
+export const Ramp = /* @__PURE__ */ createEffectComponent<typeof RampEffect, RampProps>(RampEffect)

@@ -1,0 +1,48 @@
+---
+title: EffectGroup
+description: Explicit effect grouping with a pass-level enable toggle
+nav: 0
+---
+
+`EffectComposer` groups effects into passes automatically: consecutive effects
+merge into one `EffectPass`, based only on what happens to sit next to them in
+JSX. `EffectGroup` lets you group specific effects into one pass explicitly,
+regardless of what's around them, and gives that whole pass a cheap
+`enabled` toggle - the same thing `Pass.enabled` gives you in vanilla
+`postprocessing`, without reconstructing anything.
+
+```jsx
+<EffectGroup
+  enabled?: boolean // true
+>
+  {/* effects to group go here */}
+</EffectGroup>
+```
+
+```jsx
+<EffectComposer>
+  <Bloom />
+  <EffectGroup enabled={showVignetteAndNoise}>
+    <Vignette />
+    <Noise />
+  </EffectGroup>
+</EffectComposer>
+```
+
+`Bloom` still gets its own pass as usual. `Vignette` and `Noise` are merged
+into one pass together, positioned exactly where `EffectGroup` sits in the
+JSX, and toggling `enabled` turns that whole pass on or off without rebuilding
+it - so it's cheap to flip every frame if you need to.
+
+`ref` resolves to the underlying `EffectPass`:
+
+```jsx
+<EffectGroup ref={groupRef}>...</EffectGroup>
+```
+
+## Limitations
+
+- `EffectGroup` only groups `postprocessing` `Effect`s - things that merge
+  into one shader pass. A handful of effects in this library (like `N8AO`)
+  are full standalone passes, not effects, and can't be grouped this way -
+  they take their own `enabled` prop instead.

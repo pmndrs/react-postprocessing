@@ -5,7 +5,7 @@ nav: 1
 
 An auto-focus effect, that extends `<DepthOfField>`.
 
-Based on [ektogamat/AutoFocusDOF](https://github.com/ektogamat/AutoFocusDOF).
+Based on [ektogamat/AutoFocusDOF](https://github.com/ektogamat/AutoFocusDOF). Built on `<DepthPicking>` and `useDepthPicking` internally - use those directly if you want a picked position for something other than `<DepthOfField>`'s own focus target.
 
 ```tsx
 export type AutofocusProps = typeof DepthOfField & {

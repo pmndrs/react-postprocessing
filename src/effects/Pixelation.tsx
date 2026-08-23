@@ -1,6 +1,14 @@
 import { PixelationEffect } from 'postprocessing'
-import { Ref, useMemo } from 'react'
-import { useDispose } from '../util'
+import type { Ref } from 'react'
+import { createEffectComponent } from '../createEffectComponent'
+
+// PixelationEffect's sole constructor arg is a bare number, not an options
+// object - granularity is a real live setter though, so it's just a normal
+// prop; only the curated default (5, vs the class's own default of 30)
+// needs a thin wrapper.
+const PixelationImpl = /* @__PURE__ */ createEffectComponent<typeof PixelationEffect, { granularity?: number }>(
+  PixelationEffect
+)
 
 export type PixelationProps = {
   granularity?: number
@@ -8,10 +16,5 @@ export type PixelationProps = {
 }
 
 export function Pixelation({ granularity = 5, ref }: PixelationProps) {
-  /** Because GlitchEffect granularity is not an object but a number, we have to define a custom prop "granularity" */
-  const effect = useMemo(() => new PixelationEffect(granularity), [granularity])
-
-  useDispose(effect)
-
-  return <primitive ref={ref} object={effect} />
+  return <PixelationImpl granularity={granularity} ref={ref} />
 }
