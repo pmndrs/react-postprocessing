@@ -1,6 +1,6 @@
 {
   "name": "@react-three/postprocessing",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "postprocessing wrapper for React and @react-three/fiber",
   "keywords": [
     "postprocessing",
@@ -68,7 +68,7 @@
   "peerDependencies": {
     "@react-three/fiber": ">=9.7.0",
     "postprocessing": "^6.36.0",
-    "react": "^19.2.0",
-    "three": ">= 0.182.0"
+    "react": "^19.0.0",
+    "three": ">= 0.156.0"
   }
 }
