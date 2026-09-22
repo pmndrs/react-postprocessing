@@ -70,6 +70,9 @@ type ComposerState = {
 const isConvolution = (effect: Effect): boolean =>
   (effect.getAttributes() & EffectAttribute.CONVOLUTION) === EffectAttribute.CONVOLUTION
 
+// mainUv isn't a bitflag - detect it the same way postprocessing itself does.
+const hasMainUv = (effect: Effect): boolean => /mainUv/.test(effect.getFragmentShader() ?? '')
+
 // autoClear/toneMapping get force-set and never restored. Ref-counted per
 // (renderer, property) since composers can share a renderer.
 function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(property: K) {
@@ -139,13 +142,10 @@ function disposeGeneratedPass(pass: Pass): void {
   disposePassWithoutEffects(pass)
 }
 
-// 'auto' (default): consecutive Effects share one EffectPass, same as vanilla
-// postprocessing allows by hand - a run may contain at most one convolution
-// Effect (e.g. DepthOfField), since the library throws if two land in the
-// same pass. 'all' merges through that limit too, same no-guardrail
-// treatment EffectGroup already gives its own children - multiple
-// convolution Effects in one run will throw at render time. 'none' gives
-// every Effect its own EffectPass.
+// 'auto' (default): consecutive Effects share one EffectPass, keeping
+// convolution and mainUv Effects apart since postprocessing throws if they
+// mix. 'all' merges through those limits too, no guardrails, same as
+// EffectGroup. 'none' gives every Effect its own EffectPass.
 function buildPasses(nodes: Array<Effect | Pass>, camera: Camera, mergeMode: 'auto' | 'all' | 'none'): Pass[] {
   const passes: Pass[] = []
 
@@ -155,14 +155,24 @@ function buildPasses(nodes: Array<Effect | Pass>, camera: Camera, mergeMode: 'au
     if (node instanceof Effect) {
       const effects: Effect[] = [node]
       let hasConvolution = isConvolution(node)
+      let hasMainUvEffect = hasMainUv(node)
 
       if (mergeMode !== 'none') {
         let next: Effect | Pass | undefined
         while ((next = nodes[i + 1]) instanceof Effect) {
           const nextIsConvolution = isConvolution(next)
-          if (mergeMode === 'auto' && hasConvolution && nextIsConvolution) break
+          const nextHasMainUv = hasMainUv(next)
+          if (
+            mergeMode === 'auto' &&
+            ((hasConvolution && nextIsConvolution) ||
+              (hasConvolution && nextHasMainUv) ||
+              (hasMainUvEffect && nextIsConvolution))
+          ) {
+            break
+          }
           effects.push(next)
           hasConvolution ||= nextIsConvolution
+          hasMainUvEffect ||= nextHasMainUv
           i++
         }
       }
