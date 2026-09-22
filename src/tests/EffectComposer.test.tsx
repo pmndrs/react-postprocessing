@@ -47,11 +47,25 @@ class ConvolutionEffectTwo extends Effect {
   }
 }
 
+const MAIN_UV_SHADER = `
+void mainUv(inout vec2 uv) {
+  uv += 0.0;
+}
+${EFFECT_SHADER}
+`
+
+class MainUvEffect extends Effect {
+  constructor() {
+    super('MainUvEffect', MAIN_UV_SHADER)
+  }
+}
+
 const WrappedEffectA = wrapEffect(EffectA)
 const WrappedEffectB = wrapEffect(EffectB)
 const WrappedEffectC = wrapEffect(EffectC)
 const WrappedConvolutionEffect = wrapEffect(ConvolutionEffect)
 const WrappedConvolutionEffectTwo = wrapEffect(ConvolutionEffectTwo)
+const WrappedMainUvEffect = wrapEffect(MainUvEffect)
 
 afterEach(async () => {
   await React.act(async () => {
@@ -501,6 +515,53 @@ describe('EffectComposer', () => {
       const secondEffects = effectPasses[1].effects as Effect[]
       expect(firstEffects.filter((e) => e instanceof ConvolutionEffect || e instanceof ConvolutionEffectTwo)).toHaveLength(1)
       expect(secondEffects.filter((e) => e instanceof ConvolutionEffect || e instanceof ConvolutionEffectTwo)).toHaveLength(1)
+    })
+
+    it("'auto' splits a mainUv effect and a convolution effect into separate passes (mainUv first)", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedMainUvEffect />
+            <WrappedConvolutionEffect />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.passes.filter((pass) => pass instanceof EffectPass)).toHaveLength(2)
+    })
+
+    it("'auto' splits a mainUv effect and a convolution effect into separate passes (convolution first)", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedConvolutionEffect />
+            <WrappedMainUvEffect />
+          </EffectComposer>
+        )
+      )
+
+      const composer = await waitForComposer(ref)
+      expect(composer.passes.filter((pass) => pass instanceof EffectPass)).toHaveLength(2)
+    })
+
+    it("'all' throws at render time if that removes 'auto'-only protection against merging a mainUv effect with a convolution effect", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await expect(
+        React.act(async () =>
+          root.render(
+            <EffectComposer ref={ref} mergeMode="all">
+              <WrappedMainUvEffect />
+              <WrappedConvolutionEffect />
+            </EffectComposer>
+          )
+        )
+      ).rejects.toThrow('Effects that transform UVs are incompatible with convolution effects')
     })
 
     it("'all' merges even a single convolution effect with neighbors, same as 'auto'", async () => {
