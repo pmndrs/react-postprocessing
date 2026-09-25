@@ -11,7 +11,7 @@ import {
 } from 'postprocessing'
 import * as React from 'react'
 import * as THREE from 'three'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
 import { ColorAverage } from '../effects/ColorAverage'
 import { wrapEffect } from '../wrapEffect'
@@ -1460,6 +1460,73 @@ describe('EffectComposer', () => {
 
       addPassSpy.mockRestore()
       initializeSpy.mockRestore()
+    })
+  })
+
+  describe('sizing', () => {
+    // frameloop is 'never', so frames are advanced by hand. The GL context is mocked, so only
+    // the sizing check runs, not the render. The test canvas has no layout, so give it a size
+    const renderer = () => root.render(null).getState().gl
+
+    beforeEach(() => renderer().setSize(640, 400, false))
+
+    afterEach(() => {
+      renderer().setPixelRatio(1)
+      renderer().setSize(0, 0, false)
+    })
+
+    const mountSized = async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+      const store = await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+      const composer = await waitForComposer(ref)
+      vi.spyOn(composer, 'render').mockImplementation(() => {})
+      const frame = () => React.act(async () => store.getState().advance(performance.now()))
+      await frame()
+      return { gl: store.getState().gl, composer, frame, setSize: vi.spyOn(composer, 'setSize') }
+    }
+
+    it('does not resize the composer on frames where nothing changed', async () => {
+      const { frame, setSize } = await mountSized()
+      await frame()
+      await frame()
+      expect(setSize).not.toHaveBeenCalled()
+    })
+
+    it('resizes the composer when only the pixel ratio changes', async () => {
+      const { gl, composer, frame, setSize } = await mountSized()
+      const cssSize = gl.getSize(new THREE.Vector2())
+
+      // What r3f's setDpr and drei's AdaptiveDpr do: the CSS size stays, the drawing buffer doesn't
+      gl.setPixelRatio(2)
+      await frame()
+
+      expect(setSize).toHaveBeenCalledTimes(1)
+      expect(setSize).toHaveBeenCalledWith(cssSize.width, cssSize.height)
+      expect(composer.inputBuffer.width).toBe(cssSize.width * 2)
+      expect(composer.inputBuffer.height).toBe(cssSize.height * 2)
+
+      await frame()
+      expect(setSize).toHaveBeenCalledTimes(1)
+    })
+
+    it('shrinks its buffers when the pixel ratio drops', async () => {
+      // e.g. AdaptiveDpr regressing, or the window moving to a 1x display
+      renderer().setPixelRatio(2)
+      const { gl, composer, frame } = await mountSized()
+      const cssSize = gl.getSize(new THREE.Vector2())
+      expect(composer.inputBuffer.width).toBe(cssSize.width * 2)
+
+      gl.setPixelRatio(1)
+      await frame()
+
+      expect(composer.inputBuffer.width).toBe(cssSize.width)
+      expect(composer.outputBuffer.width).toBe(cssSize.width)
     })
   })
 })
