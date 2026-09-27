@@ -271,8 +271,11 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   ])
 
   // Last size actually applied to the composer, so the check below is a
-  // cheap no-op on frames where nothing changed.
-  const appliedSizeRef = useRef({ width: -1, height: -1 })
+  // cheap no-op on frames where nothing changed. The pixel ratio is part of
+  // it: setDpr, AdaptiveDpr or moving to another display change the drawing
+  // buffer without changing gl.getSize(), and composer.setSize() sizes its
+  // buffers and passes from the drawing buffer.
+  const appliedSizeRef = useRef({ width: -1, height: -1, pixelRatio: -1 })
 
   useFrame(
     (_, delta) => {
@@ -280,10 +283,13 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
       const { composer } = composerState
 
       gl.getSize(glSize)
-      if (glSize.width !== appliedSizeRef.current.width || glSize.height !== appliedSizeRef.current.height) {
+      const pixelRatio = gl.getPixelRatio()
+      const applied = appliedSizeRef.current
+      if (glSize.width !== applied.width || glSize.height !== applied.height || pixelRatio !== applied.pixelRatio) {
         composer.setSize(glSize.width, glSize.height)
-        appliedSizeRef.current.width = glSize.width
-        appliedSizeRef.current.height = glSize.height
+        applied.width = glSize.width
+        applied.height = glSize.height
+        applied.pixelRatio = pixelRatio
       }
 
       const currentAutoClear = gl.autoClear
