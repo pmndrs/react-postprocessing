@@ -22,14 +22,18 @@ return (
 )
 ```
 
+## Example
+
+[![TiltShift demo](https://pmndrs.github.io/examples/tilt-shift/thumbnail.webp)](https://pmndrs.github.io/examples/tilt-shift)
+
 ## Props
 
-| Name          | Type          | Default          | Description                                              |
-| ------------- | ------------- | ------------------ | ------------------------------------------------------------ |
-| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                      |
-| blur          | Number        | 0.15                | The blur intensity. Range [0, 1] (can exceed 1 for extra). |
-| taper         | Number        | 0.5                 | The size of the sharp/in-focus area. Range [0, 1] (can exceed 1). |
-| start         | [Number, Number] | [0.5, 0.0]        | Start point of the blur band, in screen-space percent.  |
-| end           | [Number, Number] | [0.5, 1.0]        | End point of the blur band, in screen-space percent.    |
-| samples       | Number        | 10                   | The number of blur samples.                              |
-| direction     | [Number, Number] | [1, 1]            | The direction of the blur.                                |
+| Name          | Type             | Default              | Description                                                       |
+| ------------- | ---------------- | -------------------- | ----------------------------------------------------------------- |
+| blendFunction | BlendFunction    | BlendFunction.NORMAL | The blend function of this effect.                                |
+| blur          | Number           | 0.15                 | The blur intensity. Range [0, 1] (can exceed 1 for extra).        |
+| taper         | Number           | 0.5                  | The size of the sharp/in-focus area. Range [0, 1] (can exceed 1). |
+| start         | [Number, Number] | [0.5, 0.0]           | Start point of the blur band, in screen-space percent.            |
+| end           | [Number, Number] | [0.5, 1.0]           | End point of the blur band, in screen-space percent.              |
+| samples       | Number           | 10                   | The number of blur samples.                                       |
+| direction     | [Number, Number] | [1, 1]               | The direction of the blur.                                        |

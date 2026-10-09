@@ -26,7 +26,7 @@ type DepthPickingApi = {
 ```tsx
 function useDepthPicking(
   pass: RefObject<DepthPickingApi | null>,
-  camera?: THREE.Camera, // defaults to the composer's camera, then r3f's own
+  camera?: THREE.Camera // defaults to the composer's camera, then r3f's own
 ): (x: number, y: number) => Promise<THREE.Vector3 | false>
 ```
 
@@ -63,7 +63,7 @@ return (
 
 It unprojects using the `<EffectComposer>`'s own camera when called from inside it - the same one the pass renders depth from - falling back to r3f's own camera otherwise. Called from outside that `<EffectComposer>` (like `Cursor` above) with a non-default camera, pass that same camera as the second argument explicitly.
 
-**If you render something at the picked position** (a cursor, a placement preview, ...), give its material `depthWrite={false}`. Depth is read from the same buffer everything else renders into - without this, your own marker sits at the last hitpoint, gets sampled by the *next* pick as the closest surface there, and the marker creeps toward the camera every frame, faster as it gets closer, until it resets and repeats. (`Autofocus`'s own debug markers already do this.)
+**If you render something at the picked position** (a cursor, a placement preview, ...), give its material `depthWrite={false}`. Depth is read from the same buffer everything else renders into - without this, your own marker sits at the last hitpoint, gets sampled by the _next_ pick as the closest surface there, and the marker creeps toward the camera every frame, faster as it gets closer, until it resets and repeats. (`Autofocus`'s own debug markers already do this.)
 
 Click-to-pick instead of every frame:
 
@@ -71,3 +71,7 @@ Click-to-pick instead of every frame:
 const hit = await getHit(pointerNdcX, pointerNdcY)
 if (hit) character.moveTo(hit)
 ```
+
+## Example
+
+[![DepthPicking demo](https://pmndrs.github.io/examples/depth-picking/thumbnail.webp)](https://pmndrs.github.io/examples/depth-picking)
