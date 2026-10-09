@@ -54,6 +54,7 @@ import { Sepia } from '../effects/Sepia'
 import { ShockWave } from '../effects/ShockWave'
 import { SMAA } from '../effects/SMAA'
 import { SSAO } from '../effects/SSAO'
+import { Texture } from '../effects/Texture'
 import { TiltShift } from '../effects/TiltShift'
 import { TiltShift2 } from '../effects/TiltShift2'
 import { ToneMapping } from '../effects/ToneMapping'
@@ -125,6 +126,11 @@ const SMOKE_CASES: SmokeCase[] = [
     composerProps: { enableNormalPass: true },
     effect: (ref) => <SSAO ref={ref} />,
   },
+  {
+    file: 'Texture.tsx',
+    label: 'Texture (with a passed texture)',
+    effect: (ref) => <Texture ref={ref} texture={new THREE.Texture()} />,
+  },
   { file: 'TiltShift.tsx', label: 'TiltShift', effect: (ref) => <TiltShift ref={ref} /> },
   { file: 'TiltShift2.tsx', label: 'TiltShift2', effect: (ref) => <TiltShift2 ref={ref} /> },
   { file: 'ToneMapping.tsx', label: 'ToneMapping', effect: (ref) => <ToneMapping ref={ref} /> },
@@ -133,8 +139,6 @@ const SMOKE_CASES: SmokeCase[] = [
 ]
 
 const EXCLUDED: Record<string, string> = {
-  'Texture.tsx':
-    'loads via useLoader(TextureLoader, textureSrc) — needs a real image decode pipeline this test environment cannot provide. Verify manually.',
   'ASCII.tsx':
     "constructs its character atlas via document.createElement('canvas') — this project's vitest config runs the node test environment (no jsdom/document). Verify manually.",
 }
