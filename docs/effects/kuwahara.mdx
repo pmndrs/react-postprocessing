@@ -1,0 +1,32 @@
+---
+title: Kuwahara
+nav: 1
+---
+
+A painterly filter that smooths flat areas into brush-like strokes while keeping edges sharp. It is an anisotropic generalized Kuwahara filter: the sampling area follows the local edge direction.
+
+Based on [Maxime Heckel's article on painterly shaders](https://blog.maximeheckel.com/posts/on-crafting-painterly-shaders/).
+
+```jsx
+import { Kuwahara } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Kuwahara
+    radius={4} // filter radius in pixels
+    sectorCount={8} // number of sectors, 2 to 8
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+The filter takes about `radius * sectorCount * 3` texture samples per pixel, so large radii get expensive quickly. Lower `sectorCount` when raising `radius`.
+
+## Props
+
+| Name          | Type          | Default              | Description                                                   |
+| ------------- | ------------- | -------------------- | ------------------------------------------------------------- |
+| radius        | Number        | 4                    | The filter radius in pixels.                                  |
+| sectorCount   | Number        | 8                    | The number of sectors, 2 to 8. Fewer is cheaper but blockier. |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                            |
+| opacity       | Number        | 1                    | The opacity of this effect.                                   |
