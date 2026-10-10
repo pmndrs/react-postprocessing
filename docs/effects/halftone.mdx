@@ -1,0 +1,40 @@
+---
+title: Halftone
+nav: 1
+---
+
+An RGB halftone print effect: each color channel becomes a rotated grid of dots whose size follows the image brightness, for a comic or printed look.
+
+Ported from the three.js [HalftonePass](https://threejs.org/examples/#webgl_postprocessing_rgb_halftone).
+
+```jsx
+import { Halftone, HalftoneShape } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Halftone
+    shape={HalftoneShape.Dot} // Dot, Ellipse, Line or Square
+    radius={4} // dot grid spacing in pixels
+    rotateR={Math.PI / 12} // red channel grid rotation
+    rotateG={(Math.PI / 12) * 2} // green channel grid rotation
+    rotateB={(Math.PI / 12) * 3} // blue channel grid rotation
+    scatter={0} // random dot offset, 0 to 1
+    greyscale={false} // renders the dots in greyscale
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## Props
+
+| Name          | Type          | Default              | Description                                        |
+| ------------- | ------------- | -------------------- | -------------------------------------------------- |
+| shape         | HalftoneShape | HalftoneShape.Dot    | The dot shape: Dot, Ellipse, Line or Square.       |
+| radius        | Number        | 4                    | Dot grid spacing and maximum dot radius in pixels. |
+| rotateR       | Number        | Math.PI / 12         | Rotation of the red channel grid in radians.       |
+| rotateG       | Number        | Math.PI / 6          | Rotation of the green channel grid in radians.     |
+| rotateB       | Number        | Math.PI / 4          | Rotation of the blue channel grid in radians.      |
+| scatter       | Number        | 0                    | Random dot offset, 0 to 1.                         |
+| greyscale     | Boolean       | false                | Renders the dots in greyscale.                     |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                 |
+| opacity       | Number        | 1                    | The opacity of this effect.                        |
