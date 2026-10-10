@@ -43,6 +43,7 @@ import { GodRays } from '../effects/GodRays'
 import { Grid } from '../effects/Grid'
 import { HueSaturation } from '../effects/HueSaturation'
 import { LensFlare } from '../effects/LensFlare'
+import { Linocut } from '../effects/Linocut'
 import { LUT } from '../effects/LUT'
 import { Noise } from '../effects/Noise'
 import { Outline } from '../effects/Outline'
@@ -100,6 +101,7 @@ const SMOKE_CASES: SmokeCase[] = [
   { file: 'Grid.tsx', label: 'Grid', effect: (ref) => <Grid ref={ref} /> },
   { file: 'HueSaturation.tsx', label: 'HueSaturation', effect: (ref) => <HueSaturation ref={ref} /> },
   { file: 'LensFlare.tsx', label: 'LensFlare', effect: (ref) => <LensFlare ref={ref} /> },
+  { file: 'Linocut.tsx', label: 'Linocut', effect: (ref) => <Linocut ref={ref} /> },
   { file: 'LUT.tsx', label: 'LUT', effect: (ref) => <LUT ref={ref} lut={lutTexture} /> },
   { file: 'N8AO.tsx', label: 'N8AO', effect: (ref) => <N8AO ref={ref} /> },
   { file: 'Noise.tsx', label: 'Noise', effect: (ref) => <Noise ref={ref} /> },
