@@ -75,7 +75,10 @@ export function Outline({
 
   useLiveDefaults(
     effect,
-    { ...liveProps, 'blendMode-blendFunction': blendFunction, 'blendMode-opacity-value': opacity } as Record<string, unknown>,
+    { ...liveProps, 'blendMode-blendFunction': blendFunction, 'blendMode-opacity-value': opacity } as Record<
+      string,
+      unknown
+    >,
     LIVE_KEYS,
     readPierced,
     set
