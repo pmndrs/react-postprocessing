@@ -17,6 +17,8 @@ when things have to be grouped. These two components take care of it:
 <Select
   children: JSX.Element | JSX.Element[]
   enabled?: boolean
+  /** Keeps this subtree out of the selection, even when an ancestor Select is enabled. */
+  exclude?: boolean
 >
 ```
 
@@ -36,7 +38,7 @@ instance `Outline`) will acknowledge it.
 ```
 
 Selection can be nested and group multiple object, higher up selection take
-precence over lower ones. The following for instance will select everything.
+precedence over lower ones. The following for instance will select everything.
 Remove the outmost `enabled` and only the two mesh group is selected. You can
 flip the selections or bind them to interactions and state.
 
@@ -48,6 +50,19 @@ flip the selections or bind them to interactions and state.
   </Select>
   <Select>
     <mesh />
+  </Select>
+</Select>
+```
+
+To keep part of an enabled subtree out of the selection, wrap it in a `Select`
+with `exclude`. Selects nested inside an excluded subtree can still select
+their own objects.
+
+```jsx
+<Select enabled>
+  <mesh /> {/* selected */}
+  <Select exclude>
+    <mesh /> {/* not selected */}
   </Select>
 </Select>
 ```
