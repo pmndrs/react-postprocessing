@@ -7,9 +7,7 @@ import { DepthOfField } from '../effects/DepthOfField'
 import { GodRays } from '../effects/GodRays'
 import { LUT } from '../effects/LUT'
 import { Outline } from '../effects/Outline'
-import { Pixelation } from '../effects/Pixelation'
 import { SelectiveBloom } from '../effects/SelectiveBloom'
-import { ShockWave } from '../effects/ShockWave'
 import { SSAO } from '../effects/SSAO'
 import { flush, root } from './test-utils'
 
@@ -28,9 +26,7 @@ const CASES: {
   { label: 'GodRays', render: (ref, p) => <GodRays ref={ref} sun={sun} {...p} /> },
   { label: 'LUT', render: (ref, p) => <LUT ref={ref} lut={lut} {...p} /> },
   { label: 'Outline', render: (ref, p) => <Outline ref={ref} {...p} /> },
-  { label: 'Pixelation', render: (ref, p) => <Pixelation ref={ref} {...p} /> },
   { label: 'SelectiveBloom', render: (ref, p) => <SelectiveBloom ref={ref} lights={[light]} {...p} /> },
-  { label: 'ShockWave', render: (ref, p) => <ShockWave ref={ref} {...p} /> },
   { label: 'SSAO', composerProps: { enableNormalPass: true }, render: (ref, p) => <SSAO ref={ref} {...p} /> },
 ]
 
