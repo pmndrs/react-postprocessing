@@ -22,12 +22,7 @@ describe('DepthPicking', () => {
     await React.act(async () => root.render(null))
   })
 
-  // Depth reads are position-independent (postprocessing's stable depth
-  // texture is populated once per frame off RenderPass, not off wherever
-  // DepthPicking's own pass happens to land) - verified against real
-  // geometry in test-env, not just structurally here. enableNormalPass adds
-  // a NormalPass right after RenderPass too, shifting what "index 1" used
-  // to mean back when this was added at a fixed index.
+  // enableNormalPass adds a NormalPass after RenderPass, shifting pass indices
   it('still keeps its trailing CopyPass owning renderToScreen with enableNormalPass and other effects around it', async () => {
     const composerRef = React.createRef<EffectComposerImpl>()
 
@@ -76,13 +71,8 @@ describe('DepthPicking', () => {
     await React.act(async () => root.render(null))
   })
 
-  // DepthPickingPass.render() is conditional on a pending readDepth() call -
-  // unlike a normal pass, a frame with nothing pending renders nothing at
-  // all. If it ever owned renderToScreen (e.g. as the structurally-last
-  // pass with no other effects present), those frames would leave the
-  // screen showing whatever was already in the framebuffer. Its own
-  // trailing CopyPass (always unconditional) must own renderToScreen
-  // instead, even with no other effects around.
+  // DepthPickingPass renders nothing without a pending readDepth(), so it must never
+  // own renderToScreen - its always-running CopyPass does instead
   it('never owns renderToScreen even with no other effects - its own trailing CopyPass does instead', async () => {
     const composerRef = React.createRef<EffectComposerImpl>()
 
@@ -189,10 +179,7 @@ describe('useDepthPicking', () => {
     expect((hit as THREE.Vector3).toArray()).toEqual(expected.toArray())
   })
 
-  // The point of taking `pass` as a plain ref (rather than reading
-  // DepthPicking's own context) - the hook itself never touches
-  // EffectComposerContext, so it works from anywhere under <Canvas>, not
-  // just from inside the <EffectComposer> the pass happens to live in.
+  // The hook takes a plain ref, not EffectComposerContext, so it works anywhere under <Canvas>
   it('works when called outside the <EffectComposer> the pass is mounted in', async () => {
     const fakePass: DepthPickingApi = { readDepth: async () => 0.5 }
     const passRef = { current: fakePass }

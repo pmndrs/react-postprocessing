@@ -273,11 +273,7 @@ describe('Selection/Select', () => {
     const meshRef = React.createRef<THREE.Mesh>()
     const updaters: Array<(prev: THREE.Object3D[]) => THREE.Object3D[]> = []
 
-    // React batches both nested Selects' cleanup calls into a single
-    // re-render regardless of this bail-out (the net change from mount to
-    // unmount is real), so the optimization isn't observable through
-    // rendering alone. Capture the raw updater functions instead and
-    // replay them directly to verify the second one bails.
+    // React batches both cleanups into one render, so replay the raw updaters to see the bail-out
     function CapturingSelection({ children }: { children: React.ReactNode }) {
       const [selected, setSelected] = React.useState<THREE.Object3D[]>([])
       const select = React.useCallback((updater: React.SetStateAction<THREE.Object3D[]>) => {

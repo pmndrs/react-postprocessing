@@ -1,22 +1,6 @@
-// Generic smoke coverage for every effect component: mounts inside a real
-// EffectComposer with the minimum props each one actually requires, confirms
-// mounting/unmounting doesn't throw, and that dispose() gets called exactly
-// once per instance on unmount (for both <primitive>-based effects, via our
-// useDispose hook, and wrapEffect-based ones, via r3f's own auto-dispose).
-//
-// This catches constructor/prop-application/dispose-time crashes — it does
-// NOT verify visual/shader correctness. The test environment's WebGL context
-// is a Proxy of no-ops (see test-utils.tsx), so nothing actually renders;
-// effects still need manual/visual verification before release.
-//
-// Coverage is enforced by the last test in this file: every *.tsx file in
-// src/effects or src/passes must appear either in SMOKE_CASES or EXCLUDED
-// below. Adding a new effect/pass file without touching either list fails CI.
-//
-// This file is excluded from `tsc -p tsconfig.json` (it matches
-// src/**/*.test.*), so editors fall back to a detached/inferred compilation
-// context for it that doesn't automatically pick up @types/node — hence the
-// explicit reference below for the node: imports used by the coverage check.
+// Mounts/unmounts every effect and checks dispose() runs once. WebGL is a no-op
+// proxy here, so shaders are never verified. The last test fails if a file in
+// src/effects or src/passes is missing from SMOKE_CASES/EXCLUDED.
 
 /// <reference types="node" />
 
@@ -28,7 +12,7 @@ import * as React from 'react'
 import * as THREE from 'three'
 import { describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
-import { Autofocus } from '../effects/Autofocus'
+import { Autofocus, type AutofocusApi } from '../effects/Autofocus'
 import { Bloom } from '../effects/Bloom'
 import { BrightnessContrast } from '../effects/BrightnessContrast'
 import { ChromaticAberration } from '../effects/ChromaticAberration'
@@ -172,17 +156,10 @@ describe('effect smoke tests', () => {
     }
   })
 
-  // Autofocus's ref resolves to { dofRef, hitpoint, update }, not an effect
-  // instance - the generic dispose check above no-ops for it. It owns two
-  // disposables (the nested DepthPicking component's pass, and the
-  // nested DepthOfField effect), verified here.
+  // Autofocus's ref is an AutofocusApi, not an effect, so the generic dispose check skips it
   it('Autofocus disposes the nested DepthPicking and DepthOfField effect', async () => {
     const depthPickingDisposeSpy = vi.spyOn(DepthPickingPassImpl.prototype, 'dispose')
-    // AutofocusProps' `ref` type is broken (ComponentProps<typeof DepthOfField>
-    // drags in DepthOfField's own `ref: Ref<DepthOfFieldEffect>`, which then
-    // intersects with `Ref<AutofocusApi>` — separate pre-existing issue,
-    // not fixed here). `any` sidesteps it; the runtime shape is AutofocusApi.
-    const ref = React.createRef<any>()
+    const ref = React.createRef<AutofocusApi>()
 
     await React.act(async () =>
       root.render(

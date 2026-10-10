@@ -171,13 +171,7 @@ describe('wrapEffect', () => {
   })
 
   it('does not crash on repeated re-renders once a ref is attached', async () => {
-    // Regression for a bug specific to the *old* wrapEffect: it never
-    // destructured `ref` out of props, so `ref` landed in `...props` and
-    // JSON.stringify(props) tried to serialize `ref.current` — the mounted
-    // effect instance itself — on every re-render after the first, which
-    // crashed the same way #333/#334 did for texture props. Current
-    // wrapEffect destructures `ref` explicitly, so it never reaches the
-    // fingerprint at all; this just locks that in.
+    // The old wrapEffect serialized props including ref.current and crashed like #333/#334
     const composerRef = React.createRef<EffectComposerImpl>()
     const effectRef = React.createRef<FakeEffect>()
 
