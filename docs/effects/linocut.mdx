@@ -1,0 +1,34 @@
+---
+title: Linocut
+nav: 1
+---
+
+Turns the scene into a high-contrast black and white image with carved, swirling lines, like a linocut or woodcut print.
+
+Ported from [TresJS post-processing](https://post-processing.tresjs.org/api/pmndrs/linocut).
+
+```jsx
+import { Linocut } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Linocut
+    scale={0.85} // line width and swirl amount, 0 to 1
+    noiseScale={0} // noise added before thresholding, 0 to 1
+    center={[0.5, 0.5]} // center of the line pattern
+    rotation={0} // rotation of the line pattern in radians
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## Props
+
+| Name          | Type          | Default              | Description                                            |
+| ------------- | ------------- | -------------------- | ------------------------------------------------------ |
+| scale         | Number        | 0.85                 | Line width and swirl amount, 0 to 1.                   |
+| noiseScale    | Number        | 0                    | Noise added before thresholding, 0 to 1.               |
+| center        | Vector2       | [0.5, 0.5]           | Center of the line pattern in normalized screen space. |
+| rotation      | Number        | 0                    | Rotation of the line pattern in radians.               |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                     |
+| opacity       | Number        | 1                    | The opacity of this effect.                            |

@@ -45,6 +45,7 @@ import { HueSaturation } from '../effects/HueSaturation'
 import { Kuwahara } from '../effects/Kuwahara'
 import { LensDistortion } from '../effects/LensDistortion'
 import { LensFlare } from '../effects/LensFlare'
+import { Linocut } from '../effects/Linocut'
 import { LUT } from '../effects/LUT'
 import { Noise } from '../effects/Noise'
 import { Outline } from '../effects/Outline'
@@ -104,6 +105,7 @@ const SMOKE_CASES: SmokeCase[] = [
   { file: 'Kuwahara.tsx', label: 'Kuwahara', effect: (ref) => <Kuwahara ref={ref} /> },
   { file: 'LensDistortion.tsx', label: 'LensDistortion', effect: (ref) => <LensDistortion ref={ref} /> },
   { file: 'LensFlare.tsx', label: 'LensFlare', effect: (ref) => <LensFlare ref={ref} /> },
+  { file: 'Linocut.tsx', label: 'Linocut', effect: (ref) => <Linocut ref={ref} /> },
   { file: 'LUT.tsx', label: 'LUT', effect: (ref) => <LUT ref={ref} lut={lutTexture} /> },
   { file: 'N8AO.tsx', label: 'N8AO', effect: (ref) => <N8AO ref={ref} /> },
   { file: 'Noise.tsx', label: 'Noise', effect: (ref) => <Noise ref={ref} /> },
