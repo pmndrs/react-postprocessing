@@ -41,6 +41,7 @@ import { FXAA } from '../effects/FXAA'
 import { Glitch } from '../effects/Glitch'
 import { GodRays } from '../effects/GodRays'
 import { Grid } from '../effects/Grid'
+import { Halftone } from '../effects/Halftone'
 import { HueSaturation } from '../effects/HueSaturation'
 import { Kuwahara } from '../effects/Kuwahara'
 import { LensDistortion } from '../effects/LensDistortion'
@@ -101,6 +102,7 @@ const SMOKE_CASES: SmokeCase[] = [
     effect: (ref) => <GodRays ref={ref} sun={sunMesh} />,
   },
   { file: 'Grid.tsx', label: 'Grid', effect: (ref) => <Grid ref={ref} /> },
+  { file: 'Halftone.tsx', label: 'Halftone', effect: (ref) => <Halftone ref={ref} /> },
   { file: 'HueSaturation.tsx', label: 'HueSaturation', effect: (ref) => <HueSaturation ref={ref} /> },
   { file: 'Kuwahara.tsx', label: 'Kuwahara', effect: (ref) => <Kuwahara ref={ref} /> },
   { file: 'LensDistortion.tsx', label: 'LensDistortion', effect: (ref) => <LensDistortion ref={ref} /> },
