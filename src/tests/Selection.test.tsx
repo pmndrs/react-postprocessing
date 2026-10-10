@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as THREE from 'three'
 import { afterEach, describe, expect, it } from 'vitest'
 import { Select, Selection, selectionContext } from '../Selection'
-import { flush, root } from './test-utils'
+import { flush, root, strict } from './test-utils'
 
 afterEach(async () => {
   await React.act(async () => {
@@ -320,5 +320,170 @@ describe('Selection/Select', () => {
     const afterFirst = updaters[0]([mesh])
     const afterSecond = updaters[1](afterFirst)
     expect(afterSecond).toBe(afterFirst)
+  })
+
+  it('keeps an object selected via the inner Select after the outer one disables', async () => {
+    const snapshots: THREE.Object3D[][] = []
+    const meshRef = React.createRef<THREE.Mesh>()
+
+    const render = (outerEnabled: boolean) =>
+      root.render(
+        <Selection>
+          <Capture onSnapshot={(s) => snapshots.push(s)} />
+          <Select enabled={outerEnabled}>
+            <Select enabled>
+              <mesh ref={meshRef}>
+                <boxGeometry />
+                <meshBasicMaterial />
+              </mesh>
+            </Select>
+          </Select>
+        </Selection>
+      )
+
+    await React.act(async () => render(true))
+    await flush()
+    await flush()
+    expect(snapshots[snapshots.length - 1]).toContain(meshRef.current)
+
+    await React.act(async () => render(false))
+    await flush()
+    await flush()
+    expect(snapshots[snapshots.length - 1]).toContain(meshRef.current)
+  })
+
+  it('keeps claims balanced under StrictMode double-invoked effects', async () => {
+    const snapshots: THREE.Object3D[][] = []
+    const meshRef = React.createRef<THREE.Mesh>()
+
+    const render = (mounted: boolean, outerEnabled: boolean) =>
+      root.render(
+        strict(
+          <Selection>
+            <Capture onSnapshot={(s) => snapshots.push(s)} />
+            {mounted && (
+              <Select enabled={outerEnabled}>
+                <Select enabled>
+                  <mesh ref={meshRef} />
+                </Select>
+              </Select>
+            )}
+          </Selection>
+        )
+      )
+
+    await React.act(async () => render(true, true))
+    await flush()
+    await flush()
+    const mesh = meshRef.current
+    expect(snapshots[snapshots.length - 1]).toEqual([mesh])
+
+    await React.act(async () => render(true, false))
+    await flush()
+    await flush()
+    expect(snapshots[snapshots.length - 1]).toEqual([mesh])
+
+    await React.act(async () => render(false, false))
+    await flush()
+    await flush()
+    expect(snapshots[snapshots.length - 1]).toEqual([])
+  })
+
+  describe('exclude', () => {
+    it('keeps an excluded subtree out of an enabled ancestor Select (#154)', async () => {
+      const snapshots: THREE.Object3D[][] = []
+      const keptRef = React.createRef<THREE.Mesh>()
+      const excludedRef = React.createRef<THREE.Mesh>()
+
+      await React.act(async () =>
+        root.render(
+          <Selection>
+            <Capture onSnapshot={(s) => snapshots.push(s)} />
+            <Select enabled>
+              <mesh ref={keptRef} />
+              <Select exclude>
+                <group>
+                  <mesh ref={excludedRef} />
+                </group>
+              </Select>
+            </Select>
+          </Selection>
+        )
+      )
+      await flush()
+      await flush()
+
+      const last = snapshots[snapshots.length - 1]
+      expect(last).toContain(keptRef.current)
+      expect(last).not.toContain(excludedRef.current)
+    })
+
+    it('reacts to exclude toggling inside a nested component, without the ancestor re-rendering', async () => {
+      const snapshots: THREE.Object3D[][] = []
+      const meshRef = React.createRef<THREE.Mesh>()
+      let setExclude: (value: boolean) => void = () => {}
+
+      function Item() {
+        const [exclude, set] = React.useState(false)
+        setExclude = set
+        return (
+          <Select exclude={exclude}>
+            <mesh ref={meshRef} />
+          </Select>
+        )
+      }
+
+      await React.act(async () =>
+        root.render(
+          <Selection>
+            <Capture onSnapshot={(s) => snapshots.push(s)} />
+            <Select enabled>
+              <Item />
+            </Select>
+          </Selection>
+        )
+      )
+      await flush()
+      await flush()
+      expect(snapshots[snapshots.length - 1]).toContain(meshRef.current)
+
+      await React.act(async () => setExclude(true))
+      await flush()
+      await flush()
+      expect(snapshots[snapshots.length - 1]).not.toContain(meshRef.current)
+
+      await React.act(async () => setExclude(false))
+      await flush()
+      await flush()
+      expect(snapshots[snapshots.length - 1]).toContain(meshRef.current)
+    })
+
+    it('still lets an enabled Select inside an excluded subtree select its own objects', async () => {
+      const snapshots: THREE.Object3D[][] = []
+      const excludedRef = React.createRef<THREE.Mesh>()
+      const reselectedRef = React.createRef<THREE.Mesh>()
+
+      await React.act(async () =>
+        root.render(
+          <Selection>
+            <Capture onSnapshot={(s) => snapshots.push(s)} />
+            <Select enabled>
+              <Select exclude>
+                <mesh ref={excludedRef} />
+                <Select enabled>
+                  <mesh ref={reselectedRef} />
+                </Select>
+              </Select>
+            </Select>
+          </Selection>
+        )
+      )
+      await flush()
+      await flush()
+
+      const last = snapshots[snapshots.length - 1]
+      expect(last).not.toContain(excludedRef.current)
+      expect(last).toContain(reselectedRef.current)
+    })
   })
 })
