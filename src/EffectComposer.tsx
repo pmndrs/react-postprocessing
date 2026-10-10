@@ -200,7 +200,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   depthBuffer,
   enableNormalPass,
   stencilBuffer,
-  multisampling = 8,
+  multisampling = 4,
   frameBufferType = HalfFloatType,
   renderPass = defaultRenderPass,
   mergeMode = 'auto',

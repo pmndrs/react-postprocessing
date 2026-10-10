@@ -14,6 +14,7 @@ The `EffectComposer` must wrap all your effects. It will manage them for you.
   autoClear?: boolean
   /** Whether the last pass automatically renders to the screen. Set to `false` when rendering to a target of your own (e.g. via a trailing CopyPass) instead. */
   autoRenderToScreen?: boolean
+  /** MSAA sample count, default 4. Set to 0 to disable it, e.g. when using SMAA or FXAA instead. */
   multisampling?: number
   frameBufferType?: TextureDataType
   /** For effects that support DepthDownsamplingPass */
