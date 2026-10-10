@@ -42,6 +42,7 @@ import { Glitch } from '../effects/Glitch'
 import { GodRays } from '../effects/GodRays'
 import { Grid } from '../effects/Grid'
 import { HueSaturation } from '../effects/HueSaturation'
+import { LensDistortion } from '../effects/LensDistortion'
 import { LensFlare } from '../effects/LensFlare'
 import { LUT } from '../effects/LUT'
 import { Noise } from '../effects/Noise'
@@ -99,6 +100,7 @@ const SMOKE_CASES: SmokeCase[] = [
   },
   { file: 'Grid.tsx', label: 'Grid', effect: (ref) => <Grid ref={ref} /> },
   { file: 'HueSaturation.tsx', label: 'HueSaturation', effect: (ref) => <HueSaturation ref={ref} /> },
+  { file: 'LensDistortion.tsx', label: 'LensDistortion', effect: (ref) => <LensDistortion ref={ref} /> },
   { file: 'LensFlare.tsx', label: 'LensFlare', effect: (ref) => <LensFlare ref={ref} /> },
   { file: 'LUT.tsx', label: 'LUT', effect: (ref) => <LUT ref={ref} lut={lutTexture} /> },
   { file: 'N8AO.tsx', label: 'N8AO', effect: (ref) => <N8AO ref={ref} /> },
