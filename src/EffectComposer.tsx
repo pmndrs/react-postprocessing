@@ -45,7 +45,7 @@ export type EffectComposerProps = {
   enabled?: boolean
   children: ReactNode
   depthBuffer?: boolean
-  /** Only used for SSGI currently, leave it disabled for everything else unless it's needed */
+  /** Required by SSAO, leave it disabled otherwise. */
   enableNormalPass?: boolean
   stencilBuffer?: boolean
   autoClear?: boolean

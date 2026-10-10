@@ -1,10 +1,16 @@
 import { BlendFunction, SSAOEffect } from 'postprocessing'
 import { Ref, use, useMemo } from 'react'
+import type { Texture } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { applyPierced, readPierced, useDispose, useLiveDefaults } from '../util'
 
 // first two args are camera and texture
-type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2] & { ref?: Ref<SSAOEffect> }
+export type SSAOProps = Omit<NonNullable<ConstructorParameters<typeof SSAOEffect>[2]>, 'normalDepthBuffer'> & {
+  /** @deprecated Ignored, the EffectComposer's normal pass provides it. */
+  normalDepthBuffer?: Texture
+  opacity?: number
+  ref?: Ref<SSAOEffect>
+}
 
 // Only resolutionScale/resolutionX/resolutionY/width/height and
 // normalDepthBuffer have no live setter in postprocessing - everything else
@@ -15,6 +21,7 @@ type SSAOProps = ConstructorParameters<typeof SSAOEffect>[2] & { ref?: Ref<SSAOE
 // createEffectComponent (needs `new Effect()` to work with zero args).
 const LIVE_KEYS = [
   'blendMode-blendFunction',
+  'blendMode-opacity-value',
   'normalBuffer',
   'samples',
   'rings',
@@ -50,6 +57,7 @@ function set(effect: SSAOEffect, key: string, value: unknown): void {
 
 export function SSAO({
   blendFunction = BlendFunction.MULTIPLY,
+  opacity,
   samples = 30,
   rings = 4,
   distanceThreshold = 1.0,
@@ -122,6 +130,7 @@ export function SSAO({
     effect instanceof SSAOEffect ? effect : null,
     {
       'blendMode-blendFunction': blendFunction,
+      'blendMode-opacity-value': opacity,
       samples,
       rings,
       radius,

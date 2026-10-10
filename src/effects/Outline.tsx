@@ -14,6 +14,7 @@ export type OutlineProps = Omit<OutlineEffectOptions, 'visibleEdgeColor' | 'hidd
     selectionLayer: number
     visibleEdgeColor: ColorRepresentation
     hiddenEdgeColor: ColorRepresentation
+    opacity: number
     ref?: Ref<OutlineEffect>
   }>
 
@@ -38,6 +39,7 @@ const LIVE_KEYS = [
   'xRay',
   'dithering',
   'blendMode-blendFunction',
+  'blendMode-opacity-value',
 ]
 
 // The setter stores whatever it's given as-is, unlike the constructor -
@@ -51,6 +53,7 @@ export function Outline({
   selection = EMPTY_ARRAY,
   selectionLayer = 10,
   blendFunction,
+  opacity,
   resolutionScale,
   resolutionX,
   resolutionY,
@@ -72,7 +75,7 @@ export function Outline({
 
   useLiveDefaults(
     effect,
-    { ...liveProps, 'blendMode-blendFunction': blendFunction } as Record<string, unknown>,
+    { ...liveProps, 'blendMode-blendFunction': blendFunction, 'blendMode-opacity-value': opacity } as Record<string, unknown>,
     LIVE_KEYS,
     readPierced,
     set

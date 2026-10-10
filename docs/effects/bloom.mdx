@@ -7,12 +7,11 @@ A bloom effect.
 
 ```jsx
 import { Bloom } from '@react-three/postprocessing'
-import { BlurPass, Resizer, KernelSize, Resolution } from 'postprocessing'
+import { KernelSize, Resolution } from 'postprocessing'
 
 return (
   <Bloom
     intensity={1.0} // The bloom intensity.
-    blurPass={undefined} // A blur pass.
     kernelSize={KernelSize.LARGE} // blur kernel size
     luminanceThreshold={0.9} // luminance threshold. Raise this value to mask out darker elements in the scene.
     luminanceSmoothing={0.025} // smoothness of the luminance threshold. Range is [0, 1]
@@ -54,14 +53,16 @@ clamp colors between 0 and 1 again.
 
 ## Props
 
-| Name               | Type                                                                                                         | Default              | Description                                                                                          |
-| ------------------ | ------------------------------------------------------------------------------------------------------------ | -------------------- | ---------------------------------------------------------------------------------------------------- |
-| luminanceThreshold | Number                                                                                                       | 0.9                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
-| luminanceSmoothing | Number                                                                                                       | 0.025                | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
-| blendFunction      | BlendFunction                                                                                                | BlendFunction.SCREEN | The blend function of this effect.                                                                   |
-| intensity          | Number                                                                                                       | 1                    | The intensity.                                                                                       |
-| resolutionX        | Number                                                                                                       | Resizer.AUTO_SIZE    | The render width.                                                                                    |
-| resolutionY        | Number                                                                                                       | Resizer.AUTO_SIZE    | The render height.                                                                                   |
-| kernelSize         | Number                                                                                                       | KernelSize.LARGE     | The blur kernel size.                                                                                |
-| blurPass           | [BlurPass](https://vanruesc.github.io/postprocessing/public/docs/class/src/passes/BlurPass.js~BlurPass.html) | null                 | An efficient, incremental blur pass.                                                                 |
-| mipMap             | Boolean                                                                                                      |
+| Name               | Type          | Default              | Description                                                                                          |
+| ------------------ | ------------- | -------------------- | ---------------------------------------------------------------------------------------------------- |
+| luminanceThreshold | Number        | 0.9                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
+| luminanceSmoothing | Number        | 0.025                | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
+| blendFunction      | BlendFunction | BlendFunction.ADD    | The blend function of this effect.                                                                   |
+| intensity          | Number        | 1                    | The intensity.                                                                                       |
+| resolutionX        | Number        | Resolution.AUTO_SIZE | The render width.                                                                                    |
+| resolutionY        | Number        | Resolution.AUTO_SIZE | The render height.                                                                                   |
+| kernelSize         | Number        | KernelSize.LARGE     | The blur kernel size.                                                                                |
+| mipmapBlur         | Boolean       | true                 | Enables mipmap blur.                                                                                 |
+| radius             | Number        | 0.85                 | The mipmap blur radius. Only used with mipmapBlur.                                                   |
+| levels             | Number        | 8                    | The number of mipmap blur levels. Only used with mipmapBlur.                                         |
+| opacity            | Number        | 1                    | The opacity of this effect.                                                                          |
