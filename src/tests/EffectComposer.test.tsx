@@ -1529,4 +1529,32 @@ describe('EffectComposer', () => {
       expect(composer.outputBuffer.width).toBe(cssSize.width)
     })
   })
+
+  describe('defaults', () => {
+    it('uses 4 MSAA samples unless multisampling is set', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+      const composer = await waitForComposer(ref)
+      expect(composer.multisampling).toBe(4)
+
+      await React.act(async () =>
+        root.render(
+          <EffectComposer ref={ref} multisampling={0}>
+            <WrappedEffectA />
+          </EffectComposer>
+        )
+      )
+      const next = await waitForNewComposer(ref, composer)
+      expect(next.multisampling).toBe(0)
+
+      await React.act(async () => root.render(null))
+    })
+  })
 })
