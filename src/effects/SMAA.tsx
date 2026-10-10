@@ -1,9 +1,9 @@
-import { SMAAEffect } from 'postprocessing'
+import { BlendFunction, SMAAEffect } from 'postprocessing'
 import type { Ref } from 'react'
 import { useMemo } from 'react'
 import { createEffectComponent, type EffectOptions } from '../createEffectComponent'
 
-type SMAAOptions = EffectOptions<typeof SMAAEffect>
+type SMAAOptions = EffectOptions<typeof SMAAEffect> & { blendFunction?: BlendFunction }
 
 const SMAAImpl = /* @__PURE__ */ createEffectComponent<typeof SMAAEffect, SMAAOptions>(SMAAEffect)
 

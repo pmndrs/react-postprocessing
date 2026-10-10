@@ -630,7 +630,7 @@ export class LensFlareEffect extends Effect {
   }
 }
 
-type LensFlareProps = Omit<Partial<LensFlareEffectOptions>, 'lensPosition'> & {
+export type LensFlareProps = Omit<Partial<LensFlareEffectOptions>, 'lensPosition'> & {
   /** Position of the effect */
   lensPosition?: ReactThreeFiber.Vector3
   /** The time that it takes to fade the occlusion */

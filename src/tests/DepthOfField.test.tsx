@@ -95,10 +95,7 @@ describe('DepthOfField', () => {
     await React.act(async () => render())
     await flush()
     expect(ref.current).toBe(first)
-    // Reverts to no manually-provided depth texture (undefined), the state
-    // useLiveDefaults captured as this instance's default on first apply -
-    // not whatever EffectComposer's own depth-attribute auto-wiring later
-    // assigns, which runs separately and after this.
+    // Reverts to the default captured on first apply, not the composer's later depth wiring
     expect(currentDepthBuffer()).toBeUndefined()
 
     await React.act(async () => root.render(null))

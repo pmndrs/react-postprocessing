@@ -15,6 +15,7 @@ export type SelectiveBloomProps = BloomEffectOptions &
     selectionLayer: number
     inverted: boolean
     ignoreBackground: boolean
+    opacity: number
     ref?: Ref<SelectiveBloomEffect>
   }>
 
@@ -26,12 +27,23 @@ const removeLight = (light: Object3D, effect: SelectiveBloomEffect) => light.lay
 // radius/levels/resolution* are construction-only in postprocessing itself.
 // scene/camera being required constructor args also rules out
 // createEffectComponent (needs `new Effect()` to work with zero args).
-const LIVE_KEYS = ['width', 'height', 'kernelSize', 'intensity', 'inverted', 'ignoreBackground']
+const LIVE_KEYS = [
+  'width',
+  'height',
+  'kernelSize',
+  'intensity',
+  'inverted',
+  'ignoreBackground',
+  'blendMode-blendFunction',
+  'blendMode-opacity-value',
+]
 
 export function SelectiveBloom({
   selection = EMPTY_ARRAY,
   selectionLayer = 10,
   lights = EMPTY_ARRAY,
+  blendFunction = BlendFunction.ADD,
+  opacity,
   luminanceThreshold,
   luminanceSmoothing,
   mipmapBlur,
@@ -63,7 +75,11 @@ export function SelectiveBloom({
     [scene, camera, luminanceThreshold, luminanceSmoothing, mipmapBlur, radius, levels, resolutionScale, resolutionX, resolutionY]
   )
 
-  useLiveDefaults(effect, liveProps as Record<string, unknown>, LIVE_KEYS)
+  useLiveDefaults(
+    effect,
+    { ...liveProps, 'blendMode-blendFunction': blendFunction, 'blendMode-opacity-value': opacity } as Record<string, unknown>,
+    LIVE_KEYS
+  )
 
   // Must run before the lights effect below: addLight/removeLight read
   // effect.selection.layer live, so it needs to already reflect the

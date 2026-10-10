@@ -9,13 +9,13 @@ import { applyPierced, readPierced, useDispose, useLiveDefaults } from '../util'
 export type DepthOfFieldProps = ConstructorParameters<typeof DepthOfFieldEffect>[1] &
   Partial<{
     ref: Ref<DepthOfFieldEffect>
+    opacity: number
     target: ReactThreeFiber.Vector3
     depthTexture: {
       texture: Texture
-      // TODO: narrow to DepthPackingStrategies
       packing: number
     }
-    // TODO: not used
+    /** @deprecated Has no effect. */
     blur: number
   }>
 
@@ -26,6 +26,7 @@ export type DepthOfFieldProps = ConstructorParameters<typeof DepthOfFieldEffect>
 // (needs `new Effect()` to work with zero args).
 const LIVE_KEYS = [
   'blendMode-blendFunction',
+  'blendMode-opacity-value',
   'bokehScale',
   'cocMaterial-focusDistance',
   'cocMaterial-focusRange',
@@ -53,6 +54,7 @@ function set(effect: DepthOfFieldEffect, key: string, value: unknown): void {
 export function DepthOfField({
   ref,
   blendFunction,
+  opacity,
   worldFocusDistance,
   worldFocusRange,
   focusDistance,
@@ -93,6 +95,7 @@ export function DepthOfField({
     effect,
     {
       'blendMode-blendFunction': blendFunction,
+      'blendMode-opacity-value': opacity,
       bokehScale,
       'cocMaterial-focusDistance': focusDistance,
       'cocMaterial-focusRange': focusRange,

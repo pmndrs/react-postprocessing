@@ -269,12 +269,7 @@ describe('EffectComposer', () => {
     it('accepts conditionally-rendered children via `condition && <Effect/>` without a type cast', async () => {
       const ref = React.createRef<EffectComposerImpl>()
 
-      // Boxed behind a function so TS can't literal-narrow `show` to `false`
-      // at the call site below — that would make `show && <WrappedEffectA/>`
-      // type as just `false` instead of `boolean | Element`, silently
-      // defeating the point of this test (a real regression to the old,
-      // too-narrow `children: JSX.Element | JSX.Element[]` type wouldn't
-      // get caught by tsc).
+      // A function keeps TS from narrowing `show` to a literal, which would hide a too-narrow children type
       const shouldShow = (value: boolean): boolean => value
 
       await React.act(async () =>
@@ -361,18 +356,8 @@ describe('EffectComposer', () => {
       expect(composer.passes.at(-1)?.renderToScreen).toBe(false)
     })
 
-    // Not a constructor option in postprocessing itself, but the only place
-    // it's actually read is inside addPass() - deciding whether *that* call
-    // also assigns renderToScreen to the pass going in. Setting it after
-    // passes already exist doesn't revisit them, so treating this as a
-    // live/reactive prop (mutate the flag, leave existing passes alone)
-    // would leave a composer that was built with autoRenderToScreen: false
-    // permanently unable to render to screen again, even after the prop
-    // flips back to true - every existing pass already has renderToScreen:
-    // false baked in from when it was added, and nothing revisits it.
-    // Recreating the composer (same treatment as depthBuffer/multisampling/
-    // etc. above) sidesteps that entirely: every pass is freshly added
-    // through addPass() with the current flag already in effect.
+    // autoRenderToScreen is only read in addPass(), so existing passes keep the old value.
+    // Recreating the composer re-adds every pass with the new flag.
     it('recreates the composer when autoRenderToScreen changes, with the new last pass matching it', async () => {
       const ref = React.createRef<EffectComposerImpl>()
 
@@ -584,10 +569,7 @@ describe('EffectComposer', () => {
       expect(effectPasses[0].effects).toHaveLength(3)
     })
 
-    // postprocessing itself throws when two convolution effects share a
-    // pass - 'all' doesn't guard against that (same no-guardrail contract as
-    // EffectGroup), unlike 'auto' which keeps them apart specifically to
-    // avoid this.
+    // 'all' has no guard against two convolution effects in one pass, unlike 'auto'
     it("'all' throws at render time if that removes 'auto'-only protection against merging two convolution effects", async () => {
       const ref = React.createRef<EffectComposerImpl>()
 
@@ -1052,11 +1034,7 @@ describe('EffectComposer', () => {
       await waitForComposer(refB)
       expect(gl.autoClear).toBe(false)
 
-      // Unmount the first composer only (key "a" drops out of the tree) -
-      // the second is still relying on autoClear staying off, so this must
-      // not restore it yet. Keying both is essential here: without it,
-      // React would match by position and reuse "a"'s instance in place
-      // (just updating its props to "b"'s), unmounting the wrong one.
+      // Unmount only "a" - "b" still needs autoClear off. Keys stop React from reusing "a" in place.
       await React.act(async () =>
         root.render(
           <EffectComposer key="b" ref={refB}>
@@ -1139,11 +1117,7 @@ describe('EffectComposer', () => {
 
     it('does not clobber a manual autoClear change made while the composer was mounted', async () => {
       const gl = root.render(null).getState().gl
-      // Pre-mount baseline is false (not the usual true) specifically so
-      // it differs from the manual override below - autoClear only has two
-      // states, so this is the only way to make an unconditional restore-
-      // to-original and a "preserve the manual change" outcome observably
-      // different from each other.
+      // Baseline false so restoring it and keeping the manual change below are distinguishable
       gl.autoClear = false
 
       const ref = React.createRef<EffectComposerImpl>()
@@ -1423,11 +1397,7 @@ describe('EffectComposer', () => {
 
       const effectPassAddCalls = addPassSpy.mock.calls.filter(([pass]) => pass instanceof EffectPass).length
 
-      // The node-list change detector and the pass-building effect settle
-      // over two synchronous layout-effect passes on first mount (detect
-      // change -> bump a version -> rebuild once more) - a one-time cost,
-      // not a per-render one. See the "does not rebuild on unrelated
-      // re-renders" test below for the actual guarantee this trades for.
+      // First mount settles over two rebuilds (detect change, bump version, rebuild), a one-time cost
       expect(effectPassAddCalls).toBeLessThanOrEqual(2)
 
       addPassSpy.mockRestore()

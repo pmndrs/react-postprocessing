@@ -5,8 +5,9 @@ import { Mesh, Points } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { applyPierced, readPierced, resolveRef, useDispose, useLiveDefaults } from '../util'
 
-type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
+export type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
   sun: Mesh | Points | RefObject<Mesh | Points>
+  opacity?: number
   ref?: Ref<GodRaysEffect>
 }
 
@@ -18,6 +19,7 @@ type GodRaysProps = ConstructorParameters<typeof GodRaysEffect>[2] & {
 // with zero args).
 const LIVE_KEYS = [
   'blendMode-blendFunction',
+  'blendMode-opacity-value',
   'godRaysMaterial-density',
   'godRaysMaterial-decay',
   'godRaysMaterial-weight',
@@ -42,6 +44,7 @@ function set(effect: GodRaysEffect, key: string, value: unknown): void {
 export function GodRays({
   sun,
   blendFunction,
+  opacity,
   density,
   decay,
   weight,
@@ -82,6 +85,7 @@ export function GodRays({
     effect,
     {
       'blendMode-blendFunction': blendFunction,
+      'blendMode-opacity-value': opacity,
       'godRaysMaterial-density': density,
       'godRaysMaterial-decay': decay,
       'godRaysMaterial-weight': weight,

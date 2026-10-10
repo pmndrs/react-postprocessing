@@ -67,12 +67,7 @@ describe('GodRays', () => {
     const sunA = new Mesh(new SphereGeometry(1, 8, 8))
     const sunB = new Mesh(new SphereGeometry(1, 8, 8))
 
-    // Both meshes are mounted unconditionally throughout - only the `sun`
-    // prop GodRays points at changes, so the only invalidate() candidate is
-    // GodRays.tsx's own effect.lightSource assignment, not r3f's native
-    // handling of a <primitive object={...}> swap (a real prop change it
-    // already invalidates for on its own, which a naive test could
-    // mistake for this effect's own behavior).
+    // Both meshes stay mounted, so only GodRays' own lightSource update can call invalidate()
     const render = (sun: Mesh) =>
       root.render(
         <EffectComposer ref={composerRef}>
