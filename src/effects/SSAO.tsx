@@ -1,11 +1,13 @@
 import { BlendFunction, SSAOEffect } from 'postprocessing'
 import { Ref, use, useMemo } from 'react'
-import type { Texture } from 'three'
+import type { ColorRepresentation, Texture } from 'three'
 import { EffectComposerContext } from '../EffectComposer'
 import { applyPierced, readPierced, useDispose, useLiveDefaults } from '../util'
 
 // first two args are camera and texture
-export type SSAOProps = Omit<NonNullable<ConstructorParameters<typeof SSAOEffect>[2]>, 'normalDepthBuffer'> & {
+export type SSAOProps = Omit<NonNullable<ConstructorParameters<typeof SSAOEffect>[2]>, 'normalDepthBuffer' | 'color'> & {
+  /** Tints the occlusion. null disables it. */
+  color?: ColorRepresentation | null
   /** @deprecated Ignored, the EffectComposer's normal pass provides it. */
   normalDepthBuffer?: Texture
   opacity?: number

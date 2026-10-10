@@ -36,6 +36,23 @@ describe('SSAO', () => {
     expect(ref.current!.ssaoMaterial.minRadiusScale).toBeCloseTo(0.1)
   })
 
+  it('accepts a CSS color string for color, not just a Color instance', async () => {
+    const ref = React.createRef<SSAOEffect>()
+
+    await React.act(async () =>
+      root.render(
+        <EffectComposer enableNormalPass>
+          <SSAO ref={ref} color="#00ff00" />
+        </EffectComposer>
+      )
+    )
+    await flush()
+
+    expect(ref.current!.color!.getHexString()).toBe('00ff00')
+
+    await React.act(async () => root.render(null))
+  })
+
   it('applies intensity live, without reconstructing the effect', async () => {
     const composerRef = React.createRef<EffectComposerImpl>()
     const ref = React.createRef<SSAOEffect>()
