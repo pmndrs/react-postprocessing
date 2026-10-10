@@ -55,6 +55,7 @@ import { Ramp } from '../effects/Ramp'
 import { Scanline } from '../effects/ScanlineEffect'
 import { SelectiveBloom } from '../effects/SelectiveBloom'
 import { Sepia } from '../effects/Sepia'
+import { Sharpness } from '../effects/Sharpness'
 import { ShockWave } from '../effects/ShockWave'
 import { SMAA } from '../effects/SMAA'
 import { SSAO } from '../effects/SSAO'
@@ -121,6 +122,7 @@ const SMOKE_CASES: SmokeCase[] = [
     effect: (ref) => <SelectiveBloom ref={ref} lights={[]} />,
   },
   { file: 'Sepia.tsx', label: 'Sepia', effect: (ref) => <Sepia ref={ref} /> },
+  { file: 'Sharpness.tsx', label: 'Sharpness', effect: (ref) => <Sharpness ref={ref} /> },
   { file: 'ShockWave.tsx', label: 'ShockWave', effect: (ref) => <ShockWave ref={ref} /> },
   { file: 'SMAA.tsx', label: 'SMAA', effect: (ref) => <SMAA ref={ref} /> },
   {

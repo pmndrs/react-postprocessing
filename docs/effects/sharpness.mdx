@@ -1,0 +1,28 @@
+---
+title: Sharpness
+nav: 1
+---
+
+Sharpens the image by boosting the difference between each pixel and its neighbors. Useful after FXAA/SMAA or a lowered `resolutionScale` to bring back crisp detail.
+
+```jsx
+import { Sharpness } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
+
+return (
+  <Sharpness
+    sharpness={1} // sharpening strength, 0 disables it
+    radius={1} // distance to the sampled neighbors in pixels
+    blendFunction={BlendFunction.NORMAL} // blend mode
+  />
+)
+```
+
+## Props
+
+| Name          | Type          | Default              | Description                                  |
+| ------------- | ------------- | -------------------- | -------------------------------------------- |
+| sharpness     | Number        | 1                    | Sharpening strength, 0 disables it.          |
+| radius        | Number        | 1                    | Distance to the sampled neighbors in pixels. |
+| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.           |
+| opacity       | Number        | 1                    | The opacity of this effect.                  |
