@@ -41,14 +41,16 @@ return (
 
 ## Props
 
-| Name             | Type            | Default | Description                                                         |
-| ---------------- | --------------- | ------- | ------------------------------------------------------------------- |
-| mode             | ToneMappingMode |         | The tone mapping algorithm                                          |
-| resolution       | Number          | 256     | The resolution of the luminance texture. Must be a power of two.    |
-| adaptive         | boolean         | true    | Toggle adaptive luminance map usage                                 |
-| blendFunction    | BlendFunction   |         | The blend function of this effect.                                  |
-| middleGrey       | Number          | 0.6     | The middle grey factor.                                             |
-| maxLuminance     | Number          | 16      | Maximum luminance                                                   |
-| minLuminance     | Number          | 0.01    | The minimum luminance. Prevents very high exposure in dark scenes.  |
-| averageLuminance | Number          | 1       | The average luminance. Used for the non-adaptive Reinhard operator. |
-| adaptationRate   | Number          | 1       | The luminance adaptation rate.                                      |
+| Name             | Type            | Default             | Description                                                         |
+| ---------------- | --------------- | ------------------- | ------------------------------------------------------------------- |
+| mode             | ToneMappingMode | ToneMappingMode.AGX | The tone mapping algorithm.                                         |
+| resolution       | Number          | 256                 | The resolution of the luminance texture. Must be a power of two.    |
+| adaptive         | Boolean         | false               | Deprecated. Use `mode` instead.                                     |
+| blendFunction    | BlendFunction   | BlendFunction.SRC   | The blend function of this effect.                                  |
+| middleGrey       | Number          | 0.6                 | The middle grey factor.                                             |
+| maxLuminance     | Number          | 4                   | Deprecated. Use `whitePoint` instead.                               |
+| minLuminance     | Number          | 0.01                | The minimum luminance. Prevents very high exposure in dark scenes.  |
+| averageLuminance | Number          | 1                   | The average luminance. Used for the non-adaptive Reinhard operator. |
+| adaptationRate   | Number          | 1                   | The luminance adaptation rate.                                      |
+| whitePoint       | Number          | 4                   | The white point.                                                    |
+| opacity          | Number          | 1                   | The opacity of this effect.                                         |

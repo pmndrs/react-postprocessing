@@ -25,9 +25,11 @@ return (
 
 ## Props
 
-| Name          | Type          | Default              | Description                         |
-| ------------- | ------------- | -------------------- | ----------------------------------- |
-| eskil         | Boolean       | false                | Enables Eskil's vignette technique. |
-| blendFunction | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.  |
-| offset        | Number        | 0.5                  | The vignette offset.                |
-| darkness      | Number        | 0.5                  | The vignette darkness.              |
+| Name          | Type              | Default                   | Description                          |
+| ------------- | ----------------- | ------------------------- | ------------------------------------ |
+| eskil         | Boolean           | false                     | Deprecated. Use `technique` instead. |
+| blendFunction | BlendFunction     | BlendFunction.NORMAL      | The blend function of this effect.   |
+| offset        | Number            | 0.5                       | The vignette offset.                 |
+| darkness      | Number            | 0.5                       | The vignette darkness.               |
+| technique     | VignetteTechnique | VignetteTechnique.DEFAULT | The vignette technique.              |
+| opacity       | Number            | 1                         | The opacity of this effect.          |

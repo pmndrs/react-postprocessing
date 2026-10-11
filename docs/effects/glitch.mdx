@@ -32,10 +32,12 @@ return (
 | active                    | Boolean       | true                 | Turn the effect on and off                                                                |
 | blendFunction             | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                                                        |
 | chromaticAberrationOffset | Vector2       |                      | A chromatic aberration offset. If provided, the glitch effect will influence this offset. |
-| delay                     | Vector2       |                      | The minimum and maximum delay between glitch activations in seconds.                      |
-| duration                  | Vector2       |                      | The minimum and maximum duration of a glitch in seconds.                                  |
-| strength                  | Vector2       |                      | The strength of weak and strong glitches.                                                 |
+| delay                     | Vector2       | [1.5, 3.5]           | The minimum and maximum delay between glitch activations in seconds.                      |
+| duration                  | Vector2       | [0.6, 1.0]           | The minimum and maximum duration of a glitch in seconds.                                  |
+| strength                  | Vector2       | [0.3, 1.0]           | The strength of weak and strong glitches.                                                 |
 | perturbationMap           | Texture       |                      | A perturbation map. If none is provided, a noise texture will be created.                 |
 | dtSize                    | Number        | 64                   | The size of the generated noise map. Will be ignored if a perturbation map is provided.   |
 | columns                   | Number        | 0.05                 | The scale of the blocky glitch columns.                                                   |
 | ratio                     | Number        | 0.85                 | The threshold for strong glitches.                                                        |
+| mode                      | GlitchMode    | GlitchMode.SPORADIC  | The glitch mode. Ignored while `active` is false.                                         |
+| opacity                   | Number        | 1                    | The opacity of this effect.                                                               |

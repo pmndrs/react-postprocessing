@@ -23,7 +23,10 @@ return (
 
 ## Props
 
-| Name          | Type          | Default              | Description                        |
-| ------------- | ------------- | -------------------- | ---------------------------------- |
-| offset        | Vector2       |                      | The color offset.                  |
-| blendFunction | BlendFunction | BlendFunction.Normal | The blend function of this effect. |
+| Name             | Type          | Default              | Description                                                              |
+| ---------------- | ------------- | -------------------- | ------------------------------------------------------------------------ |
+| offset           | Vector2       | [0.001, 0.0005]      | The color offset.                                                        |
+| blendFunction    | BlendFunction | BlendFunction.NORMAL | The blend function of this effect.                                       |
+| radialModulation | Boolean       | false                | Scales the offset by the distance from the screen center.                |
+| modulationOffset | Number        | 0.15                 | The radial modulation offset, 0 to 1. Only used with `radialModulation`. |
+| opacity          | Number        | 1                    | The opacity of this effect.                                              |
