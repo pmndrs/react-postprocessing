@@ -25,17 +25,17 @@ return (
 
 ## Props
 
-| Name            | Type                                  | Default              | Description                                                   |
-| --------------- | ------------------------------------- | -------------------- | ------------------------------------------------------------- |
-| blendFunction   | BlendFunction                         | BlendFunction.NORMAL | The blend function of this effect.                            |
-| focusDistance   | Number                                | 3                    | The focus distance in world units.                            |
-| focusRange      | Number                                | 2                    | The focus range in world units.                               |
-| bokehScale      | Number                                | 1                    | The scale of the bokeh blur.                                  |
-| target          | Vector3                               |                      | A world position to keep in focus. Overrides `focusDistance`. |
-| depthTexture    | { texture: Texture, packing: number } |                      | A depth texture to use instead of the composer's own.         |
-| resolutionScale | Number                                | 0.5                  | The render resolution scale.                                  |
-| resolutionX     | Number                                | Resolution.AUTO_SIZE | The render width.                                             |
-| resolutionY     | Number                                | Resolution.AUTO_SIZE | The render height.                                            |
-| opacity         | Number                                | 1                    | The opacity of this effect.                                   |
+| Name            | Type                                    | Default              | Description                                                   |
+| --------------- | --------------------------------------- | -------------------- | ------------------------------------------------------------- |
+| blendFunction   | BlendFunction                           | BlendFunction.NORMAL | The blend function of this effect.                            |
+| focusDistance   | Number                                  | 3                    | The focus distance in world units.                            |
+| focusRange      | Number                                  | 2                    | The focus range in world units.                               |
+| bokehScale      | Number                                  | 1                    | The scale of the bokeh blur.                                  |
+| target          | Vector3                                 |                      | A world position to keep in focus. Overrides `focusDistance`. |
+| depthTexture    | `{ texture: Texture, packing: number }` |                      | A depth texture to use instead of the composer's own.         |
+| resolutionScale | Number                                  | 0.5                  | The render resolution scale.                                  |
+| resolutionX     | Number                                  | Resolution.AUTO_SIZE | The render width.                                             |
+| resolutionY     | Number                                  | Resolution.AUTO_SIZE | The render height.                                            |
+| opacity         | Number                                  | 1                    | The opacity of this effect.                                   |
 
 `focalLength`, `worldFocusDistance`, `worldFocusRange`, `width`, `height` and `blur` are deprecated.
