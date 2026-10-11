@@ -47,7 +47,7 @@ return (
 | selectionLayer     | Number        | 10                   | The selection layer                                                                                  |
 | inverted           | Boolean       | false                | Consider the selection inverted.                                                                     |
 | ignoreBackground   | Boolean       | false                | Discard the background of the selection.                                                             |
-| blendFunction      | BlendFunction | BlendFunction.SCREEN | The blend function of this effect.                                                                   |
+| blendFunction      | BlendFunction | BlendFunction.ADD    | The blend function of this effect.                                                                   |
 | luminanceThreshold | Number        | 1.0                  | The luminance threshold. Raise this value to mask out darker elements in the scene. Range is [0, 1]. |
 | luminanceSmoothing | Number        | 0.03                 | Controls the smoothness of the luminance threshold. Range is [0, 1].                                 |
 | mipmapBlur         | Boolean       | true                 | Enables or disables mipmap blur.                                                                     |
@@ -58,3 +58,4 @@ return (
 | resolutionScale    | Number        | 0.5                  | The render resolution scale. Ignored if `mipmapBlur` is enabled.                                     |
 | resolutionX        | Number        | Resolution.AUTO_SIZE | The render width. Ignored if `mipmapBlur` is enabled.                                                |
 | resolutionY        | Number        | Resolution.AUTO_SIZE | The render height. Ignored if `mipmapBlur` is enabled.                                               |
+| opacity            | Number        | 1                    | The opacity of this effect.                                                                          |
