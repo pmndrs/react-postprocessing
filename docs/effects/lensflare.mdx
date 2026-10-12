@@ -25,6 +25,10 @@ Use bvh `<bvh><Scene></bvh>` to enhance the internal raycaster performance.
 
 The Ultimate Lens Flare leverages the raycaster to examine the material type of objects and determine if they are `MeshTransmissionMaterial` or `MeshPhysicalMaterial`. It checks for the transmission parameter to identify glass-like materials. Therefore, for an object to behave like glass, its material should have either `transmission = 1` or `transparent = true` and `opacity = NUMBER`. The effect automatically interprets the opacity `NUMBER` value to determine the brightness of the flare.
 
+## Example
+
+[![LensFlare demo](https://pmndrs.github.io/examples/lensflare/thumbnail.webp)](https://pmndrs.github.io/examples/lensflare)
+
 ## Credits
 
 - https://www.shadertoy.com/view/4sK3W3
