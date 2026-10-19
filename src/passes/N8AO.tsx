@@ -2,10 +2,10 @@
 // https://twitter.com/N8Programs/status/1660996748485984261
 
 import { ReactThreeFiber, applyProps, useThree } from '@react-three/fiber'
-import { Ref, useLayoutEffect, useMemo } from 'react'
+import { Ref, use, useLayoutEffect, useMemo } from 'react'
 /* @ts-ignore */
 import { N8AOPostPass } from 'n8ao'
-import { groupPasses } from '../EffectComposer'
+import { EffectComposerContext, groupPasses } from '../EffectComposer'
 import { useDispose } from '../util'
 
 export type N8AOProps = {
@@ -41,7 +41,8 @@ export function N8AO({
   renderMode = 0,
   ref,
 }: N8AOProps) {
-  const { camera, scene, invalidate } = useThree()
+  const { camera, scene } = use(EffectComposerContext)
+  const invalidate = useThree((state) => state.invalidate)
   const effect = useMemo(() => {
     const instance = new N8AOPostPass(scene, camera)
     // N8AOPostPass isn't a postprocessing Effect, so it's not mergeable via

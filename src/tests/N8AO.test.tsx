@@ -1,5 +1,6 @@
 import { CopyPass, EffectComposer as EffectComposerImpl } from 'postprocessing'
 import * as React from 'react'
+import { PerspectiveCamera, Scene } from 'three'
 import { describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
 import { N8AO } from '../passes/N8AO'
@@ -86,6 +87,31 @@ describe('N8AO', () => {
     // still own renderToScreen - otherwise nothing reaches the canvas.
     expect(enabledRenderToScreenCount()).toBe(1)
     expect(copyPass!.renderToScreen).toBe(true)
+
+    await React.act(async () => root.render(null))
+  })
+
+  it("uses the EffectComposer's camera and scene props, not the canvas defaults", async () => {
+    const ref = React.createRef<any>()
+    const cameraA = new PerspectiveCamera()
+    const cameraB = new PerspectiveCamera()
+    const scene = new Scene()
+
+    const render = (camera: PerspectiveCamera) =>
+      root.render(
+        <EffectComposer camera={camera} scene={scene}>
+          <N8AO ref={ref} />
+        </EffectComposer>
+      )
+
+    await React.act(async () => render(cameraA))
+    await flush()
+    expect(ref.current.camera).toBe(cameraA)
+    expect(ref.current.scene).toBe(scene)
+
+    await React.act(async () => render(cameraB))
+    await flush()
+    expect(ref.current.camera).toBe(cameraB)
 
     await React.act(async () => root.render(null))
   })
