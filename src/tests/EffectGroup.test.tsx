@@ -1,10 +1,11 @@
 import { CopyPass, Effect, EffectComposer as EffectComposerImpl, EffectPass, RenderPass } from 'postprocessing'
 import * as React from 'react'
+import { PerspectiveCamera } from 'three'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
 import { EffectGroup } from '../EffectGroup'
 import { wrapEffect } from '../wrapEffect'
-import { EFFECT_SHADER, flush, root, strict, waitForComposer } from './test-utils'
+import { EFFECT_SHADER, flush, root, strict, waitForComposer, waitForNewComposer } from './test-utils'
 
 class EffectA extends Effect {
   constructor() {
@@ -333,5 +334,40 @@ describe('EffectGroup', () => {
     await waitUntil(() => composer.passes.some((p) => p instanceof EffectPass))
 
     expect(composer.passes.filter((p) => p instanceof EffectPass)).toHaveLength(1)
+  })
+
+  it("copies the EffectComposer's camera onto the pass when that camera changes", async () => {
+    const composerRef = React.createRef<EffectComposerImpl>()
+    const cameraA = new PerspectiveCamera(50, 1, 0.1, 10)
+    const cameraB = new PerspectiveCamera(50, 1, 1.5, 500)
+
+    const render = (camera: PerspectiveCamera) =>
+      root.render(
+        <EffectComposer ref={composerRef} camera={camera}>
+          <EffectGroup>
+            <WrappedEffectA />
+          </EffectGroup>
+        </EffectComposer>
+      )
+
+    await React.act(async () => render(cameraA))
+    const firstComposer = await waitForComposer(composerRef)
+    const pass = await waitForGroupPass(firstComposer)
+    const material = () =>
+      pass.fullscreenMaterial as unknown as {
+        uniforms: { cameraNear: { value: number }; cameraFar: { value: number } }
+      }
+
+    expect(material().uniforms.cameraNear.value).toBeCloseTo(cameraA.near)
+    expect(material().uniforms.cameraFar.value).toBeCloseTo(cameraA.far)
+
+    await React.act(async () => render(cameraB))
+    const secondComposer = await waitForNewComposer(composerRef, firstComposer)
+    await waitUntil(() => secondComposer.passes.includes(pass))
+
+    // Same pass — EffectGroup does not rebuild it just because the camera changed.
+    expect(secondComposer.passes).toContain(pass)
+    expect(material().uniforms.cameraNear.value).toBeCloseTo(cameraB.near)
+    expect(material().uniforms.cameraFar.value).toBeCloseTo(cameraB.far)
   })
 })
