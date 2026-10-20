@@ -243,13 +243,19 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
 
     effectComposer.setSize(glSize.width, glSize.height)
 
+    const ownPasses = new Set(effectComposer.passes)
+
     setComposerState({ composer: effectComposer, normalPass, downSamplingPass })
 
     return () => {
       // The rebuild effect below may not have detached its passes yet
       // (composerState only updates next render) - without this, dispose()
-      // would kill effects the new composer is about to reuse.
-      for (const pass of effectComposer.passes) disposeGeneratedPass(pass)
+      // would kill passes and effects the new composer is about to reuse.
+      for (const pass of [...effectComposer.passes]) {
+        if (ownPasses.has(pass)) continue
+        effectComposer.removePass(pass)
+        disposeGeneratedPass(pass)
+      }
       effectComposer.dispose()
       autoClearGuard.release(gl)
     }
