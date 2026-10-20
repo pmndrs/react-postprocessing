@@ -11,12 +11,8 @@ export type EffectGroupProps = {
   ref?: Ref<EffectPass>
 }
 
-// Groups its children into one EffectPass instead of relying on
-// EffectComposer's automatic consecutive-effect merging. Renders children
-// into a hidden inner <group> (invisible to EffectComposer's own top-level
-// walk) and renders the resulting pass back out via <primitive> at this
-// component's own JSX position, so EffectComposer's existing bare-Pass
-// passthrough places it correctly relative to sibling effects.
+// Children go into a hidden <group> that EffectComposer's walk skips, and the
+// combined pass is rendered back at this component's JSX position.
 export function EffectGroup({ enabled = true, children, ref }: EffectGroupProps) {
   const { camera, scene, requestRebuild } = use(EffectComposerContext)
 
@@ -24,10 +20,7 @@ export function EffectGroup({ enabled = true, children, ref }: EffectGroupProps)
   const effectsRef = useRef<Effect[]>([])
   const [pass, setPass] = useState<EffectPass | null>(null)
 
-  // Mirrors EffectComposer's own buildPasses: always constructs a fresh
-  // EffectPass when the effect list changes, rather than updating one in
-  // place - so composer.addPass() runs its normal setSize/initialize dance
-  // for every effect, with nothing to replicate by hand here.
+  // Fresh pass on every effect list change (like buildPasses), so addPass() does all the setup.
   useLayoutEffect(() => {
     const effects = readGroupChildren(group.current, (object): object is Effect => object instanceof Effect)
     if (!updateIfChanged(effectsRef, effects)) return
@@ -42,31 +35,24 @@ export function EffectGroup({ enabled = true, children, ref }: EffectGroupProps)
     setPass(newPass)
   })
 
-  // The pass snapshots camera near/far (and forwards mainCamera/mainScene to
-  // its effects) only at construction. EffectComposer's own passes are rebuilt
-  // when the composer camera or scene changes; this one is kept, so depth
-  // effects inside the group would keep reading the previous camera.
+  // EffectComposer rebuilds its own passes on camera/scene change, this one is kept, so sync it here.
   useLayoutEffect(() => {
     if (!pass) return
     pass.mainCamera = camera
     pass.mainScene = scene
   }, [pass, camera, scene])
 
-  // useLayoutEffect (not useEffect) so `enabled` is applied before
-  // EffectComposer's own effect adds this pass to the composer.
+  // Layout effect so `enabled` is set before EffectComposer adds the pass.
   useLayoutEffect(() => {
     if (pass) pass.enabled = enabled
   }, [pass, enabled])
 
-  // A local state update above doesn't re-render EffectComposer, so its own
-  // tree walk would never notice this pass appearing/disappearing.
+  // Local state changes don't re-render EffectComposer, so ask it to re-walk.
   useLayoutEffect(() => {
     requestRebuild()
   }, [pass, requestRebuild])
 
-  // Disposes whichever pass this replaces (or the last one, on unmount) -
-  // the only place a pass gets disposed, so there's no double-dispose risk
-  // from also doing it inline above where `pass` is replaced.
+  // Disposes the replaced pass, or the last one on unmount.
   useLayoutEffect(() => {
     return () => {
       if (pass) disposePassWithoutEffects(pass)
