@@ -18,7 +18,7 @@ export type EffectGroupProps = {
 // component's own JSX position, so EffectComposer's existing bare-Pass
 // passthrough places it correctly relative to sibling effects.
 export function EffectGroup({ enabled = true, children, ref }: EffectGroupProps) {
-  const { camera, requestRebuild } = use(EffectComposerContext)
+  const { camera, scene, requestRebuild } = use(EffectComposerContext)
 
   const group = useRef<Group>(null!)
   const effectsRef = useRef<Effect[]>([])
@@ -41,6 +41,16 @@ export function EffectGroup({ enabled = true, children, ref }: EffectGroupProps)
     groupPasses.add(newPass)
     setPass(newPass)
   })
+
+  // The pass snapshots camera near/far (and forwards mainCamera/mainScene to
+  // its effects) only at construction. EffectComposer's own passes are rebuilt
+  // when the composer camera or scene changes; this one is kept, so depth
+  // effects inside the group would keep reading the previous camera.
+  useLayoutEffect(() => {
+    if (!pass) return
+    pass.mainCamera = camera
+    pass.mainScene = scene
+  }, [pass, camera, scene])
 
   // useLayoutEffect (not useEffect) so `enabled` is applied before
   // EffectComposer's own effect adds this pass to the composer.
