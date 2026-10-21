@@ -34,9 +34,7 @@ export const EffectComposerContext = /* @__PURE__ */ createContext<{
   camera: Camera
   scene: Scene
   resolutionScale?: number
-  // A child's local state update doesn't re-render its parent - descendants
-  // that add/remove a bare Pass of their own (e.g. EffectGroup) call this
-  // to make the tree walk below notice.
+  // For descendants whose own Pass changes without re-rendering us (e.g. EffectGroup).
   requestRebuild: () => void
   autoClear: boolean
 }>(null!)
@@ -73,8 +71,7 @@ const isConvolution = (effect: Effect): boolean =>
 // mainUv isn't a bitflag - detect it the same way postprocessing itself does.
 const hasMainUv = (effect: Effect): boolean => /mainUv/.test(effect.getFragmentShader() ?? '')
 
-// autoClear/toneMapping get force-set and never restored. Ref-counted per
-// (renderer, property) since composers can share a renderer.
+// Restores autoClear/toneMapping once the last composer on a renderer is gone.
 function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(property: K) {
   const refs = new WeakMap<
     WebGLRenderer,
@@ -108,28 +105,19 @@ function createRendererPropertyGuard<K extends 'autoClear' | 'toneMapping'>(prop
 const autoClearGuard = /* @__PURE__ */ createRendererPropertyGuard('autoClear')
 const toneMappingGuard = /* @__PURE__ */ createRendererPropertyGuard('toneMapping')
 
-// Scratch vector for gl.getSize() below - written then read synchronously
-// within the same call, never held onto across a render/frame, so sharing
-// one instance across every <EffectComposer> is safe (same reasoning as
-// DEFAULT_SCREEN_RES in LensFlare.tsx: safe because nothing ever aliases it).
+// Shared scratch vector, only ever used synchronously.
 const glSize = /* @__PURE__ */ new Vector2()
 
-// Stable identity for the `renderPass` default - it's in the creation
-// effect's dependency array below (changing it recreates the composer,
-// same as depthBuffer/multisampling), so a fresh arrow function every
-// render here would recreate the composer on every render too.
+// Stable default - renderPass is a composer creation dep.
 const defaultRenderPass = (scene: Scene, camera: Camera): Pass => new RenderPass(scene, camera)
 
-// Only passes buildPasses itself constructs - not a user's own bare Pass,
-// which owns its own lifecycle.
+// Passes built by buildPasses - user passes own their lifecycle.
 const generatedPasses = /* @__PURE__ */ new WeakSet<Pass>()
 
-// EffectGroup registers its pass here (see EffectGroup.tsx) so the rebuild
-// effect below knows to add a shared trailing CopyPass.
+// Passes that need the shared trailing CopyPass (EffectGroup, N8AO).
 export const groupPasses = /* @__PURE__ */ new WeakSet<Pass>()
 
-// Not pass.dispose() - EffectPass.dispose() also disposes the effects it
-// wraps, which have their own lifecycle. setEffects([]) detaches them first.
+// EffectPass.dispose() would also dispose its effects, which have their own lifecycle.
 export function disposePassWithoutEffects(pass: Pass): void {
   if (pass instanceof EffectPass) {
     ;(pass as unknown as { setEffects(effects: never[]): void }).setEffects([])
@@ -142,10 +130,8 @@ function disposeGeneratedPass(pass: Pass): void {
   disposePassWithoutEffects(pass)
 }
 
-// 'auto' (default): consecutive Effects share one EffectPass, keeping
-// convolution and mainUv Effects apart since postprocessing throws if they
-// mix. 'all' merges through those limits too, no guardrails, same as
-// EffectGroup. 'none' gives every Effect its own EffectPass.
+// 'auto' merges consecutive Effects but keeps convolution/mainUv apart (postprocessing
+// throws if they mix), 'all' merges everything, 'none' never merges.
 function buildPasses(nodes: Array<Effect | Pass>, camera: Camera, mergeMode: 'auto' | 'all' | 'none'): Pass[] {
   const passes: Pass[] = []
 
@@ -243,18 +229,21 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
 
     effectComposer.setSize(glSize.width, glSize.height)
 
+    const ownPasses = new Set(effectComposer.passes)
+
     setComposerState({ composer: effectComposer, normalPass, downSamplingPass })
 
     return () => {
-      // The rebuild effect below may not have detached its passes yet
-      // (composerState only updates next render) - without this, dispose()
-      // would kill effects the new composer is about to reuse.
-      for (const pass of effectComposer.passes) disposeGeneratedPass(pass)
+      // Detach passes not created here, dispose() would kill ones the new composer reuses.
+      for (const pass of [...effectComposer.passes]) {
+        if (ownPasses.has(pass)) continue
+        effectComposer.removePass(pass)
+        disposeGeneratedPass(pass)
+      }
       effectComposer.dispose()
       autoClearGuard.release(gl)
     }
-    // `glSize` intentionally excluded: it's applied via the composer.setSize
-    // effect below, and shouldn't tear down/recreate the whole composer.
+    // glSize is applied in useFrame, it shouldn't recreate the composer.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     camera,
@@ -270,11 +259,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     resolutionScale,
   ])
 
-  // Last size actually applied to the composer, so the check below is a
-  // cheap no-op on frames where nothing changed. The pixel ratio is part of
-  // it: setDpr, AdaptiveDpr or moving to another display change the drawing
-  // buffer without changing gl.getSize(), and composer.setSize() sizes its
-  // buffers and passes from the drawing buffer.
+  // Pixel ratio included - setDpr changes the drawing buffer but not gl.getSize().
   const appliedSizeRef = useRef({ width: -1, height: -1, pixelRatio: -1 })
 
   useFrame(
@@ -301,14 +286,12 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     enabled ? renderPriority : 0
   )
 
-  // Derived from the r3f scene graph (not tracked incrementally) so order
-  // always matches JSX, even through wrapper components or a reorder.
+  // Read from the r3f scene graph so order always matches JSX, even through wrappers.
   const group = useRef<Group>(null!)
   const nodesRef = useRef<Array<Effect | Pass>>([])
   const [nodesVersion, setNodesVersion] = useState(0)
 
-  // Runs every render, but only bumps nodesVersion (triggering the rebuild
-  // below) when the resolved node list actually changed.
+  // Runs every render, bumps nodesVersion only when the node list changed.
   useLayoutEffect(() => {
     if (!composerState) return
     const nodes = readGroupChildren(
@@ -318,18 +301,14 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
     if (updateIfChanged(nodesRef, nodes)) setNodesVersion((v) => v + 1)
   })
 
-  // Only re-runs when nodesVersion/composerState/camera change - React's
-  // own dependency bailout, so create/cleanup pairing stays correct.
   useLayoutEffect(() => {
     if (!composerState) return
     const { composer, normalPass, downSamplingPass } = composerState
 
     const passes = buildPasses(nodesRef.current, camera, mergeMode)
 
-    // A toggleable pass (EffectGroup) sitting last would leave nothing on
-    // screen once disabled - postprocessing assigns renderToScreen by
-    // structural position, not `.enabled`. A shared trailing CopyPass
-    // (always enabled, always added last) fixes that for the whole chain.
+    // renderToScreen goes by position, not `.enabled` - without this, a disabled
+    // group at the end would leave the screen empty.
     if (passes.some((pass) => groupPasses.has(pass))) {
       const trailingCopyPass = new CopyPass()
       generatedPasses.add(trailingCopyPass)
@@ -383,8 +362,7 @@ export const EffectComposer = /* @__PURE__ */ memo(function EffectComposer({
   // Expose the composer
   useImperativeHandle(ref, () => composerState?.composer as EffectComposerImpl, [composerState])
 
-  // Wait until the composer exists before mounting children so they always
-  // see a valid composer instance via context.
+  // Children mount only once the composer exists, so context is never empty.
   if (!state) return null
 
   return (

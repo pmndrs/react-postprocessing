@@ -45,11 +45,7 @@ export function N8AO({
   const invalidate = useThree((state) => state.invalidate)
   const effect = useMemo(() => {
     const instance = new N8AOPostPass(scene, camera)
-    // N8AOPostPass isn't a postprocessing Effect, so it's not mergeable via
-    // EffectGroup - it's already a standalone Pass, hence its own `enabled`
-    // prop below instead. Registering it here still gets it the shared
-    // trailing CopyPass safety net (see EffectComposer.tsx) so disabling it
-    // while it's the last pass in the chain doesn't blank the canvas.
+    // Gets the trailing CopyPass, so disabling it as the last pass doesn't blank the canvas.
     groupPasses.add(instance)
     return instance
   }, [camera, scene])
@@ -76,8 +72,7 @@ export function N8AO({
       halfRes,
       depthAwareUpsampling,
     })
-    // effect.configuration is a plain object, never r3f-managed - applyProps'
-    // own invalidate (gated behind object.__r3f) never fires for it.
+    // configuration isn't r3f-managed, so applyProps won't invalidate on its own.
     invalidate()
   }, [
     screenSpaceRadius,

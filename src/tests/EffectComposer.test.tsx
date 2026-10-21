@@ -13,6 +13,7 @@ import * as React from 'react'
 import * as THREE from 'three'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { EffectComposer } from '../EffectComposer'
+import { EffectGroup } from '../EffectGroup'
 import { ColorAverage } from '../effects/ColorAverage'
 import { wrapEffect } from '../wrapEffect'
 import { EFFECT_SHADER, flush, root, strict, waitForComposer, waitForEffects, waitForNewComposer } from './test-utils'
@@ -898,6 +899,64 @@ describe('EffectComposer', () => {
       expect(secondComposer.passes.some((p) => p instanceof EffectPass)).toBe(true)
 
       effectDisposeSpy.mockRestore()
+    })
+
+    it('does not dispose a user-provided pass or its effects when a composer-level prop recreates the composer', async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+      const userEffect = new EffectC()
+      const userPass = new EffectPass(new THREE.PerspectiveCamera(), userEffect)
+      const passDisposeSpy = vi.spyOn(userPass, 'dispose')
+      const effectDisposeSpy = vi.spyOn(userEffect, 'dispose')
+
+      const render = (multisampling: number) =>
+        root.render(
+          <EffectComposer ref={ref} multisampling={multisampling}>
+            <primitive object={userPass} />
+          </EffectComposer>
+        )
+
+      await React.act(async () => render(0))
+      const firstComposer = await waitForComposer(ref)
+      await flush()
+      expect(firstComposer.passes).toContain(userPass)
+
+      await React.act(async () => render(4))
+      const secondComposer = await waitForNewComposer(ref, firstComposer)
+      await flush()
+
+      expect(secondComposer.passes).toContain(userPass)
+      expect(passDisposeSpy).not.toHaveBeenCalled()
+      expect(effectDisposeSpy).not.toHaveBeenCalled()
+    })
+
+    it("keeps an EffectGroup's effects alive and still wired to its pass when a composer-level prop recreates the composer", async () => {
+      const ref = React.createRef<EffectComposerImpl>()
+      const groupRef = React.createRef<EffectPass>()
+      const effect = new EffectA()
+      const effectDisposeSpy = vi.spyOn(effect, 'dispose')
+
+      const render = (multisampling: number) =>
+        root.render(
+          <EffectComposer ref={ref} multisampling={multisampling}>
+            <EffectGroup ref={groupRef}>
+              <primitive object={effect} />
+            </EffectGroup>
+          </EffectComposer>
+        )
+
+      await React.act(async () => render(0))
+      const firstComposer = await waitForComposer(ref)
+      await waitForEffects(ref, 1)
+      const pass = groupRef.current!
+
+      await React.act(async () => render(4))
+      const secondComposer = await waitForNewComposer(ref, firstComposer)
+      await flush()
+
+      expect(secondComposer.passes).toContain(pass)
+      expect(effectDisposeSpy).not.toHaveBeenCalled()
+      // @ts-expect-error - `listener` isn't part of the public EffectPass typing
+      expect(effect.hasEventListener('change', pass.listener)).toBe(true)
     })
 
     it('disposes a hand-constructed effect exactly once on unmount', async () => {
